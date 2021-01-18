@@ -1,0 +1,2 @@
+--> ('test_resources.test_trace_me', 'TestFixtures', 'test_foo')  <= ea702762eece900b0ceebfd22b3165fae44fe29b64e5d61e0befe28a5ab1d598
+<-- ('test_resources.test_trace_me', 'TestFixtures', 'test_foo')  => bbd393a60007e5f9621b8fde442dbcf493227ef7ced9708aa743b46a88e1b49e

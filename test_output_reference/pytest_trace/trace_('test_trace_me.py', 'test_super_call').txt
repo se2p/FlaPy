@@ -1,0 +1,8 @@
+--> ('test_resources.test_trace_me', '', 'test_super_call')  <= 306f6a85c8136a673f6eac5fffe265a196613180ebdfe2b9e6fdd6fdd62bb8fd
+----> ('test_resources.test_trace_me', 'SuperClass', 'some_method')  <= 25bb142f9f55ec6fec38416ead1ea0ecf3a0d6585e70489416d8835d1e714c28
+<---- ('test_resources.test_trace_me', 'SuperClass', 'some_method')  => bbd393a60007e5f9621b8fde442dbcf493227ef7ced9708aa743b46a88e1b49e
+----> ('test_resources.test_trace_me', 'SubClass', 'overwritten_method')  <= 25bb142f9f55ec6fec38416ead1ea0ecf3a0d6585e70489416d8835d1e714c28
+------> ('test_resources.test_trace_me', 'SubClass', 'overwritten_method')  <= 25bb142f9f55ec6fec38416ead1ea0ecf3a0d6585e70489416d8835d1e714c28
+<------ ('test_resources.test_trace_me', 'SubClass', 'overwritten_method')  => bbd393a60007e5f9621b8fde442dbcf493227ef7ced9708aa743b46a88e1b49e
+<---- ('test_resources.test_trace_me', 'SubClass', 'overwritten_method')  => bbd393a60007e5f9621b8fde442dbcf493227ef7ced9708aa743b46a88e1b49e
+<-- ('test_resources.test_trace_me', '', 'test_super_call')  => bbd393a60007e5f9621b8fde442dbcf493227ef7ced9708aa743b46a88e1b49e

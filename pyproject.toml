@@ -1,0 +1,82 @@
+[tool.poetry]
+name = "FlaPy"
+version = "0.1.0"
+description = ""
+authors = [
+  "Stephan Lukasczyk <stephan.lukasczyk@uni-passau.de>",
+  "Martin Gruber <gruberma@fim.uni-passau.de>",
+]
+license = "LGPL-3.0+"
+readme = "README.md"
+repository = "https://github.com/se2p/flapy"
+keywords = [
+  "unit test",
+  "flaky test",
+]
+classifiers = [
+  "Development Status :: 1 - Planning",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Education",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3.7",
+  "Topic :: Education :: Testing",
+  "Topic :: Software Development :: Testing",
+  "Topic :: Software Development :: Testing :: Unit",
+  "Typing :: Typed",
+]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+pipfile = "^0.0.2"
+virtualenv = "^16.7"
+deepdiff = "^4.0"
+pytest = "^5.3.0"
+pytest-cov = "^2.8.0"
+pygithub = "^1.53"
+
+fire = "^0.3.1"
+pandas = "^1.1.4"
+junitparser = "^1.6.3"
+[tool.poetry.dev-dependencies]
+flake8 = "^3.7"
+mypy = "^0.761"
+pylint = "^2.4"
+codecov = "^2.0"
+black = "=19.10b0"
+numpy = "^1.18.2"
+
+[tool.poetry.scripts]
+flakyanalysis = "flapy.analysis:main"
+pytest_trace = "flapy.pytest_trace:main"
+pypidata = "flapy.pypi_data:main"
+results_parser = "flapy.results_parser:main"
+
+[tool.black]
+line-length = 88
+target_version = ['py37', 'py38']
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.eggs
+    | \.git
+    | \.pytest_cache
+    | \.mypy_cache
+    | \.venv
+    | _build
+    | build
+    | dist
+    | flapy.egg-info
+  )/
+  | flapy/tempfile_seeded.py
+  | flapy/deephash_my.py
+  | flapy/pickle_tools.py
+)
+'''
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

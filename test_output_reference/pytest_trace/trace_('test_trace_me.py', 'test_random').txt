@@ -1,0 +1,10 @@
+--> ('test_resources.test_trace_me', '', 'test_random')  <= 306f6a85c8136a673f6eac5fffe265a196613180ebdfe2b9e6fdd6fdd62bb8fd
+----> ('numpy.random.mtrand', 'RandomState', 'uniform') #wrapper <= b788702da138273704d253d032dcc9ce4530598b630b959e60a98d8e67a09972
+------> ('numpy.random.mtrand', 'RandomState', 'uniform') #builtin-call
+--------> ('builtins', '', 'empty') #wrapper <= 262798fbcf77b8a069dd4a28c6ad41cbf4889709b988ef70c7298a2f23bf687c
+----------> ('builtins', '', 'empty') #builtin-call
+<---------- ('builtins', '', 'empty') #builtin-return
+<-------- ('builtins', '', 'empty') #wrapper #reloading-args-failed => 9d3215b83e7302742dc0551a92e6413216e3e02140cdabe091ead47ff3beea06
+<------ ('numpy.random.mtrand', 'RandomState', 'uniform') #builtin-return
+<---- ('numpy.random.mtrand', 'RandomState', 'uniform') #wrapper #reloading-args-failed => 7d88399170c26baac35355bf285dd8d556447bd6c8b0dabf01c774d2f406d440
+<-- ('test_resources.test_trace_me', '', 'test_random')  => bbd393a60007e5f9621b8fde442dbcf493227ef7ced9708aa743b46a88e1b49e

@@ -1,0 +1,12 @@
+--> ('test_resources.test_trace_me', '', 'test_hashing')  <= 306f6a85c8136a673f6eac5fffe265a196613180ebdfe2b9e6fdd6fdd62bb8fd
+----> ('test_resources.test_trace_me', '', 'my_map')  <= 34f387e1569a52592118c41832a5cd1770e5ebea17e9db0bc1bc79fea14725c0
+------> ('test_resources.test_trace_me', '', '<lambda>') #naming-fallback-funcPtr <= d36afb5252ee4cf1399069147f31c05b77de6892390567206fdcc460ab2834a8
+<------ ('test_resources.test_trace_me', '', '<lambda>') #naming-fallback-funcPtr => 610e2bb86cee5362640bd1ab01b8a4a4559cced9dd6058376894c041629a7b69
+------> ('builtins', 'list', 'append') #builtin
+<------ ('builtins', 'list', 'append') #builtin
+------> ('test_resources.test_trace_me', '', '<lambda>') #naming-fallback-funcPtr <= 22cfa3aa5c2d5f465eded66c03a92037fcbaf8fe51b5d39c4216ad2d59877572
+<------ ('test_resources.test_trace_me', '', '<lambda>') #naming-fallback-funcPtr => 867a472b6fb448c5e78e8a6bfabf07e6c76733e0c44ddf99cbb55c17d7f86504
+------> ('builtins', 'list', 'append') #builtin
+<------ ('builtins', 'list', 'append') #builtin
+<---- ('test_resources.test_trace_me', '', 'my_map')  => 79c7213b9e21b4a47eea9f5b17ac7615d58f04475d1b95b991213e73d2d4ed98
+<-- ('test_resources.test_trace_me', '', 'test_hashing')  => bbd393a60007e5f9621b8fde442dbcf493227ef7ced9708aa743b46a88e1b49e
