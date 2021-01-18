@@ -1,0 +1,89 @@
+image: python:${PYTHON_VERSION}
+
+stages:
+  - build
+  - test
+  - deploy
+
+before_script:
+  - python --version
+  - pip install poetry
+  - poetry install
+
+.unit-tests: &unit-tests
+  stage: test
+  script:
+    - poetry run pytest -q --cov=flapy --cov-branch --cov-report html:cov_html --cov-report=term-missing tests/
+  artifacts:
+    paths:
+      - cov_html
+
+unit-tests:python-3.7:
+  <<: *unit-tests
+  variables:
+    PYTHON_VERSION: '3.7'
+
+unit-tests:python-3.8:
+  <<: *unit-tests
+  variables:
+    PYTHON_VERSION: '3.8-buster'
+
+.nightly-tests:
+  only:
+    - schedules
+  stage: test
+  before_script:
+    - python --version
+    - pip install poetry
+    - poetry install
+    - poetry add --dev pytest-random-order
+  script:
+    - for ((i=1; i<=10; i++)); do echo "test run ${i}\n"; poetry run pytest -q --cov=flaky_analysis --cov-branch --random-order --random-order-bucket=global ; done
+
+nightly-tests:python-3.7:
+  extends: .nightly-tests
+  variables:
+    PYTHON_VERSION: '3.7'
+
+nightly-tests:python-3.8:
+  extends: .nightly-tests
+  variables:
+    PYTHON_VERSION: '3.8-buster'
+
+flake8:
+  stage: build
+  image: python:3.7
+  script:
+    - poetry run flake8 .
+mypy:
+  stage: build
+  image: python:3.7
+  script:
+    - poetry run mypy flaky_analysis
+
+pylint:
+  stage: build
+  image: python:3.7
+  script:
+    - poetry run pylint flaky_analysis
+
+black:
+  stage: build
+  image: python:3.7
+  script:
+    - poetry run black --check .
+
+pages:
+  stage: deploy
+  variables:
+    PYTHON_VERSION: '3.7'
+  dependencies:
+    - unit-tests:python-3.7
+  script:
+    - mv cov_html/ public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+  only:
+    - master
