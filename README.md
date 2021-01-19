@@ -1,6 +1,6 @@
-# Flaky Analysis
+# FlaPy
 
-Flaky Analysis is a small tool that allows software developers
+FlaPy is a small tool that allows software developers
 to automatically check tests for flakiness.
 
 It is the result of research carried out at the
@@ -29,7 +29,7 @@ poetry install
 poetry build
 ```
 
-## Using Flaky Analysis
+## Using FlaPy
 
 ```bash
              # Drop first line, which contains the header
@@ -65,8 +65,8 @@ See the contributors list
 ## Contact
 
 If you want to contact me,
-please find my contact details on my
-[page at the University of Passau](https://www.fim.uni-passau.de/lehrstuhl-fuer-software-engineering-ii/lehrstuhlteam/?target=117242&module=TemplatePersondetails&config_id=a8d16e612076595e5b55aa227262539d&range_id=l13&username=lukasc01&group_id=).
+please find our contact details on my
+[page at the University of Passau](https://www.fim.uni-passau.de/lehrstuhl-fuer-software-engineering-ii/lehrstuhlteam/).
 
 ## License
 
