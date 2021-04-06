@@ -151,8 +151,8 @@ def test_floating_point_operation():
 
 # Flaky due to non-deterministic builtin-function hash()
 def test_unordered_collections():
-    s = {"Hello darkness", "my old friend", "I come to talk", "to you again"}
-    assert next(s.__iter__()) == "Hello darkness"
+    s = {"foo", "bar", "boo", "baz"}
+    assert next(s.__iter__()) == "foo"
 
 
 # ---------------------
