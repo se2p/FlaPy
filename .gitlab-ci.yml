@@ -1,7 +1,6 @@
 image: python:${PYTHON_VERSION}
 
 stages:
-  - build
   - test
   - deploy
 
@@ -51,24 +50,24 @@ nightly-tests:python-3.8:
     PYTHON_VERSION: '3.8-buster'
 
 flake8:
-  stage: build
+  stage: test
   image: python:3.7
   script:
     - poetry run flake8 .
 mypy:
-  stage: build
+  stage: test
   image: python:3.7
   script:
     - poetry run mypy flaky_analysis
 
 pylint:
-  stage: build
+  stage: test
   image: python:3.7
   script:
     - poetry run pylint flaky_analysis
 
 black:
-  stage: build
+  stage: test
   image: python:3.7
   script:
     - poetry run black --check .
