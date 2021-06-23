@@ -52,6 +52,13 @@ def test_trace(func_to_trace: Tuple[str, ...], hash_to_pickle_json):
 
 
 def test_builtin(hash_to_pickle_json):
+    """
+    This test is flaky ^^
+    It is an order-dependent victim:
+    If you execute another test before it that imports the random module which this test is using, the builtin wrapper does not go over the random module since it is already imported and as a result, the tracing output of pytest_trace is shorter.
+    Short term solution: make this test run first -> rename test files
+    Long term solution: run in different processes (pytest --fork) or un-import module
+    """
     func_to_trace = ("test_trace_me.py", "test_random")
     out_file = os.path.join(out_dir, f"trace_{func_to_trace}.txt")
     with open(out_file, "w") as output_stream:
