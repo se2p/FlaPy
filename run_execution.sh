@@ -88,17 +88,17 @@ echo "$NUM_RUNS" > "$RESULT_DIR/num_runs.txt"
 git --git-dir="${REPOSITORY_DIR}/.git" rev-parse HEAD > "${RESULT_DIR}/project-git-hash.txt"
 git --git-dir="${SCRATCH_ANALYSIS_DIR}/.git" rev-parse HEAD > "${RESULT_DIR}/flakyanalysis-git-hash.txt"
 
-debug_echo "Run Analysis in non-deterministic mode"
-mkdir -p "${LOCAL_PROJECT_DIR}/non-deterministic"
-mkdir -p "${LOCAL_PROJECT_DIR}/non-deterministic/tmp"
-flakyanalysis \
-  --logfile "${LOCAL_PROJECT_DIR}/non-deterministic/execution.log" \
-  --repository "${REPOSITORY_DIR}" \
-  --temp "${LOCAL_PROJECT_DIR}/non-deterministic/tmp" \
-  --number-test-runs "${NUM_RUNS}" \
-  --random-order-bucket global \
-  --output "${LOCAL_PROJECT_DIR}/non-deterministic/output.txt" \
-  --trace "${FUNC_TO_TRACE}"
+# debug_echo "Run Analysis in non-deterministic mode"
+# mkdir -p "${LOCAL_PROJECT_DIR}/non-deterministic"
+# mkdir -p "${LOCAL_PROJECT_DIR}/non-deterministic/tmp"
+# flakyanalysis \
+#   --logfile "${LOCAL_PROJECT_DIR}/non-deterministic/execution.log" \
+#   --repository "${REPOSITORY_DIR}" \
+#   --temp "${LOCAL_PROJECT_DIR}/non-deterministic/tmp" \
+#   --number-test-runs "${NUM_RUNS}" \
+#   --random-order-bucket global \
+#   --output "${LOCAL_PROJECT_DIR}/non-deterministic/output.txt" \
+#   --trace "${FUNC_TO_TRACE}"
 
 debug_echo "Run Analysis in deterministic mode"
 mkdir -p "${LOCAL_PROJECT_DIR}/deterministic"
@@ -128,8 +128,10 @@ echo "Execution time: ${RUNTIME}" >> "${LOCAL_PROJECT_DIR}/execution.log"
 debug_echo "Copy results back"
 
 tar cJf "${RESULT_DIR}/results.tar.xz" \
-  "${LOCAL_PROJECT_DIR}/non-deterministic" \
   "${LOCAL_PROJECT_DIR}/deterministic"
+# tar cJf "${RESULT_DIR}/results.tar.xz" \
+#   "${LOCAL_PROJECT_DIR}/non-deterministic" \
+#   "${LOCAL_PROJECT_DIR}/deterministic"
 cp "${LOCAL_PROJECT_DIR}/execution.log" "${RESULT_DIR}"
 debug_echo "Clean Up"
 rm -rf "${LOCAL_PROJECT_DIR}"
