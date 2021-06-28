@@ -459,7 +459,7 @@ def main(args: List[str] = None) -> None:  # pylint: disable=too-many-locals
         print("USAGE: pytest_trace.py  FUNCS_TO_TRACE  OUT_FILE  [PYTEST_ARGS]")
         print()
         print(
-            "FUNCS_TO_TRACE should one or multiple functions separated by spaces,\n"
+            "FUNCS_TO_TRACE should be one or multiple functions separated by spaces,\n"
             "so use parentheses to still make them count as one argument\n"
             'Example: "func1 func2"\n'
         )
