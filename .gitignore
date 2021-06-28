@@ -109,5 +109,5 @@ cov_html/
 # MY STUFF
 *experimental*
 slurm-logs/*
-flaky-analysis-results/
+flapy-results/
 local/
