@@ -22,6 +22,8 @@ function sig_handler {
 }
 trap sig_handler INT TERM HUP QUIT
 
+mkdir -p slurm-logs
+
 IFS=',' read SLURM_JOB_ID rest < <(sbatch \
 	-o slurm-logs/slurm-%j.out \
 	-e slurm-logs/slurm-%j.out \
