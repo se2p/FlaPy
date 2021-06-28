@@ -392,11 +392,11 @@ class PyTestRunner(AbstractRunner):
             env.add_packages_for_installation(packages)
             env.add_package_for_installation("pytest==5.3.1")
             env.add_package_for_installation("pytest-cov==2.8.1")
-            env.add_package_for_installation("benchexec==1.22")
+            env.add_package_for_installation("benchexec==3.8")
 
-            command = "runexec --output=/dev/stdout "  # --container "
-            # if self._full_access_dir is not None:
-            # command += f"--full-access-dir={self._full_access_dir} "
+            command = "runexec --output=/dev/stdout --hidden-dir=/home "  # --container "
+            if self._full_access_dir is not None:
+                command += f"--full-access-dir={self._full_access_dir} "
             if self._time_limit > 0:
                 command += f"--timelimit={self._time_limit}s "
             command += "-- "
@@ -535,13 +535,13 @@ class RandomPyTestRunner(PyTestRunner):
             env.add_packages_for_installation(packages)
             env.add_package_for_installation("pytest==5.3.1")
             env.add_package_for_installation("pytest-cov==2.8.1")
-            env.add_package_for_installation("benchexec==1.22")
+            env.add_package_for_installation("benchexec==3.8")
             env.add_package_for_installation("pytest-random-order==1.0.4")
 
             # command = ""
-            command = "runexec --output=/dev/stdout "  # --container "
+            command = "runexec --output=/dev/stdout --hidden-dir=/home "  # --container "
             # if self._full_access_dir is not None:
-            # command += f"--full-access-dir={self._full_access_dir} "
+            #     command += f"--full-access-dir={self._full_access_dir} "
             if self._time_limit > 0:
                 command += f"--timelimit={self._time_limit}s "
             command += "-- "

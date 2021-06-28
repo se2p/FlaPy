@@ -1,9 +1,17 @@
 #!/usr/bin/env bash
 
+
+if [[ "${PWD:0:6}" = "/home/" ]]
+then
+    echo "ERROR: DO NOT EXECUTE THIS IN /HOME"
+    echo "    To prevent the executed code from accessing your data, we use runexec and hide the home directory."
+    echo "    Therefore, the flapy will not produce any results if executed in the home directory."
+    exit
+fi
+
 CSV_FILE=$1
 
 dos2unix "${CSV_FILE}"
-
 
 LOCAL="$(pwd)/local/hdd/${USER}"
 
