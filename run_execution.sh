@@ -53,7 +53,7 @@ debug_echo "Project ${PROJECT_NAME}"
 #
 # In case `virtualenv` is not found, the altered HOME might be the reason for it
 # solution: use global installation of virtualenv, not local one
-export PIP_CACHE_DIR="/local/hdd/gruberma/.cache/pip"
+export PIP_CACHE_DIR="/local/hdd/${USER}/.cache/pip"
 
 debug_echo "Change directory to local"
 cd "${LOCAL_PROJECT_DIR}" || exit 1
