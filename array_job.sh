@@ -43,8 +43,8 @@ function sighdl {
   kill -INT "${srunPid}" || true
 }
 
-mkdir -p "/scratch/${USER}/flapy-results/run"
-OUT_FILE="/scratch/${USER}/flapy-results/run/${PROJECT_NAME}-${REPO_POSTFIX}.txt"
+mkdir -p "flapy-results/run"
+OUT_FILE="flapy-results/run/${PROJECT_NAME}-${REPO_POSTFIX}.txt"
 
 srun \
   --user-cgroups=on \
