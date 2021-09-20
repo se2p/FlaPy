@@ -1,2 +1,2 @@
 PROJECT_NAME,PROJECT_URL,PROJECT_HASH,FUNCS_TO_TRACE,TESTS_TO_BE_RUN,NUM_RUNS
-ypc,https://github.com/dbeley/ypc,160be81,,tests/test_ydl.py::test_get_ydl_dict,1
+sample_project,https://github.com/gruberma/python-tests-minimal-examples,4865a6a,,,2
