@@ -336,8 +336,19 @@ class TestsOverview:
     def to_od_flaky_tests(self) -> pd.DataFrame:
         od_flaky_tests = self._df[self._df["Order-dependent"]]
         return od_flaky_tests[
-            ["Project_Name", "Project_URL", "Project_Hash", "Test_nodeid_inclPara"]
+            ["Project_Name", "Project_URL", "Project_Hash", "Test_nodeid"]
         ].drop_duplicates()
+
+    def to_flapy_input(self, num_runs: int) -> pd.DataFrame:
+        self._df["Test_nodeid"] = self._df.apply(
+            lambda s: to_nodeid(
+                s["Test_filename"], s["Test_classname"], s["Test_funcname"], s["Test_parametrization"]
+            ),
+            axis=1,
+        )
+        self._df["Funcs_to_trace"] = ""
+        self._df["Num_runs"] = num_runs
+        return self._df[["Project_Name", "Project_URL", "Project_Hash", "Funcs_to_trace", "Test_nodeid", "Num_runs"]]
 
 
 class CoverageCsv:
@@ -1298,26 +1309,26 @@ class Verdict:
         return Verdict.UNDECIDABLE
 
 
-def to_nodeid(filename: str, classname: str, funcname: str) -> str:
+def to_nodeid(filename: str, classname: str, funcname: str, parametrization: str = "") -> str:
     """
     Reconstruct nodeID from variables given by pytest's junit-xml.
     Pytest computes classname and funcname from the nodeID.
     Reference: https://github.com/pytest-dev/pytest/blob/de6c28ed1f26f3ffa937472de2967e03c1da044a/src/_pytest/junitxml.py#L438  # pylint: disable=line-too-long
     """
     if classname == "":
-        return f"{filename}::{funcname}"
+        return f"{filename}::{funcname}{parametrization}"
     split = classname.split(".")
     try:
         # Case there exists a test-class (assume class names are upper case)
         if split[-1][0].isupper():
             *file, class_ = split
             file[-1] = file[-1] + ".py"
-            return f"{os.path.join(*file)}::{class_}::{funcname}"
+            return f"{os.path.join(*file)}::{class_}::{funcname}{parametrization}"
         # Case there is no test-class, just a test-file
         else:
             file = split
             file[-1] = file[-1] + ".py"
-            return f"{os.path.join(*file)}::{funcname}"
+            return f"{os.path.join(*file)}::{funcname}{parametrization}"
     except IndexError:
         eprint(
             f"classname_to_nodeid: IndexError with classname={classname}, funcname={funcname}"
