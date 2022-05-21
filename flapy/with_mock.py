@@ -22,9 +22,7 @@ def main(args: List[str] = None):
         args = sys.argv[1:]
 
     if len(args) == 0:
-        print(
-            "Usage: python3 with_mock.py FUNCTION:PICKELED_RETURN_VALUE... -- SCRIPT [ARGS...]"
-        )
+        print("Usage: python3 with_mock.py FUNCTION:PICKELED_RETURN_VALUE... -- SCRIPT [ARGS...]")
         sys.exit()
 
     # Load

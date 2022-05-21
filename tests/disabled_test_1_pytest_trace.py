@@ -81,7 +81,7 @@ def test_builtin(hash_to_pickle_json):
     with open(out_file) as output_stream:
         trace = output_stream.read()
         for trace_line, reference_line in zip(trace.split("\n"), reference.split("\n")):
-            assert re.match (reference_line,trace_line)
+            assert re.match(reference_line, trace_line)
 
 
 # def test_entire_program():

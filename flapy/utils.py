@@ -10,16 +10,27 @@ U = TypeVar("U")
 def try_default(
     function: Callable[[], T],
     exception: Type[BaseException],
-    error_return_val: U,
+    error_return_val: Union[U, Callable[[Type[BaseException]], U]],
     finally_: Callable[[], Any] = None,
 ) -> Union[T, U]:
-    """
-    Helper function. Try-except is not allowed in lambdas.
+    """ Helper function. Try-except is not allowed in lambdas.
+
+    function: the function that shall be called. It must not have input parameters -> curry them first
+    exception: type (class) of exception, that should be caught
+    error_return_val: either a function that shall be called
+
     """
     try:
         return function()
-    except exception:
-        return error_return_val
+    except exception as e:
+        if callable(error_return_val):
+            return error_return_value(e)
+        elif error_return_val == "ERROR_MESSAGE":
+            return f"{type(e).__name__}: {e}"
+        elif error_return_val == "ERROR_MESSAGE_TUPLE":
+            return ("error", f"{type(e).__name__}: {e}")
+        else:
+            return error_return_val
     finally:
         if finally_:
             finally_()

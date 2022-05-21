@@ -3,6 +3,13 @@ import re
 import os
 import sys
 import tarfile
+import tempfile
+import sqlite3
+
+import string
+import keyword
+
+from tqdm import tqdm
 
 # import traceback
 import logging
@@ -10,7 +17,9 @@ import multiprocessing
 import fire  # type: ignore
 
 import xml
+import yaml
 import operator as op
+import numpy as np
 import pandas as pd  # type: ignore
 import xml.etree.ElementTree as ET
 
@@ -26,21 +35,20 @@ from typing import (
     Dict,
     Set,
     Any,
+    Iterable,
 )
 from functools import partial
+from itertools import groupby, starmap
 from ast import literal_eval
 from pathlib import Path
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from functools import lru_cache, reduce
-from junitparser import (  # type: ignore
-    Failure,
-    Skipped,
-    Error,
-    JUnitXml,
-    TestCase,
-    JUnitXmlError,
-)
+import junitparser
+
 from flapy.utils import try_default, eprint
+
+# Initialize pandas progress bar methods
+tqdm.pandas()
 
 FuncDescriptor = Tuple[str, ...]
 
@@ -75,30 +83,42 @@ default_flaky_keywords = [
     "('builtins', 'set', '__contains__')",
 ]
 
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.INFO)
+# logging.getLogger().setLevel(logging.DEBUG)
+FORMAT = "[%(asctime)s][%(levelname)s][%(filename)s:%(lineno)4s - %(funcName)20s() ] %(message)s"
+logging.basicConfig(format=FORMAT)
+
+proj_cols = ["Project_Name", "Project_URL", "Project_Hash"]
+test_cols = ["Test_filename", "Test_classname", "Test_funcname", "Test_parametrization"]
+test_cols_without_parametrization = ["Test_filename", "Test_classname", "Test_funcname"]
+test_cols_without_filename = ["Test_classname", "Test_funcname", "Test_parametrization"]
 
 
-def read_junit_testcase(test_case: TestCase, include_errors) -> Dict[str, Union[str, int]]:
-    row = {
+def read_junit_testcase(test_case: junitparser.TestCase) -> Dict[str, Union[str, int]]:
+    """Transform a Junit test case (xml element under the hood) to a dictionary"""
+    return {
         "file": test_case._elem.get("file"),
         "class": test_case.classname,
         "name": test_case.name,
         "verdict": try_default(
             lambda: Verdict.from_junitparser(test_case.result),
-            JUnitXmlError,
+            junitparser.JUnitXmlError,
             Verdict.PARSE_ERROR,
         ),
+        "message": (
+            test_case.result.message
+            if test_case.result and test_case.result.message
+            else "NO MESSAGE"
+        ),
+        "result-text": (
+            re.findall(r"(\w*Error.*)\n", test_case.result._elem.text)
+            if test_case.result and test_case.result._elem
+            else []
+        ),
+        "system-err": (
+            re.findall(r"(\w*Error.*)\n", test_case.system_err) if test_case.system_err else []
+        ),
     }
-    if include_errors:
-        row.update({
-            "message": test_case.result.message
-                if test_case.result and test_case.result.message else "NO MESSAGE",
-            "result-text": re.findall(r"(\w*Error.*)\n", test_case.result._elem.text)
-                if test_case.result and test_case.result._elem else [],
-            "system-err": re.findall(r"(\w*Error.*)\n", test_case.system_err)
-                if test_case.system_err else [],
-        })
-    return row
 
 
 def is_empty(openvia: Callable[[str], IO], path: str):
@@ -110,9 +130,11 @@ def is_empty(openvia: Callable[[str], IO], path: str):
     return False
 
 
-def junitxml_classname_to_modname_and_actual_classname(
-    classname: str,
-) -> Tuple[List[str], str]:
+def junitxml_classname_to_modname_and_actual_classname(classname: str) -> Tuple[List[str], str]:
+    """ The JUnit-XML attribute 'class' contains both the name of the module and the name of the class -> split them by assuming class names start with capital letters.
+
+    EXAMPLE: "tests.test_camera.TestCamera" -> (['tests', 'test_camera'], 'TestCamera')
+    """
     if classname == "":
         return [], ""
     split = classname.split(".")
@@ -126,9 +148,7 @@ def junitxml_classname_to_modname_and_actual_classname(
             class_ = ""
         return mod, class_
     except IndexError:
-        print(
-            f"junitxml_classname_to_actual_classname: IndexError with classname={classname}"
-        )
+        print(f"junitxml_classname_to_actual_classname: IndexError with classname={classname}")
         return [], ""
 
 
@@ -143,26 +163,44 @@ def eval_string_to_set(obj):
 
 
 class PassedFailed:
-    def __init__(self, file_: str):
-        self._df = pd.read_csv(
-            file_,
+    def __init__(self, df: pd.DataFrame):
+        self._df = df
+
+        # Some junit-xml files actually had name="" in them
+        #   -> replace by NaN so they get ignored in the groupby
+        self._df["Test_funcname"] = self._df["Test_funcname"].replace("", np.NaN)
+
+        # Rows with NaN are ignored by pd.groupby -> fillna
+        self._df["Test_filename"] = self._df["Test_filename"].fillna("")
+        self._df["Test_classname"] = self._df["Test_classname"].fillna("")
+        self._df["Test_parametrization"] = self._df["Test_parametrization"].fillna("")
+
+    @classmethod
+    def load(cls, file_name: str):
+        """Load PassedFailed from CSV file
+
+        :file_name: TODO
+        :returns: TODO
+
+        """
+        _df = pd.read_csv(
+            file_name,
+            # These converters are disabled, because they cause a lot of memory usage.
+            # Instead use `eval_string_to_set` on a filtered version.
             # converters={
             #     'Passed_sameOrder': eval_string_to_set,
             #     'Failed_sameOrder': eval_string_to_set,
             #     'Error_sameOrder': eval_string_to_set,
             #     'Skipped_sameOrder': eval_string_to_set,
+            #     'Verdicts_sameOrder': eval_string_to_set,
             #     'Passed_randomOrder': eval_string_to_set,
             #     'Failed_randomOrder': eval_string_to_set,
             #     'Error_randomOrder': eval_string_to_set,
             #     'Skipped_randomOrder': eval_string_to_set,
+            #     'Verdicts_randomOrder': eval_string_to_set,
             # }
         )
-        # Some junit-xml files actually had name="" in them
-        self._df = self._df[~self._df["Test_funcname"].isna()]
-        # Rows with NaN are ignored by pd.groupby -> fillna
-        self._df["Test_filename"] = self._df["Test_filename"].fillna("")
-        self._df["Test_classname"] = self._df["Test_classname"].fillna("")
-        self._df["Test_parametrization"] = self._df["Test_parametrization"].fillna("")
+        return cls(_df)
 
     def add_rerun_column(self) -> pd.DataFrame:
         self._df["ids_deter"] = [
@@ -177,6 +215,7 @@ class PassedFailed:
         return self
 
     def to_test_overview(self) -> pd.DataFrame:
+        logging.info("")
         self._df["Verdict_sameOrder"] = self._df["Verdicts_sameOrder"].apply(
             lambda s: Verdict.decide_overall_verdict(eval_string_to_set(s))
         )
@@ -184,9 +223,7 @@ class PassedFailed:
             lambda s: Verdict.decide_overall_verdict(eval_string_to_set(s))
         )
 
-        self._df["Flaky_sameOrder_withinIteration"] = (
-            self._df["Verdict_sameOrder"] == Verdict.FLAKY
-        )
+        self._df["Flaky_sameOrder_withinIteration"] = self._df["Verdict_sameOrder"] == Verdict.FLAKY
         self._df["Flaky_randomOrder_withinIteration"] = (
             self._df["Verdict_randomOrder"] == Verdict.FLAKY
         )
@@ -203,7 +240,6 @@ class PassedFailed:
             as_index=False,
         ).agg(
             {
-                "Flaky_sameOrder_withinIteration": any,
                 "Verdicts_sameOrder": lambda l: reduce(
                     set.union, map(lambda s: eval_string_to_set(s), l)
                 ),
@@ -221,7 +257,6 @@ class PassedFailed:
                 ),
                 "#Runs_sameOrder": sum,
                 #
-                "Flaky_randomOrder_withinIteration": any,
                 "Verdicts_randomOrder": lambda l: reduce(
                     set.union, map(lambda s: eval_string_to_set(s), l)
                 ),
@@ -238,14 +273,16 @@ class PassedFailed:
                     op.add, map(lambda s: len(eval_string_to_set(s)), l)
                 ),
                 "#Runs_randomOrder": sum,
+                "Flaky_sameOrder_withinIteration": any,
+                "Flaky_randomOrder_withinIteration": any,
             }
         )
         test_overview["Verdict_sameOrder"] = test_overview["Verdicts_sameOrder"].apply(
             Verdict.decide_overall_verdict
         )
-        test_overview["Verdict_randomOrder"] = test_overview[
-            "Verdicts_randomOrder"
-        ].apply(Verdict.decide_overall_verdict)
+        test_overview["Verdict_randomOrder"] = test_overview["Verdicts_randomOrder"].apply(
+            Verdict.decide_overall_verdict
+        )
 
         self._df.drop(
             ["Flaky_sameOrder_withinIteration", "Flaky_randomOrder_withinIteration"],
@@ -254,23 +291,51 @@ class PassedFailed:
         )
 
         # recalculate Order-dependent
-        test_overview["Order-dependent"] = (
-            ~test_overview["Flaky_sameOrder_withinIteration"]
-        ) & (test_overview["Flaky_randomOrder_withinIteration"])
+        test_overview["Order-dependent"] = (~test_overview["Flaky_sameOrder_withinIteration"]) & (
+            test_overview["Flaky_randomOrder_withinIteration"]
+        )
 
+        # Infrastructure Flakiness
+        #     if a test is order-dependent, it will never be marked as infrastructure flaky,
+        #     even if it would fulfill the requirements in the same order test executions
         test_overview["Flaky_Infrastructure"] = (
-            # deter
             (
+                # same order
                 (test_overview["Verdict_sameOrder"] == Verdict.FLAKY)
                 & ~test_overview["Flaky_sameOrder_withinIteration"]
             )
             | (
-                # non-deter
+                # random order
                 (test_overview["Verdict_sameOrder"] != Verdict.FLAKY)
                 & (test_overview["Verdict_randomOrder"] == Verdict.FLAKY)
                 & (~test_overview["Order-dependent"])
             )
         ) & ~test_overview["Order-dependent"]
+
+        def decide_flakiness_type(
+            flaky_sameOrder_withinIteration: bool, order_dependent: bool, infrastructure: bool,
+        ) -> str:
+            assert flaky_sameOrder_withinIteration + order_dependent + infrastructure < 2
+            if flaky_sameOrder_withinIteration:
+                return FlakinessType.NOD
+            if order_dependent:
+                return FlakinessType.OD
+            if infrastructure:
+                return FlakinessType.INFR
+            return FlakinessType.NOT_FLAKY
+
+        test_overview.insert(
+            7,
+            "flaky?",
+            test_overview.apply(
+                lambda s: decide_flakiness_type(
+                    s["Flaky_sameOrder_withinIteration"],
+                    s["Order-dependent"],
+                    s["Flaky_Infrastructure"],
+                ),
+                axis="columns",
+            ),
+        )
 
         # modname_classname = test_overview['Test_classname'].apply(
         #     junitxml_classname_to_modname_and_actual_classname
@@ -280,9 +345,7 @@ class PassedFailed:
         #     m[-1] if len(m) > 0 else '' for m, _ in modname_classname
         # ]
         test_overview["Test_nodeid"] = test_overview.apply(
-            lambda s: to_nodeid(
-                s["Test_filename"], s["Test_classname"], s["Test_funcname"]
-            ),
+            lambda s: to_nodeid(s["Test_filename"], s["Test_classname"], s["Test_funcname"]),
             axis=1,
         )
         test_overview["Test_nodeid_inclPara"] = (
@@ -295,21 +358,18 @@ class PassedFailed:
 
 
 class TestsOverview:
-    def __init__(self, file_: str):
-        self._df = pd.read_csv(file_).fillna("")
+    def __init__(self, df: pd.DataFrame):
+        self._df = df.fillna("")
 
-    def get_od_flaky_tests(self):
-        self._df["Test_nodeid_inclPara"] = (
-            self._df["Test_nodeid"] + self._df["Test_parametrization"]
-        )
-        od_flaky_tests = self._df[self._df["Order-dependent"]]
-        return od_flaky_tests[
-            ["Project_Name", "Project_URL", "Project_Hash", "Test_nodeid_inclPara"]
-        ].drop_duplicates()
+    @classmethod
+    def load(cls, file_name: str):
+        """Load TestsOverview from CSV file"""
+        _df = pd.read_csv(file_name)
+        return cls(_df)
 
     def to_classification_template(self) -> pd.DataFrame:
-        deter_flaky_tests = self._df[self._df["Flaky_sameOrder_withinIteration"]]
-        classification_template = deter_flaky_tests[
+        """ Prepare a manual classification template """
+        classification_template = self._df[
             [
                 "Project_Name",
                 "Project_URL",
@@ -320,103 +380,95 @@ class TestsOverview:
                 "Test_parametrization",
             ]
         ].drop_duplicates()
-        classification_template["project domain"] = ""
-        classification_template["flakiness category"] = ""
-        classification_template["sure? 1=yes 4=no"] = ""
-        classification_template["flaky fixture?"] = ""
-        classification_template["comment"] = ""
+        classification_template["Project Domain"] = ""
+        classification_template["Category"] = ""
+        classification_template["Category sure? 1=yes 4=no"] = ""
+        classification_template["Category comment"] = ""
+        classification_template["Location"] = ""
+        classification_template["Location sure? 1=yes 4=no"] = ""
+        classification_template["Location comment"] = ""
         return classification_template
 
-    def to_deter_flaky_tests(self) -> pd.DataFrame:
-        deter_flaky_tests = self._df[self._df["Flaky_sameOrder_withinIteration"]]
-        return deter_flaky_tests[
-            ["Project_Name", "Project_URL", "Project_Hash", "Test_nodeid"]
-        ].drop_duplicates()
+    def to_flapy_input(
+        self, num_runs: int, *, flakiness_type="ANY", all_tests_in_one_run=True
+    ) -> pd.DataFrame:
+        """Filter for all flaky tests and create a new flapy-input, which executes all these (in isolation).
 
-    def to_od_flaky_tests(self) -> pd.DataFrame:
-        od_flaky_tests = self._df[self._df["Order-dependent"]]
-        return od_flaky_tests[
-            ["Project_Name", "Project_URL", "Project_Hash", "Test_nodeid"]
-        ].drop_duplicates()
+        :all_tests_in_one_run: execute all tests within the same project in the same iteration. Tests will still be run separately, but this saves multiple cloning effort.
+        """
+        if flakiness_type == "ANY":
+            df = self._df
+        elif flakiness_type == "ANY_FLAKY":
+            df = self._df[self._df["flaky?"] != FlakinessType.NOT_FLAKY]
+        else:
+            df = self._df[self._df["flaky?"] == flakiness_type]
 
-    def to_flapy_input(self, num_runs: int) -> pd.DataFrame:
-        self._df["Test_nodeid"] = self._df.apply(
-            lambda s: to_nodeid(
-                s["Test_filename"], s["Test_classname"], s["Test_funcname"], s["Test_parametrization"]
-            ),
-            axis=1,
-        )
-        self._df["Funcs_to_trace"] = ""
-        self._df["Num_runs"] = num_runs
-        return self._df[["Project_Name", "Project_URL", "Project_Hash", "Funcs_to_trace", "Test_nodeid", "Num_runs"]]
+        if all_tests_in_one_run:
+            df = df.groupby(proj_cols)["Test_nodeid"].apply(lambda s: " ".join(s)).reset_index()
+        else:
+            df = df[proj_cols + ["Test_nodeid"]]
 
-
-class CoverageCsv:
-    def __init__(self, file_: str):
-        self._df = pd.read_csv(file_).fillna("")
-
-    def to_overview(self):
-        self._df["BranchCoverage_weighted"] = (
-            self._df["BranchCoverage"] * self._df["number_of_entries"]
-        )
-        self._df["LineCoverage_weighted"] = (
-            self._df["LineCoverage"] * self._df["number_of_entries"]
-        )
-
-        self._df = self._df.groupby(
-            ["Project_Name", "Project_URL", "Project_Hash"], as_index=False
-        ).agg(
-            {
-                "number_of_entries": sum,
-                "BranchCoverage_weighted": sum,
-                "LineCoverage_weighted": sum,
-            }
-        )
-        self._df["BranchCoverage"] = (
-            self._df["BranchCoverage_weighted"] / self._df["number_of_entries"]
-        )
-        self._df["LineCoverage"] = (
-            self._df["LineCoverage_weighted"] / self._df["number_of_entries"]
-        )
-        self._df.drop("BranchCoverage_weighted", axis="columns")
-        self._df.drop("LineCoverage_weighted", axis="columns")
-        return self._df.drop_duplicates(["Project_Name", "Project_URL"])
+        df["Funcs_to_trace"] = ""
+        df["Num_runs"] = num_runs
+        df["PyPi_tag"] = ""
+        df["Tests_to_be_run"] = df["Test_nodeid"]
+        return df[
+            [
+                "Project_Name",
+                "Project_URL",
+                "Project_Hash",
+                "PyPi_tag",
+                "Funcs_to_trace",
+                "Test_nodeid",
+                "Num_runs",
+            ]
+        ]
 
 
-class MyFileWrapper:
+class MyFileWrapper(ABC):
     def __init__(
         self,
-        path_to_output_file: Union[str, Path],
+        path_: Union[str, Path],
+        tarinfo: tarfile.TarInfo,
         project_name: str,
         openvia: Callable[[str], IO] = open,
+        archive: tarfile.TarFile = None,
     ):
-        self.p: Path = Path(path_to_output_file)
+        self.p: Path = Path(path_)
         self.project_name: str = project_name
         self.openvia = openvia
+        self.archive = archive
+        self.tarinfo = tarinfo
 
     @classmethod
     @abstractmethod
-    def get_regex(cls, project_name: str):
+    def get_regex(cls, project_name: str) -> str:
         """
-        Regex should have number as first and only group
+        Regex should have the run number as the first and only group
         :param project_name:
         :return:
         """
         pass
 
+    # TODO is it necessary to check for is empty?
     @classmethod
     def is_(cls, path: Path, project_name: str, openvia: Callable[[str], IO]) -> bool:
-        return re.match(
-            cls.get_regex(project_name), str(path)
-        ) is not None and not is_empty(openvia, str(path))
+        return re.match(cls.get_regex(project_name), str(path)) is not None and not is_empty(
+            openvia, str(path)
+        )
 
     # @classmethod
     # def is_(cls, path: Path, project_name: str, openvia: Callable[[str], IO]) -> bool:
     #     return re.match(cls.get_regex(project_name), str(path)) is not None
 
+    @lru_cache()
     def get_num(self) -> int:
-        num = re.findall(self.get_regex(self.project_name), str(self.p))[0]
+        num = re.findall(self.get_regex(self.project_name), str(self.p))[0][0]
         return int(num)
+
+    @lru_cache()
+    def get_test_to_be_run(self) -> str:
+        return re.findall(self.get_regex(self.project_name), str(self.p))[0][1]
 
     def open(self) -> IO:
         f = self.openvia(str(self.p))
@@ -431,11 +483,7 @@ class MyFileWrapper:
 class CoverageXmlFile(MyFileWrapper):
     @classmethod
     def get_regex(cls, project_name: str):
-        return rf".*/{project_name}_coverage(\d+).xml$"
-
-    def get_num(self) -> int:
-        num = re.findall(self.get_regex(self.project_name), str(self.p))[0]
-        return int(num)
+        return rf".*/{project_name}_coverage(\d+)(.*)\.xml$"
 
     def get_order(self) -> str:
         if CoverageXmlFileDeter.is_(self.p, self.project_name, self.openvia):
@@ -475,24 +523,21 @@ class CoverageXmlFile(MyFileWrapper):
 class CoverageXmlFileDeter(CoverageXmlFile):
     @classmethod
     def get_regex(cls, project_name: str):
-        return rf".*/deterministic/tmp/{project_name}_coverage(\d+)\.xml"
+        return rf".*/deterministic/tmp/{project_name}_coverage(\d+)(.*)\.xml"
 
 
 class CoverageXmlFileNonDeter(CoverageXmlFile):
     @classmethod
     def get_regex(cls, project_name: str):
-        return rf".*/non-deterministic/tmp/{project_name}_coverage(\d+)\.xml"
+        return rf".*/non-deterministic/tmp/{project_name}_coverage(\d+)(.*)\.xml"
 
 
 class JunitXmlFile(MyFileWrapper):
     @classmethod
     def get_regex(cls, project_name: str):
-        return rf".*/tmp/{project_name}_output(\d+).*\.xml$"
+        return rf".*/tmp/{project_name}_output(\d+)(.*)\.xml$"
 
-    def get_num(self) -> int:
-        num = re.findall(self.get_regex(self.project_name), str(self.p))[0]
-        return int(num)
-
+    @lru_cache()
     def get_order(self) -> str:
         if JunitXmlFileDeter.is_(self.p, self.project_name, self.openvia):
             return "deter"
@@ -500,21 +545,21 @@ class JunitXmlFile(MyFileWrapper):
             return "non-deter"
         return "COULD_NOT_GET_ORDER"
 
-    def parse(self) -> JUnitXml:
+    def parse(self) -> junitparser.JUnitXml:
         with self.open() as f:
             try:
-                return JUnitXml.fromfile(f, ET.parse)
+                return junitparser.JUnitXml.fromfile(f, ET.parse)
             except xml.etree.ElementTree.ParseError:
-                return JUnitXml()
+                return junitparser.JUnitXml()
 
     def get_hostname(self) -> str:
         return list(self.parse())[0].hostname
 
-    def get_testcases(self) -> List[TestCase]:
+    def get_testcases(self) -> List[junitparser.TestCase]:
         junit_xml = self.parse()
         return [case for suite in junit_xml for case in suite]
 
-    def to_table(self, include_errors) -> List[Dict[str, Union[str, int]]]:
+    def to_table(self) -> List[Dict[str, Union[str, int]]]:
         """
         Transform Junit XML files into a table that shows the verdict and message for each run.
         :return:
@@ -537,16 +582,12 @@ class JunitXmlFile(MyFileWrapper):
             # if len(test_cases) == 0:
             #     logging.warning(f"{self.p} contains no testcases")
             result: List[Dict[str, Union[str, int]]] = [
-                # try_default(
-                    # lambda:
-                    {
-                        **read_junit_testcase(test_case, include_errors),
-                        "num": self.get_num(),
-                        "order": self.get_order(),
-                    }#,
-                    # Exception,
-                    # {},
-                # )
+                {
+                    **read_junit_testcase(test_case),
+                    "num": self.get_num(),
+                    "test_to_be_run": self.get_test_to_be_run(),
+                    "order": self.get_order(),
+                }
                 for test_case in test_cases
             ]
             return result
@@ -560,19 +601,17 @@ class JunitXmlFile(MyFileWrapper):
 class JunitXmlFileDeter(JunitXmlFile):
     @classmethod
     def get_regex(cls, project_name: str):
-        return rf".*/deterministic/tmp/{project_name}_output(\d+).*\.xml"
+        return rf".*/deterministic/tmp/{project_name}_output(\d+)(.*)\.xml"
 
 
 class JunitXmlFileNonDeter(JunitXmlFile):
     @classmethod
     def get_regex(cls, project_name: str):
-        return rf".*/non-deterministic/tmp/{project_name}_output(\d+).*\.xml"
+        return rf".*/non-deterministic/tmp/{project_name}_output(\d+)(.*)\.xml"
 
 
 class TraceFile(MyFileWrapper):
-    """
-    File containing traces
-    """
+    """File containing traces """
 
     @classmethod
     def get_regex(cls, project_name: str):
@@ -608,23 +647,48 @@ class TraceFile(MyFileWrapper):
 T1 = TypeVar("T1", bound=MyFileWrapper)
 
 
-class ProjectResultsDir:
+class IterationResultsMetaInfo:
+    def __init__(self, filename):
+        with open(filename) as f:
+            self._datamap = yaml.safe_load(f)
+        self.project_name = self._datamap["project_name"]
+        self.project_url = self._datamap["project_url"]
+        self.project_git_hash = self._datamap["project_git_hash"]
+        self.func_to_trace = self._datamap["func_to_trace"]
+        self.tests_to_be_run = self._datamap["tests_to_be_run"]
+        self.num_runs = self._datamap["num_runs"]
+        self.start_time = self._datamap["start_time"]
+        self.end_time = self._datamap["end_time"]
+        self.execution_time = self._datamap["execution_time"]
+
+
+class Iteration:
     """
     Example: flapy-results_20200101/lineflow
     """
 
     def __init__(self, dir: Union[str, Path]):
         self.p = Path(dir)
-        assert ProjectResultsDir.is_project_results_dir(self.p)
+        assert Iteration.is_iteration(self.p), "This does not seem like an iteration directory"
+        # TODO remove extracted, we don't do that anymore, we use cache instead
         self.use_extracted = (self.p / "local").is_dir()
         self._archive: Optional[tarfile.TarFile] = None
+
+        # Setup cache
         self._results_cache = self.p / "results_cache"
         if not self._results_cache.is_dir():
             self._results_cache.mkdir()
         self._junit_cache_file = self._results_cache / "junit_data.csv"
 
+        # Read meta info if available (only in newer versions, older versions use separate files)
+        self.meta_file = self.p / "flapy-iteration-result.yaml"
+        if self.meta_file.is_file():
+            self.meta_info = IterationResultsMetaInfo(self.meta_file)
+        else:
+            self.meta_info = None
+
     @classmethod
-    def is_project_results_dir(cls, path: Path) -> bool:
+    def is_iteration(cls, path: Path) -> bool:
         return (
             path.is_dir()
             and path.name != "run"
@@ -634,6 +698,8 @@ class ProjectResultsDir:
 
     @lru_cache()
     def get_project_name(self) -> str:
+        if self.meta_info is not None:
+            return self.meta_info.project_name
         if (self.p / "project-name.txt").is_file():
             with open(self.p / "project-name.txt") as file:
                 return file.read().replace("\n", "")
@@ -648,21 +714,29 @@ class ProjectResultsDir:
                 try:
                     return self.get_archive_names()[0].split("/")[3]
                 except Exception:
+                    logging.error(
+                        f"Could not get project name for iteration results {self.p}. This is needed for identifying junit-xml, coverage, and other files, as their name contains the project name."
+                    )
                     return "COULD_NOT_GET_PROJECT_NAME"
 
     def get_project_url(self) -> str:
+        if self.meta_info is not None:
+            return self.meta_info.project_url
         if (self.p / "project-url.txt").is_file():
             with open(self.p / "project-url.txt") as file:
                 return file.read().replace("\n", "")
         return "COULD_NOT_GET_PROJECT_URL"
 
     def get_project_git_hash(self) -> str:
+        if self.meta_info is not None:
+            return self.meta_info.project_git_hash
         if (self.p / "project-git-hash.txt").is_file():
             with open(self.p / "project-git-hash.txt") as file:
                 return file.read().replace("\n", "")
         return "COULD_NOT_GET_PROJECT_GIT_HASH"
 
-    def get_flakyanalysis_git_hash(self) -> str:
+    def get_flapy_git_hash(self) -> str:
+        """Flapy used to be called 'flakyanalysis'"""
         if (self.p / "flakyanalysis-git-hash.txt").is_file():
             with open(self.p / "flakyanalysis-git-hash.txt") as file:
                 return file.read().replace("\n", "")
@@ -683,20 +757,20 @@ class ProjectResultsDir:
         read_cache=True,
         write_cache=True,
         return_nothing=False,
-        include_errors=True
     ) -> pd.DataFrame:
+
         did_read_cache = False
         if read_cache and self._junit_cache_file.is_file():
             junit_data: pd.DataFrame = pd.read_csv(self._junit_cache_file)
             did_read_cache = True
         else:
-            columns = list(read_junit_testcase(TestCase(), include_errors).keys()) + ["num", "order"]
+            columns = list(read_junit_testcase(junitparser.TestCase()).keys()) + ["num", "order"]
             junitxml_files = self.get_files(JunitXmlFile)
             junit_data = pd.DataFrame(
                 [
                     test_case
-                    for junit_file in junitxml_files
-                    for test_case in junit_file.to_table(include_errors)
+                    for junit_xml_file in junitxml_files
+                    for test_case in junit_xml_file.to_table()
                 ]
             )
             if len(junit_data) == 0:
@@ -717,18 +791,21 @@ class ProjectResultsDir:
         junit_data = self.get_junit_data(
             include_project_columns=True, read_cache=read_cache, write_cache=write_cache
         )
-        junit_data = junit_data
         if len(junit_data) == 0:
-            return pd.DataFrame()
+            return pd.DataFrame(
+                {
+                    "Iteration": [self.p.name],
+                    "Iteration_EMPTY": [True],
+                    "Project_Name": [self.get_project_name()],
+                    "Project_URL": [self.get_project_url()],
+                    "Project_Hash": [self.get_project_git_hash()],
+                }
+            )
         junit_data["Test_filename"] = junit_data["file"]
         junit_data["Test_classname"] = junit_data["class"]
-        junit_data["Test_funcname"] = [
-            re.sub(r"\[.*\]", "", name) for name in junit_data["name"]
-        ]
+        junit_data["Test_funcname"] = [re.sub(r"\[.*\]", "", name) for name in junit_data["name"]]
         junit_data["Test_parametrization"] = [
-            re.findall(r"(\[.*\])", name)[0]
-            if len(re.findall(r"(\[.*\])", name)) > 0
-            else ""
+            re.findall(r"(\[.*\])", name)[0] if len(re.findall(r"(\[.*\])", name)) > 0 else ""
             for name in junit_data["name"]
         ]
         junit_data["Passed"] = junit_data.apply(
@@ -789,9 +866,7 @@ class ProjectResultsDir:
             )
         ]
 
-        passed_failed["Verdict"] = passed_failed["Verdicts"].apply(
-            Verdict.decide_overall_verdict
-        )
+        passed_failed["Verdict"] = passed_failed["Verdicts"].apply(Verdict.decide_overall_verdict)
 
         passed_failed = pd.merge(
             passed_failed[passed_failed["order"] == "deter"],
@@ -810,9 +885,12 @@ class ProjectResultsDir:
             suffixes=("_sameOrder", "_randomOrder"),
         )
 
+        passed_failed.insert(1, "Iteration_EMPTY", False)
+
         return passed_failed[
             [
                 "Iteration",
+                "Iteration_EMPTY",
                 #
                 "Project_Name",
                 "Project_URL",
@@ -840,76 +918,8 @@ class ProjectResultsDir:
             ]
         ]
 
-    # TODO delete -> not needed -> use PassedFailed.to_test_overview
-    def get_test_overview(self) -> pd.DataFrame:
-        junit_data = self.get_junit_data(include_project_columns=True)
-        junit_data["Test_filename"] = junit_data["file"]
-        junit_data["Test_classname"] = junit_data["class"]
-        junit_data["Test_funcname"] = [
-            re.sub(r"\[.*\]", "", name) for name in junit_data["name"]
-        ]
-        junit_data["Test_parametrization"] = [
-            re.findall(r"(\[.*\])", name)[0]
-            if len(re.findall(r"(\[.*\])", name)) > 0
-            else ""
-            for name in junit_data["name"]
-        ]
-        junit_data["Passed"] = junit_data["verdict"] == Verdict.PASS
-        junit_data["Failed"] = junit_data["verdict"] == Verdict.FAIL
-        junit_data["Error"] = junit_data["verdict"] == Verdict.ERROR
-        junit_data["Skipped"] = junit_data["verdict"] == Verdict.SKIP
-        junit_data["Verdict"] = junit_data["verdict"]
-
-        test_overview = junit_data.groupby(
-            [
-                "Project_Name",
-                "Project_URL",
-                "Project_Hash",
-                "Test_filename",
-                "Test_classname",
-                "Test_funcname",
-                "Test_parametrization",
-                "order",
-            ],
-            as_index=False,
-            group_keys=False,
-        ).agg(
-            {
-                "Verdict": lambda l: Verdict.decide_overall_verdict(set(l)),
-                "Passed": lambda l: sum(l),
-                "Failed": lambda l: sum(l),
-                "Error": lambda l: sum(l),
-                "Skipped": lambda l: sum(l),
-            }
-        )
-
-        test_overview = test_overview.astype(
-            {"Passed": int, "Failed": int, "Error": int, "Skipped": int}
-        )
-
-        test_overview = pd.merge(
-            test_overview[test_overview["order"] == "deter"],
-            test_overview[test_overview["order"] == "non-deter"],
-            on=[
-                "Project_Name",
-                "Project_URL",
-                "Project_Hash",
-                "Test_filename",
-                "Test_classname",
-                "Test_funcname",
-                "Test_parametrization",
-            ],
-            how="outer",
-            suffixes=("_sameOrder", "_randomOrder"),
-        )
-        test_overview["Order-dependent"] = (
-            test_overview["Verdict_sameOrder"] != "Flaky"
-        ) & (test_overview["Verdict_randomOrder"] == "Flaky")
-
-        return test_overview
-
     def get_coverage_raw_data(self) -> List[Dict]:
-        """
+        """Read branch- and line-coverage from coverage-xml
 
         :returns: EXAMPLE:
             [
@@ -919,8 +929,7 @@ class ProjectResultsDir:
         """
         coverage_data = list(
             filter(
-                lambda d: len(d) > 0,
-                map(CoverageXmlFile.to_dict, self.get_files(CoverageXmlFile)),
+                lambda d: len(d) > 0, map(CoverageXmlFile.to_dict, self.get_files(CoverageXmlFile)),
             )
         )
         self.close_archive()
@@ -958,13 +967,15 @@ class ProjectResultsDir:
         else:
             return [
                 type_(
-                    name,
+                    tarinfo.name,
+                    tarinfo,
                     self.get_project_name(),
                     openvia=self.get_archive().extractfile,  # type: ignore
+                    archive=self.get_archive(),
                 )
-                for name in self.get_archive_names()
+                for tarinfo in self.get_archive_members()
                 if type_.is_(
-                    Path(name),
+                    Path(tarinfo.name),
                     self.get_project_name(),
                     openvia=self.get_archive().extractfile,  # type: ignore
                 )
@@ -980,6 +991,13 @@ class ProjectResultsDir:
         if self._archive is None:
             self._archive = tarfile.open(self.p / "results.tar.xz")
         return self._archive
+
+    def get_archive_members(self) -> List[tarfile.TarInfo]:
+        try:
+            return self.get_archive().getmembers()
+        except EOFError:
+            logging.warning(f"EOFError in archive.getnames() on {self.p}")
+            return []
 
     def get_archive_names(self) -> List[str]:
         """Wrapper to around self.get_archive().getnames() to avoid EOFError
@@ -1017,158 +1035,201 @@ class ProjectResultsDir:
     def close_archive(self) -> None:
         if self._archive is not None:
             self._archive.close()
+            self._archive = None
 
     def __repr__(self) -> str:
-        return f"ProjectResultsDir('{self.p}')"
+        return f"Iteration('{self.p}')"
 
 
-class ResultsDir:
+class IterationCollection(ABC):
+
+    """Abstract class, providing analysis methods that can be performed given iterations"""
+
+    tests_overview = None
+
+    @abstractmethod
+    def get_iterations(self) -> List[Iteration]:
+        """
+        Return list of contained iterations.
+        TODO: Docstring for get_iterations.
+        :returns: TODO
+
+        """
+        pass
+
+    @lru_cache()
+    def get_iterations_overview(self) -> pd.DataFrame:
+        iterations_overview = (
+            pd.DataFrame(
+                [
+                    (it, it.get_project_name(), it.get_project_url(), it.get_project_git_hash(),)
+                    for it in self.get_iterations()
+                ],
+                columns=["Iteration", "Project_Name", "Project_URL", "Project_Hash"],
+            )
+            .set_index(["Project_Name", "Project_URL", "Project_Hash"])
+            .sort_index()
+        )
+        return iterations_overview
+
+    @abstractmethod
+    def get_passed_failed(self) -> pd.DataFrame:
+        pass
+
+    def get_tests_overview(
+        self,
+        *,
+        read_resultsDir_cache=True,
+        write_resultsDir_cache=True,
+        read_iteration_cache=True,
+        write_iteration_cache=True,
+    ) -> TestsOverview:
+        # Use cache if possible
+        #   I do not use @lru_cache here, because it doesn't work inside pool.map,
+        #   since every process hast it's own memory
+        if self.tests_overview is None:
+            pf = self.get_passed_failed(
+                read_iteration_cache=read_iteration_cache,
+                write_iteration_cache=write_iteration_cache,
+            )
+            to = PassedFailed(pf).to_test_overview()
+            self.tests_overview = TestsOverview(to)
+        return self.tests_overview
+
+
+class ResultsDir(IterationCollection):
     """
     Directory created by one execution of flapy.
-    Example: flapy-results_20200101
+    Example: flapy-results_20200101_1430
     """
 
     def __init__(self, dir: Union[str, Path]):
         self.p = Path(dir)
-        assert self.p.is_dir()
+        assert self.p.is_dir(), f"Directory {self.p} does not exist"
+
+        # Setup cache
+        #   we use the exclamation mark, because it has a early position in the ascii table, so
+        #   the cache file appears at the top of the directory
+        self._results_cache = self.p / "!flapy.cache"
+        if not self._results_cache.is_dir():
+            self._results_cache.mkdir()
+        self._pf_cache_file = self._results_cache / "passed_failed.csv"
+
+    def get_iterations(self) -> List[Iteration]:
+        iterations = [Iteration(path) for path in self.p.glob("*") if Iteration.is_iteration(path)]
+        return iterations
 
     def clear_results_cache(self):
-        for dir in self.get_project_results_dirs():
+        for dir in self.get_iterations():
             dir.clear_results_cache()
 
     def clear_junit_data_cache(self):
-        for dir in self.get_project_results_dirs():
+        for dir in self.get_iterations():
             dir.clear_junit_data_cache()
 
     def get_junit_data(
         self,
-        *,
+        *,  # After this star, there must only be parameters with default values. Needed for fire.
         include_project_columns=True,
         read_cache=True,
         write_cache=True,
         return_nothing=False,
     ) -> pd.DataFrame:
-        pool = multiprocessing.Pool()
-        return pd.concat(
-            pool.map(
-                partial(
-                    ProjectResultsDir.get_junit_data,
-                    include_project_columns=include_project_columns,
-                    read_cache=read_cache,
-                    write_cache=write_cache,
-                    return_nothing=return_nothing,
-                ),
-                self.get_project_results_dirs(),
+        with multiprocessing.Pool() as pool:
+            return pd.concat(
+                pool.map(
+                    partial(
+                        Iteration.get_junit_data,
+                        include_project_columns=include_project_columns,
+                        read_cache=read_cache,
+                        write_cache=write_cache,
+                        return_nothing=return_nothing,
+                    ),
+                    self.get_iterations(),
+                )
             )
+
+    def get_passed_failed(
+        self,
+        *,
+        read_resultsDir_cache=True,
+        write_resultsDir_cache=True,
+        read_iteration_cache=True,
+        write_iteration_cache=True,
+    ) -> pd.DataFrame:
+        """
+        Cached version of self._compute_passed_failed.
+
+        The resultsDir_cache is RESULTS_DIR/!flapy.cache/passed_failed.csv
+            and it is procesed within this method.
+        The iteration_cache is RESULTS_DIR/ITERATION/results_cache/junit_data.csv
+            and it is processed in Iteration.get_junit_data.
+        """
+
+        did_read_cache = False
+        cache_file = self._pf_cache_file
+
+        if read_resultsDir_cache and cache_file.is_file():
+            logging.info(f"Loading cached passed-failed table for ResultsDir {self.p}")
+            cache_df: pd.DataFrame = pd.read_csv(cache_file)
+
+            cache_is_hot = self._is_pf_cache_hot(cache_df=cache_df)
+            if cache_is_hot:
+                passed_failed = cache_df
+                did_read_cache = True
+            else:
+                logging.info(
+                    f"Passed-failed cache of Iteration {self.p} is OUTDATED -> recalculate"
+                )
+                passed_failed = self._compute_passed_failed(
+                    read_iteration_cache, write_iteration_cache
+                )
+        else:
+            passed_failed = self._compute_passed_failed(read_iteration_cache, write_iteration_cache)
+
+        if write_resultsDir_cache and not did_read_cache:
+            passed_failed.to_csv(cache_file, index=False)
+
+        return passed_failed
+
+    def _is_pf_cache_hot(self, *, cache_df: pd.DataFrame = None):
+        """
+        Check if cache is still hot (i.e., if pf.csv contains all iterations that are
+        actually in this directory)
+        """
+        if cache_df is None:
+            cache_df: pd.DataFrame = pd.read_csv(self._pf_cache_file)
+
+        # Get iterations into the format in which it is saved in passed_failed.csv
+        iterations_in_this_dir = self.get_iterations_overview()["Iteration"].apply(
+            lambda it: self.p.name + "/" + it.p.name
         )
+        return set(iterations_in_this_dir) == set(cache_df["Iteration"])
 
-    @lru_cache()
-    def get_project_results_dirs(self) -> List[ProjectResultsDir]:
-        project_results_dirs = [
-            ProjectResultsDir(path)
-            for path in self.p.glob("*")
-            if ProjectResultsDir.is_project_results_dir(path)
-        ]
-        return project_results_dirs
-
-    def get_passed_failed(self, *, read_cache=True, write_cache=True) -> pd.DataFrame:
+    def _compute_passed_failed(self, read_iteration_cache, write_iteration_cache):
+        """
+        Compute passed-failed table parallelized accross iterations.
+        """
         pool = multiprocessing.Pool()
         passed_failed = pd.concat(
             pool.map(
                 partial(
-                    ProjectResultsDir.get_passed_failed,
-                    read_cache=read_cache,
-                    write_cache=write_cache,
+                    Iteration.get_passed_failed,
+                    read_cache=read_iteration_cache,
+                    write_cache=write_iteration_cache,
                 ),
-                self.get_project_results_dirs(),
+                self.get_iterations(),
             )
         )
         passed_failed["Iteration"] = self.p.name + "/" + passed_failed["Iteration"]
         return passed_failed
 
-    def get_project_dirs_overview(self) -> pd.DataFrame:
-        proj_dirs_overview = pd.DataFrame(
-            [
-                (
-                    proj_dir.p,
-                    proj_dir.get_project_name(),
-                    proj_dir.get_project_url(),
-                    proj_dir.get_project_git_hash(),
-                )
-                for proj_dir in self.get_project_results_dirs()
-            ],
-            columns=["Iteration", "Project_Name", "Project_URL", "Project_Hash"],
-        )
-        return proj_dirs_overview
-
     def get_no_space_left(self) -> pd.DataFrame:
-        return pd.concat(
-            map(ProjectResultsDir.get_no_space_left, self.get_project_results_dirs())
-        )
+        return pd.concat(map(Iteration.get_no_space_left, self.get_iterations()))
 
-    # TODO delete
-    def get_test_overview(self):
-        test_overview = pd.concat(
-            map(ProjectResultsDir.get_test_overview, self.get_project_results_dirs())
-        )
-
-        test_overview = test_overview.groupby(
-            [
-                "Project_Name",
-                "Project_URL",
-                "Project_Hash",
-                "Test_filename",
-                "Test_classname",
-                "Test_funcname",
-                "Test_parametrization",
-            ],
-            as_index=False,
-            group_keys=False,
-        ).agg(
-            {
-                "Verdict_sameOrder": lambda l: Verdict.decide_overall_verdict(set(l)),
-                "Passed_sameOrder": sum,
-                "Failed_sameOrder": sum,
-                "Error_sameOrder": sum,
-                "Skipped_sameOrder": sum,
-                "Verdict_randomOrder": lambda l: Verdict.decide_overall_verdict(set(l)),
-                "Passed_randomOrder": sum,
-                "Failed_randomOrder": sum,
-                "Error_randomOrder": sum,
-                "Skipped_randomOrder": sum,
-            }
-        )
-        test_overview = test_overview.astype(
-            {
-                "Passed_sameOrder": int,
-                "Failed_sameOrder": int,
-                "Error_sameOrder": int,
-                "Skipped_sameOrder": int,
-                "Passed_randomOrder": int,
-                "Failed_randomOrder": int,
-                "Error_randomOrder": int,
-                "Skipped_randomOrder": int,
-            }
-        )
-        test_overview["Order-dependent"] = (
-            test_overview["Verdict_sameOrder"] != "Flaky"
-        ) & (test_overview["Verdict_randomOrder"] == "Flaky")
-        test_overview["Test_nodeid"] = test_overview.apply(
-            lambda s: to_nodeid(
-                s["Test_filename"], s["Test_classname"], s["Test_funcname"]
-            ),
-            axis=1,
-        )
-        return test_overview
-
-    def find_keywords_in_tracefiles(
-        self, *, keywords=default_flaky_keywords
-    ) -> pd.DataFrame:
+    def find_keywords_in_tracefiles(self, *, keywords=default_flaky_keywords) -> pd.DataFrame:
         pool = multiprocessing.Pool()
-        result = pool.map(
-            ProjectResultsDir.find_keywords_in_tracefiles,
-            self.get_project_results_dirs(),
-        )
+        result = pool.map(Iteration.find_keywords_in_tracefiles, self.get_iterations(),)
 
         if len(result) > 0:
             return (
@@ -1201,26 +1262,80 @@ class ResultsDir:
 
     def get_coverage_overview(self) -> pd.DataFrame:
         pool = multiprocessing.Pool()
-        co = pd.concat(
-            pool.map(
-                ProjectResultsDir.get_coverage_overview, self.get_project_results_dirs()
-            )
-        )
+        co = pd.concat(pool.map(Iteration.get_coverage_overview, self.get_iterations()))
         co["Iteration"] = str(self.p) + "/" + co["Iteration"]
-
-        # co["BranchCoverage_weighted"] = co["BranchCoverage"] * co["number_of_entries"]
-        # co["LineCoverage_weighted"] = co["LineCoverage"] * co["number_of_entries"]
-        #
-        # co = co.groupby(["Project_Name", "Project_URL", "Project_Hash"]).agg({
-        #     "number_of_entries": sum,
-        #     "BranchCoverage_weighted": sum,
-        #     "LineCoverage_weighted": sum
-        # })
-        # co["BranchCoverage_mean"] = co["BranchCoverage_weighted"] / co["number_of_entries"]
         return co
 
     def __repr__(self) -> str:
         return f"ResultsDir('{self.p}')"
+
+
+class ResultsDirCollection(IterationCollection):
+
+    """Directory containing (symlinks to) ResultsDirs. Assumes that it only containes such."""
+
+    def __init__(self, dir):
+        self.p = Path(dir)
+        assert self.p.is_dir(), f"Directory {self.p} does not exist"
+
+    def get_results_dirs(self) -> List[ResultsDir]:
+        return [ResultsDir(path) for path in self.p.glob("*")]
+
+    def get_iterations(self):
+        return [it for rd in self.get_results_dirs() for it in rd.get_iterations()]
+
+    def get_passed_failed(
+        self,
+        *,
+        read_resultsDir_cache=True,
+        write_resultsDir_cache=True,
+        read_iteration_cache=True,
+        write_iteration_cache=True,
+    ) -> pd.DataFrame:
+        """
+        Collect passed-failed information from each ResultsDir and concat them.
+        """
+        return pd.concat(
+            [
+                rd.get_passed_failed(
+                    read_resultsDir_cache=read_resultsDir_cache,
+                    write_resultsDir_cache=write_resultsDir_cache,
+                    read_iteration_cache=read_iteration_cache,
+                    write_iteration_cache=write_iteration_cache,
+                )
+                for rd in self.get_results_dirs()
+            ]
+        )
+
+
+def parse_string_range(s: str):
+    """Example "1-3,5,7" -> [1, 2, 3, 5, 7]"""
+    result = []
+    for part in s.split(","):
+        if "-" in part:
+            a, b = part.split("-")
+            a, b = int(a), int(b)
+            result.extend(range(a, b + 1))
+        else:
+            a = int(part)
+            result.append(a)
+    return result
+
+
+class FlakinessType:
+    """
+    Enum for flakiness type.
+      I don't use actual enums,
+      because they are not equal to their string representations,
+      but I need this, when re-reading the 'flaky?' column from TestsOverview.csv
+    """
+
+    OD = "order-dependent"
+    NOD = "non-order-dependent"
+    INFR = "infrastructure flaky"
+    NOT_FLAKY = "not flaky"
+
+    all_types = [OD, NOD, INFR, NOT_FLAKY]
 
 
 class Verdict:
@@ -1246,12 +1361,14 @@ class Verdict:
     UNDECIDABLE = "Undecidable"
 
     @staticmethod
-    def from_junitparser(result: Union[Failure, Skipped, Error, None]) -> str:
-        if isinstance(result, Failure):
+    def from_junitparser(
+        result: Union[junitparser.Failure, junitparser.Skipped, junitparser.Error, None]
+    ) -> str:
+        if isinstance(result, junitparser.Failure):
             return Verdict.FAIL
-        if isinstance(result, Skipped):
+        if isinstance(result, junitparser.Skipped):
             return Verdict.SKIP
-        if isinstance(result, Error):
+        if isinstance(result, junitparser.Error):
             return Verdict.ERROR
         if result is None:
             return Verdict.PASS
@@ -1294,10 +1411,7 @@ class Verdict:
         if verdicts - {Verdict.ERROR, Verdict.SKIP} == {Verdict.FAIL}:
             return Verdict.FAIL
         if (
-            (
-                Verdict.PASS in verdicts
-                and (Verdict.FAIL in verdicts or Verdict.ERROR in verdicts)
-            )
+            (Verdict.PASS in verdicts and (Verdict.FAIL in verdicts or Verdict.ERROR in verdicts))
         ) or (Verdict.FLAKY in verdicts):
             return Verdict.FLAKY
         if verdicts == {Verdict.ERROR}:
@@ -1330,9 +1444,7 @@ def to_nodeid(filename: str, classname: str, funcname: str, parametrization: str
             file[-1] = file[-1] + ".py"
             return f"{os.path.join(*file)}::{funcname}{parametrization}"
     except IndexError:
-        eprint(
-            f"classname_to_nodeid: IndexError with classname={classname}, funcname={funcname}"
-        )
+        eprint(f"classname_to_nodeid: IndexError with classname={classname}, funcname={funcname}")
         return funcname
 
 
@@ -1372,9 +1484,7 @@ def parse_trace_line(
     elif prefix.startswith("<"):
         call_return = "return"
     else:
-        raise ValueError(
-            f'Unrecognized start sequence "{prefix}" {additional_error_information}'
-        )
+        raise ValueError(f'Unrecognized start sequence "{prefix}" {additional_error_information}')
     depth = int(prefix.count("-") / 2)
     func = literal_eval(func)
     func = tuple(["" if x is None else x.replace(" ", "_") for x in func])
@@ -1385,6 +1495,7 @@ def parse_trace_line(
 
 def main() -> None:
     """The main entry location of the program."""
+    # TODO improve startup time by making fire not explore libraries
     fire.Fire()
 
 

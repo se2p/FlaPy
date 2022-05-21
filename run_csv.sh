@@ -1,44 +1,89 @@
 #!/usr/bin/env bash
 
+# -- DOC
+# This scripts require LOCAL_PODMAN_ROOT to be set
 
-if [[ "${PWD:0:6}" = "/home/" ]]
-then
-    echo "ERROR: DO NOT EXECUTE THIS IN /HOME"
-    echo "    To prevent the executed code from accessing your data, we use runexec and hide the home directory."
-    echo "    Therefore, the flapy will not produce any results if executed in the home directory."
-    exit
+# -- HELPER FUNCTIONS
+DEBUG=1
+function debug_echo {
+  [[ "${DEBUG}" = 1 ]] && echo "$@"
+}
+
+# -- PARSE ARGUMENTS
+RUN_ON=$1
+CSV_FILE=$2
+PLUS_RANDOM_RUNS=$3
+FLAPY_ARGS=$4
+RESULTS_PARENT_FOLDER=$5
+
+debug_echo "-- $0"
+debug_echo "    Run on:            $RUN_ON"
+debug_echo "    CSV file:          $CSV_FILE"
+debug_echo "    Plus random runs:  $PLUS_RANDOM_RUNS"
+debug_echo "    Flapy args:        $FLAPY_ARGS"
+
+if [ -z "${RESULTS_PARENT_FOLDER}" ]; then
+    RESULTS_PARENT_FOLDER=$(pwd)
 fi
 
-CSV_FILE=$1
 
 dos2unix "${CSV_FILE}"
 
-LOCAL="$(pwd)/local/hdd/${USER}"
+# -- CREATE RESULTS_DIR
+DATE_TIME=$(date +%Y%m%d_%H%M%S)
+RESULTS_DIR="${RESULTS_PARENT_FOLDER}/flapy-results_${DATE_TIME}"
+mkdir -p "${RESULTS_DIR}"
 
-while IFS=, read PROJECT_NAME PROJECT_URL PROJECT_HASH FUNCS_TO_TRACE TESTS_TO_BE_RUN NUM_RUNS; do
+# save input file
+mkdir "$RESULTS_DIR/!flapy.input/"
+cp "${CSV_FILE}" "$RESULTS_DIR/!flapy.input/"
 
-        echo "Project name:      $PROJECT_NAME"
-        echo "Project url:       $PROJECT_URL"
-        echo "Project hash:      $PROJECT_HASH"
-        echo "Funcs to trace:    $FUNCS_TO_TRACE"
-        echo "Num runs:          $NUM_RUNS"
+# -- CREATE LOG DIR
+if [[ $RUN_ON = "cluster" ]]
+then
+    SLURM_LOG_DIR="${RESULTS_PARENT_FOLDER}/slurm-logs/${DATE_TIME}_run_csv"
+    mkdir -p "$SLURM_LOG_DIR"
+fi
 
-        mkdir -p "${LOCAL}/${PROJECT_NAME}"
+# -- MAIN
+{
+    read # ignore header
+    while IFS=, read -r PROJECT_NAME PROJECT_URL PROJECT_HASH PYPI_TAG FUNCS_TO_TRACE TESTS_TO_BE_RUN NUM_RUNS; do
 
-        # Pick a postfix for the repo-dir to allow multiple runs of the same project and the same machine
-        if [[ ${FUNCS_TO_TRACE} == "" ]]; then
-            # In case tracing is deactivated, the postfix is a random number.
-            #  (It would be better to choose an unused name within the target directory)
-            LOCAL_PROJECT_DIR=$(mktemp -d "${LOCAL}/${PROJECT_NAME}/XXXXX")
-            REPO_POSTFIX=$(basename ${LOCAL_PROJECT_DIR})
+        debug_echo "-- $0 (one row)"
+        debug_echo "    Project name:      $PROJECT_NAME"
+        debug_echo "    Project url:       $PROJECT_URL"
+        debug_echo "    Project hash:      $PROJECT_HASH"
+        debug_echo "    PyPi tag:          $PYPI_TAG"
+        debug_echo "    Funcs to trace:    $FUNCS_TO_TRACE"
+        debug_echo "    Tests to be run:   $TESTS_TO_BE_RUN"
+        debug_echo "    Num runs:          $NUM_RUNS"
+
+        # Although we have the DATE_TIME already in the RESULTS_DIR, we need it here,
+        # because the iterations-result-dirs are sometimes sym-linked to other result-dirs
+        ITERATION_RESULTS_DIR=$(
+            mktemp -d "${RESULTS_DIR}/${PROJECT_NAME}_${DATE_TIME}__XXXXX"
+        )
+        ITERATION_NAME=$(basename ${ITERATION_RESULTS_DIR})
+
+        if [[ $RUN_ON = "cluster" ]]
+        then
+            export PODMAN_HOME=
+            export LOCAL_PODMAN_ROOT=
+            sbatch \
+                -o "$ITERATION_RESULTS_DIR/log.out" \
+                -e "$ITERATION_RESULTS_DIR/log.out" \
+                -- \
+                run_container.sh \
+                    "${PROJECT_NAME}" "${PROJECT_URL}" "${PROJECT_HASH}" "${PYPI_TAG}" "${FUNCS_TO_TRACE}" "${TESTS_TO_BE_RUN}" "${NUM_RUNS}" "${PLUS_RANDOM_RUNS}" "${ITERATION_RESULTS_DIR}" "${FLAPY_ARGS}"
+        elif [[ $RUN_ON = "local" ]]
+        then
+            ./run_container.sh \
+                "${PROJECT_NAME}" "${PROJECT_URL}" "${PROJECT_HASH}" "${PYPI_TAG}" "${FUNCS_TO_TRACE}" "${TESTS_TO_BE_RUN}" "${NUM_RUNS}" "${PLUS_RANDOM_RUNS}" "${ITERATION_RESULTS_DIR}" "${FLAPY_ARGS}"
         else
-            # In case tracing is activated, postfix should be consistent accross multiple executions
-            # , because it might influence the trace -> use hash of funcs-to-trace
-            REPO_POSTFIX=$(echo FUNCS_TO_TRACE | md5sum | head -c 8)
-            LOCAL_PROJECT_DIR="${LOCAL}/${PROJECT_NAME}/${REPO_POSTFIX}"
+            echo "Unknown value '$RUN_ON' for RUN_ON. Please use 'cluster' or 'local'."
+            exit
         fi
-        mkdir -p "${LOCAL_PROJECT_DIR}"
 
-        ./run_execution.sh "${PROJECT_NAME}" "${PROJECT_URL}" "${PROJECT_HASH}" "${FUNCS_TO_TRACE}" "${TESTS_TO_BE_RUN}" "${NUM_RUNS}" "${LOCAL_PROJECT_DIR}"
-
-done <"${CSV_FILE}"
+    done
+} <"${CSV_FILE}"

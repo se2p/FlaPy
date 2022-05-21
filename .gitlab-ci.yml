@@ -17,11 +17,6 @@ before_script:
     paths:
       - cov_html
 
-unit-tests:python-3.7:
-  <<: *unit-tests
-  variables:
-    PYTHON_VERSION: '3.7'
-
 unit-tests:python-3.8:
   <<: *unit-tests
   variables:
@@ -39,45 +34,40 @@ unit-tests:python-3.8:
   script:
     - for ((i=1; i<=10; i++)); do echo "test run ${i}\n"; poetry run pytest -q --cov=flaky_analysis --cov-branch --random-order --random-order-bucket=global ; done
 
-nightly-tests:python-3.7:
-  extends: .nightly-tests
-  variables:
-    PYTHON_VERSION: '3.7'
-
 nightly-tests:python-3.8:
   extends: .nightly-tests
   variables:
     PYTHON_VERSION: '3.8-buster'
 
-flake8:
+.flake8:
   stage: test
-  image: python:3.7
+  image: python:3.8-buster
   script:
     - poetry run flake8 .
-mypy:
+.mypy:
   stage: test
-  image: python:3.7
+  image: python:3.8-buster
   script:
-    - poetry run mypy flaky_analysis
+    - poetry run mypy flapy 
 
-pylint:
+.pylint:
   stage: test
-  image: python:3.7
+  image: python:3.8-buster
   script:
-    - poetry run pylint flaky_analysis
+    - poetry run pylint flapy 
 
-black:
+.black:
   stage: test
-  image: python:3.7
+  image: python:3.8-buster
   script:
     - poetry run black --check .
 
 pages:
   stage: deploy
   variables:
-    PYTHON_VERSION: '3.7'
+    PYTHON_VERSION: '3.8-buster'
   dependencies:
-    - unit-tests:python-3.7
+    - unit-tests:python-3.8
   script:
     - mv cov_html/ public/
   artifacts:

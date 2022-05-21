@@ -164,11 +164,7 @@ def frame_to_func(frame):
 
 
 def to_hash(
-    obj: object,
-    hash_timeout: int,
-    mod_name: str,
-    class_name: Optional[str],
-    func_name: str,
+    obj: object, hash_timeout: int, mod_name: str, class_name: Optional[str], func_name: str,
 ) -> str:
     """
     Return a hash value of a given object
@@ -226,9 +222,7 @@ def to_string(obj: object) -> str:
     that contains no memory address and throws no exception
     """
     try:
-        return MEMORY_ADDRESS_PATTERN.sub("at MEMORY ADDRESS", repr(obj)).replace(
-            "\n", " "
-        )
+        return MEMORY_ADDRESS_PATTERN.sub("at MEMORY ADDRESS", repr(obj)).replace("\n", " ")
     except Exception as ex:  # pylint: disable=broad-except
         return f"Error_while_to_string {type(ex)} {ex}"
 
@@ -250,9 +244,7 @@ def frame_to_func_descriptor(frame: FrameType) -> Tuple[str, str, str, List[str]
     filename = frame.f_code.co_filename
     tags = []
     if func_name == "wrapper" and "function" in frame.f_locals:
-        mod_name, class_name, unwrapped_func_name = func_to_descriptor(
-            frame.f_locals["function"]
-        )
+        mod_name, class_name, unwrapped_func_name = func_to_descriptor(frame.f_locals["function"])
         tags.append("#wrapper")
     else:
         unwrapped_func_name = func_name
@@ -313,9 +305,7 @@ def run_with_trace(
     }
 
     if trace_all:
-        tracedfuncs_to_output.append(
-            (("", ""), open("trace_all.txt", "w"), False, False)
-        )
+        tracedfuncs_to_output.append((("", ""), open("trace_all.txt", "w"), False, False))
         inside_function.update({("", ""): True})
 
     indent: Dict[IO[str], int] = {out: 0 for _, out, _, _ in tracedfuncs_to_output}
@@ -476,9 +466,7 @@ def main(args: List[str] = None) -> None:  # pylint: disable=too-many-locals
     ]  # Example: [("file', "class", "func"), ("file", "func")]
 
     # Discard path, only keep filename
-    funcs_to_be_traced = [
-        (file.split("/")[-1], *func) for file, *func in funcs_to_be_traced
-    ]
+    funcs_to_be_traced = [(file.split("/")[-1], *func) for file, *func in funcs_to_be_traced]
 
     # Add pyunit fixtures
     class_fixtures_to_trace: Sequence[FuncDescriptor] = [
@@ -498,9 +486,7 @@ def main(args: List[str] = None) -> None:  # pylint: disable=too-many-locals
     funcs_to_be_traced += class_fixtures_to_trace
     funcs_to_be_traced += module_fixtures_to_trace
 
-    hash_to_pickle_filepath = Path(output_file_name).parent / Path(
-        HASH_TO_PICKLE_FILENAME
-    )
+    hash_to_pickle_filepath = Path(output_file_name).parent / Path(HASH_TO_PICKLE_FILENAME)
     if not hash_to_pickle_filepath.exists():
         existing_hash_to_pickle = {}
     else:

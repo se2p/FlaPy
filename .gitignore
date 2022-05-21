@@ -109,5 +109,10 @@ cov_html/
 # MY STUFF
 *experimental*
 slurm-logs/*
-flapy-results/
 local/
+flapy.tar
+output_from_exec_on_slurm_node/
+
+/flapy-results*
+dataset*
+to*

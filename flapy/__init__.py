@@ -10,5 +10,5 @@
 #
 # You should have received a copy of the GNU Lesser General Public License
 # along with this project.  If not, see <https://www.gnu.org/licenses>.
-"""Provides an analysis for possible flaky tests."""
-__version__ = "0.1.0"
+"""Detects flaky tests within a project by repeatedly execution its testsuite"""
+__version__ = "0.2.0"
