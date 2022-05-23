@@ -90,6 +90,7 @@ Every line in the input file will result in one execution of the container. We c
 You can have duplicate lines in this input file to analyze the same project multiple times.
 In fact, we actively use this to detect infrastructure flakiness, which might occur only between iterations, not within.
 PROJECT_NAME, PROJECT_URL and PROJECT_HASH will be used to uniquely identify a project when accumulating results across multiple iterations.
+PROJECT_URL can also be local directory, which will then be copied into the container.
 PYPI_TAG is used to install the project itself via pip before executing its testsuite to fetch it's dependencies.
 If PYPI_TAG is empty, FlaPy will fall back to searching for requirements in common files like requirements.txt
 
