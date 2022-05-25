@@ -1985,7 +1985,6 @@ kiwipy.git,https://github.com/muhrin/kiwipy.git,19e9ca5b5affd0edd76e7fb926dfdf3e
 klab,https://github.com/Kortemme-Lab/klab,6d410ad08f1bd9f7cbbb28d7d946e94fbaaa2b6b
 kll,https://github.com/kiibohd/kll,aa4ea9d6626c7ef99f83e200f5ca6bf340dad447
 kms-client,https://github.com/balassit/kms_client,427c8004d89d2cea7d39facb78f6d4f1b1521db1
-knit,https://github.com/dask/knit/,934aee7012967453b7343f6e01f16b26aece2aaf
 knot,https://github.com/jaapverloop/knot,6ae8c2ada5385fa770b147edba053bebb18e8347
 knot-injector,https://github.com/rdidyk/knot-injector,6f6bb4c3aba0696e82979b03dc53d805c71afad6
 koach,https://github.com/kexplo/koach,328cf762d8310d363dfc9d26b477b6cf04ece70b
@@ -2826,7 +2825,6 @@ psims,https://github.com/mobiusklein/psims,2533115cabb7c9a1e46fd0d5f74b6ab9f67f7
 psnprices,https://github.com/snipem/psnprices,774fb3600722f4e11fdfc86777613ee4ef862337
 psqlparse,https://github.com/alculquicondor/psqlparse,cc75107eae843b903e2d39fb0f375d54a894458c
 psrqpy,https://github.com/mattpitkin/psrqpy,f4e7d685ebb4b3bf086e3f998f68cc3c4e1914fb
-psrqpy,https://github.com/mattpitkin/psrqpy/,f4e7d685ebb4b3bf086e3f998f68cc3c4e1914fb
 psv,https://github.com/Dolphman/PSV,8e35587e854bbb33dbb50b83e9eaace4985e7b1f
 psyrun,https://github.com/jgosmann/psyrun,42f58223f864005c9ba427fcc0ccf44bd94df1e8
 ptct,https://github.com/almoore/ptct,c835d4f8e4abde877665f5a38e304e88368310c1
