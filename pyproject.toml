@@ -37,7 +37,7 @@ pytest = "^6.2.5"
 pytest-cov = "^2.8.0"
 pygithub = "^1.53"
 
-fire = "^0.3.1"
+fire = "^0.4.0"
 pandas = "^1.1.4"
 junitparser = "^1.6.3"
 Jinja2 = "^3.0.3"

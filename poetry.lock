@@ -205,7 +205,7 @@ python-versions = "*"
 
 [[package]]
 name = "fire"
-version = "0.3.1"
+version = "0.4.0"
 description = "A library for automatically generating command line interfaces."
 category = "main"
 optional = false
@@ -919,7 +919,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "8a1e58c65dfeeb97edd5686338e4f1d8816361142e50a015b9e0ae0629ac05f2"
+content-hash = "39db6f7f05cc4c454749bb6d1db35db059111c85454fb00bffbb44ff1807072d"
 
 [metadata.files]
 appdirs = [
@@ -1097,7 +1097,7 @@ executing = [
     {file = "executing-0.8.2.tar.gz", hash = "sha256:c23bf42e9a7b9b212f185b1b2c3c91feb895963378887bb10e64a2e612ec0023"},
 ]
 fire = [
-    {file = "fire-0.3.1.tar.gz", hash = "sha256:9736a16227c3d469e5d2d296bce5b4d8fa8d7851e953bda327a455fc2994307f"},
+    {file = "fire-0.4.0.tar.gz", hash = "sha256:c5e2b8763699d1142393a46d0e3e790c5eb2f0706082df8f647878842c216a62"},
 ]
 flake8 = [
     {file = "flake8-3.9.2-py2.py3-none-any.whl", hash = "sha256:bf8fd333346d844f616e8d47905ef3a3384edae6b4e9beb0c5101e25e3110907"},
