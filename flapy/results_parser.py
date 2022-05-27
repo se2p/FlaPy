@@ -368,8 +368,9 @@ class TestsOverview:
         return cls(_df)
 
     def to_classification_template(self) -> pd.DataFrame:
-        """ Prepare a manual classification template """
-        classification_template = self._df[
+        """Prepare a manual classification template for all flaky tests"""
+        flaky_tests = self._df[self._df["flaky?"] != FlakinessType.NOT_FLAKY]
+        classification_template = flaky_tests[
             [
                 "Project_Name",
                 "Project_URL",
@@ -378,15 +379,13 @@ class TestsOverview:
                 "Test_classname",
                 "Test_funcname",
                 "Test_parametrization",
+                "flaky?",
             ]
         ].drop_duplicates()
         classification_template["Project Domain"] = ""
         classification_template["Category"] = ""
         classification_template["Category sure? 1=yes 4=no"] = ""
         classification_template["Category comment"] = ""
-        classification_template["Location"] = ""
-        classification_template["Location sure? 1=yes 4=no"] = ""
-        classification_template["Location comment"] = ""
         return classification_template
 
     def to_flapy_input(
