@@ -25,9 +25,9 @@ def try_default(
     except exception as e:
         if callable(error_return_val):
             return error_return_value(e)
-        elif error_return_val == "ERROR_MESSAGE":
+        elif isinstance(error_return_val, str) and error_return_val == "ERROR_MESSAGE":
             return f"{type(e).__name__}: {e}"
-        elif error_return_val == "ERROR_MESSAGE_TUPLE":
+        elif isinstance(error_return_val, str) and error_return_val == "ERROR_MESSAGE_TUPLE":
             return ("error", f"{type(e).__name__}: {e}")
         else:
             return error_return_val
