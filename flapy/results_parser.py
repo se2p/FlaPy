@@ -1209,17 +1209,20 @@ class ResultsDir(IterationCollection):
         """
         Compute passed-failed table parallelized accross iterations.
         """
-        pool = multiprocessing.Pool()
-        passed_failed = pd.concat(
-            pool.map(
-                partial(
-                    Iteration.get_passed_failed,
-                    read_cache=read_iteration_cache,
-                    write_cache=write_iteration_cache,
-                ),
-                self.get_iterations(),
+        if len(self.get_iterations()) == 0:
+            logging.warning(f"ResultsDir {self} contains no iterations")
+            return pd.DataFrame()
+        with multiprocessing.Pool() as pool:
+            passed_failed = pd.concat(
+                pool.map(
+                    partial(
+                        Iteration.get_passed_failed,
+                        read_cache=read_iteration_cache,
+                        write_cache=write_iteration_cache,
+                    ),
+                    self.get_iterations(),
+                )
             )
-        )
         passed_failed["Iteration"] = self.p.name + "/" + passed_failed["Iteration"]
         return passed_failed
 
