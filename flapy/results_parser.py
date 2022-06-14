@@ -169,6 +169,7 @@ class PassedFailed:
         # Some junit-xml files actually had name="" in them
         #   -> replace by NaN so they get ignored in the groupby
         self._df["Test_funcname"] = self._df["Test_funcname"].replace("", np.NaN)
+        self._df["Project_Hash"] = self._df["Project_Hash"].replace(np.NaN, "")
 
         # Rows with NaN are ignored by pd.groupby -> fillna
         self._df["Test_filename"] = self._df["Test_filename"].fillna("")
