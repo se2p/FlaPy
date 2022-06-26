@@ -393,6 +393,7 @@ class TestsOverview:
     ) -> pd.DataFrame:
         """Filter for all flaky tests and create a new flapy-input, which executes all these (in isolation).
 
+        :flakiness_type: see `FlakinessType`
         :all_tests_in_one_run: execute all tests within the same project in the same iteration. Tests will still be run separately, but this saves multiple cloning effort.
         """
         if flakiness_type == "ANY":
