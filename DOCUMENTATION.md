@@ -30,7 +30,7 @@ Parameters:
 /workdir                           # docker WORKDIR
     /clone_and_run_tests.sh        # copied over by docker
     /FlaPy-0.1.0-py3-none-any.whl  # copied over by docker
-    /PROJ                          # REPOSIRTORY_DIR (cloned repo)
+    /PROJ                          # REPOSITORY_DIR (cloned repo)
 *   /deterministic                 # same order execution output
        /execution.log              #   --logfile
        /output.txt                 #   --output
