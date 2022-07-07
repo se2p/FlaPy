@@ -670,8 +670,6 @@ class Iteration:
     def __init__(self, dir: Union[str, Path]):
         self.p = Path(dir)
         assert Iteration.is_iteration(self.p), "This does not seem like an iteration directory"
-        # TODO remove extracted, we don't do that anymore, we use cache instead
-        self.use_extracted = (self.p / "local").is_dir()
         self._archive: Optional[tarfile.TarFile] = None
 
         # Setup cache
@@ -693,19 +691,16 @@ class Iteration:
             path.is_dir()
             and path.name != "run"
             and not path.name.startswith(".")
-            and ((path / "local").is_dir() or (path / "results.tar.xz").is_file())
+            and (path / "results.tar.xz").is_file()
         )
 
     @lru_cache()
     def get_project_name(self) -> str:
         if self.meta_info is not None:
             return self.meta_info.project_name
-        if (self.p / "project-name.txt").is_file():
+        elif (self.p / "project-name.txt").is_file():
             with open(self.p / "project-name.txt") as file:
                 return file.read().replace("\n", "")
-        if self.use_extracted:
-            user_dir = next((self.p / "local" / "hdd").iterdir())
-            return next(user_dir.iterdir()).name
         else:
             if len(self.get_archive_names()) == 0:
                 return self.p.name + "_EMPTY"
@@ -958,28 +953,21 @@ class Iteration:
         return coverage_overview
 
     def get_files(self, type_: Type[T1]) -> List[T1]:
-        if self.use_extracted:
-            return [
-                type_(path, self.get_project_name(), openvia=open)
-                for path in self.p.rglob("*")
-                if type_.is_(path, self.get_project_name(), openvia=open)
-            ]
-        else:
-            return [
-                type_(
-                    tarinfo.name,
-                    tarinfo,
-                    self.get_project_name(),
-                    openvia=self.get_archive().extractfile,  # type: ignore
-                    archive=self.get_archive(),
-                )
-                for tarinfo in self.get_archive_members()
-                if type_.is_(
-                    Path(tarinfo.name),
-                    self.get_project_name(),
-                    openvia=self.get_archive().extractfile,  # type: ignore
-                )
-            ]
+        return [
+            type_(
+                tarinfo.name,
+                tarinfo,
+                self.get_project_name(),
+                openvia=self.get_archive().extractfile,  # type: ignore
+                archive=self.get_archive(),
+            )
+            for tarinfo in self.get_archive_members()
+            if type_.is_(
+                Path(tarinfo.name),
+                self.get_project_name(),
+                openvia=self.get_archive().extractfile,  # type: ignore
+            )
+        ]
 
     def get_junit_files(self) -> List[JunitXmlFile]:
         return self.get_files(JunitXmlFile)
