@@ -214,7 +214,7 @@ class PassedFailed:
         ]
         return self
 
-    def to_test_overview(self) -> pd.DataFrame:
+    def to_tests_overview(self) -> pd.DataFrame:
         logging.info("")
         self._df["Verdict_sameOrder"] = self._df["Verdicts_sameOrder"].apply(
             lambda s: Verdict.decide_overall_verdict(eval_string_to_set(s))
@@ -1080,7 +1080,7 @@ class IterationCollection(ABC):
                 read_iteration_cache=read_iteration_cache,
                 write_iteration_cache=write_iteration_cache,
             )
-            to = PassedFailed(pf).to_test_overview()
+            to = PassedFailed(pf).to_tests_overview()
             self.tests_overview = TestsOverview(to)
         return self.tests_overview
 
@@ -1286,7 +1286,7 @@ class ResultsDirCollection(IterationCollection):
         """
         Collect passed-failed information from each ResultsDir and concat them.
         """
-        return pd.concat(
+        passed_failed = pd.concat(
             [
                 rd.get_passed_failed(
                     read_resultsDir_cache=read_resultsDir_cache,
@@ -1297,6 +1297,8 @@ class ResultsDirCollection(IterationCollection):
                 for rd in self.get_results_dirs()
             ]
         )
+        passed_failed["Iteration"] = self.p.name + "/" + passed_failed["Iteration"]
+        return passed_failed
 
 
 def parse_string_range(s: str):
