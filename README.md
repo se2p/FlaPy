@@ -75,7 +75,7 @@ In `passed_failed_sample.csv` you can now find for each iteration and each test 
 
 To accumulate the results across iterations (group by project and test-case), use:
 ```bash
-poetry run results_parser PassedFailed load passed_failed_sample.csv to_test_overview to_csv --index=False > test_overview_sample.csv
+poetry run results_parser PassedFailed load passed_failed_sample.csv to_tests_overview to_csv --index=False > test_overview_sample.csv
 ```
 
 
