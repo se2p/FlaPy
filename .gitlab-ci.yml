@@ -12,7 +12,7 @@ before_script:
 .unit-tests: &unit-tests
   stage: test
   script:
-    - poetry run pytest -q --cov=flapy --cov-branch --cov-report html:cov_html --cov-report=term-missing tests/
+    - poetry run pytest -v --cov=flapy --cov-branch --cov-report html:cov_html --cov-report=term-missing tests/
   artifacts:
     paths:
       - cov_html
