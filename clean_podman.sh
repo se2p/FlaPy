@@ -9,4 +9,4 @@ echo "-- Removing containers"
 podman --root "${LOCAL_PODMAN_ROOT}" rm -v --all
 
 echo "-- Removing images"
-podman --root "${LOCAL_PODMAN_ROOT}" rmi -v --all
+podman --root "${LOCAL_PODMAN_ROOT}" rmi --all
