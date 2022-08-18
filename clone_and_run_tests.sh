@@ -38,6 +38,7 @@ META_FILE="$RESULT_DIR/flapy-iteration-result.yaml"
 touch "$META_FILE"
 
 CWD=$(pwd)
+debug_echo " CWD = ${CWD}"
 
 # -- CLONE / COPY REPO
 REPOSITORY_DIR="${CWD}/${PROJECT_NAME}"
