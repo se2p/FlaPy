@@ -16,27 +16,43 @@ PLUS_RANDOM_RUNS=$3
 FLAPY_ARGS=$4
 RESULTS_PARENT_FOLDER=$5
 
+# -- DEBUG OUTPUT
 debug_echo "-- $0"
 debug_echo "    Run on:            $RUN_ON"
 debug_echo "    CSV file:          $CSV_FILE"
 debug_echo "    Plus random runs:  $PLUS_RANDOM_RUNS"
 debug_echo "    Flapy args:        $FLAPY_ARGS"
 
+
+# -- INPUT PRE-PROCESSING
 if [ -z "${RESULTS_PARENT_FOLDER}" ]; then
     RESULTS_PARENT_FOLDER=$(pwd)
 fi
-
-
 dos2unix "${CSV_FILE}"
+
+
+
 
 # -- CREATE RESULTS_DIR
 DATE_TIME=$(date +%Y%m%d_%H%M%S)
 RESULTS_DIR="${RESULTS_PARENT_FOLDER}/flapy-results_${DATE_TIME}"
 mkdir -p "${RESULTS_DIR}"
 
-# save input file
-mkdir "$RESULTS_DIR/!flapy.input/"
-cp "${CSV_FILE}" "$RESULTS_DIR/!flapy.input/"
+# -- SAVE INPUT FILE
+FLAPY_INPUT_META_FOLDER="$RESULTS_DIR/!flapy.input/"
+mkdir "${FLAPY_INPUT_META_FOLDER}"
+cp "${CSV_FILE}" "${FLAPY_INPUT_META_FOLDER}"
+
+# -- LOG META INFOS
+FLAPY_INPUT_META_FILE="$FLAPY_INPUT_META_FOLDER/flapy_input.yaml"
+touch "$FLAPY_INPUT_META_FILE"
+{
+    echo "run_on:             \"$RUN_ON\""
+    echo "csv_file:           \"$CSV_FILE\""
+    echo "plus_random_runs:   \"$PLUS_RANDOM_RUNS\""
+    echo "flapy_args:         \"$FLAPY_ARGS\""
+} >> "$FLAPY_INPUT_META_FILE"
+
 
 # -- CREATE LOG DIR
 if [[ $RUN_ON = "cluster" ]]
