@@ -55,19 +55,21 @@ fi
 
 
 # -- LOG META INFOS (1/2)
-echo "project_name:           \"$PROJECT_NAME\""     >> $META_FILE
-echo "project_url:            \"$PROJECT_URL\""      >> $META_FILE
-echo "project_git_hash:       \"$REPO_HASH\""        >> $META_FILE
-echo "project_git_hash_INPUT: \"$PROJECT_HASH\""     >> $META_FILE
-echo "pypi_tag:               \"$PYPI_TAG\""         >> $META_FILE
-echo "func_to_trace:          \"$FUNCS_TO_TRACE\""   >> $META_FILE
-echo "tests_to_be_run:        \"$TESTS_TO_BE_RUN\""  >> $META_FILE
-echo "num_runs:               $NUM_RUNS"             >> $META_FILE
-echo "plus_random_runs:       $PLUS_RANDOM_RUNS"     >> $META_FILE
-echo "flapy args:             \"$FLAPY_ARGS\""       >> $META_FILE
 START_TIMESTAMP=$(date +%s)
 START_DATE=$(date)
-echo "start_time:             $START_DATE" >> $META_FILE
+{
+    echo "project_name:           \"$PROJECT_NAME\""
+    echo "project_url:            \"$PROJECT_URL\""
+    echo "project_git_hash:       \"$REPO_HASH\""
+    echo "project_git_hash_INPUT: \"$PROJECT_HASH\""
+    echo "pypi_tag:               \"$PYPI_TAG\""
+    echo "func_to_trace:          \"$FUNCS_TO_TRACE\""
+    echo "tests_to_be_run:        \"$TESTS_TO_BE_RUN\""
+    echo "num_runs:               $NUM_RUNS"
+    echo "plus_random_runs:       $PLUS_RANDOM_RUNS"
+    echo "flapy args:             \"$FLAPY_ARGS\""
+    echo "start_time:             $START_DATE"
+} >> $META_FILE
 
 # -- EXECUTE TESTS
 #  In the following two paragraphs, "non-deterministic" means executing the project's tests in random
