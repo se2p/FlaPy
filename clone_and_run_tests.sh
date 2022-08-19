@@ -46,9 +46,11 @@ debug_echo "Clone Repository into ${REPOSITORY_DIR}"
 if [[ $PROJECT_URL == http* ]]
 then
     git clone "${PROJECT_URL}" "${REPOSITORY_DIR}"
-    cd "${REPOSITORY_DIR}" || exit 1
-    git reset --hard "${PROJECT_HASH}" || exit 1
-    cd "${CWD}" || exit 1
+    if [[ -n "$PROJECT_HASH" ]]; then
+        cd "${REPOSITORY_DIR}" || exit 1
+        git reset --hard "${PROJECT_HASH}" || exit 1
+        cd "${CWD}" || exit 1
+    fi
     REPO_HASH=$(git --git-dir="${REPOSITORY_DIR}/.git" rev-parse HEAD)
 else
     cp -r "${PROJECT_URL}" "${REPOSITORY_DIR}"
