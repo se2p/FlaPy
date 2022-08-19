@@ -78,6 +78,20 @@ START_DATE=$(date)
 #  In the following two paragraphs, "non-deterministic" means executing the project's tests in random
 #  order and "deterministic" means executing them in same order (default of pytest).
 #  This naming convention is not good, but I keep it for legacy reasons.
+debug_echo "Run tests in same order mode"
+mkdir -p "${CWD}/deterministic"
+mkdir -p "${CWD}/deterministic/tmp"
+flapy_run_tests \
+  --logfile "${CWD}/deterministic/execution.log" \
+  --repository "${REPOSITORY_DIR}" \
+  --project-name "${PROJECT_NAME}" \
+  --pypi-tag "${PYPI_TAG}" \
+  --temp "${CWD}/deterministic/tmp" \
+  --number-test-runs "${NUM_RUNS}" \
+  --trace "${FUNCS_TO_TRACE}" \
+  --tests-to-be-run "${TESTS_TO_BE_RUN}" \
+  $FLAPY_ARGS  # do not double quote here! we want the word splitting
+
 if [[ $PLUS_RANDOM_RUNS = true ]]
 then
     debug_echo "Run tests in random order mode"
@@ -95,20 +109,6 @@ then
       --tests-to-be-run "${TESTS_TO_BE_RUN}" \
       $FLAPY_ARGS  # do not double quote here! we want the word splitting
 fi
-
-debug_echo "Run tests in same order mode"
-mkdir -p "${CWD}/deterministic"
-mkdir -p "${CWD}/deterministic/tmp"
-flapy_run_tests \
-  --logfile "${CWD}/deterministic/execution.log" \
-  --repository "${REPOSITORY_DIR}" \
-  --project-name "${PROJECT_NAME}" \
-  --pypi-tag "${PYPI_TAG}" \
-  --temp "${CWD}/deterministic/tmp" \
-  --number-test-runs "${NUM_RUNS}" \
-  --trace "${FUNCS_TO_TRACE}" \
-  --tests-to-be-run "${TESTS_TO_BE_RUN}" \
-  $FLAPY_ARGS  # do not double quote here! we want the word splitting
 
 # -- LOG META INFOS (2/2)
 END_DATE=$(date)
