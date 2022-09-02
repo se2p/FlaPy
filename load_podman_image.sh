@@ -44,4 +44,7 @@ date -Iseconds
 TMPDIR=$LOCAL_TMP podman --root "${LOCAL_PODMAN_ROOT}" load -i "${DOCKER_IMAGE}"
 date -Iseconds
 
+echo "-- Echo podman info"
+./echo_podman_info.sh
+
 echo "-- Done!"
