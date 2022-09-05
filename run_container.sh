@@ -43,7 +43,7 @@ META_FILE="$ITERATION_RESULTS_DIR/flapy-iteration-result.yaml"
 touch "$META_FILE"
 
 # -- LOG HOSTNAME
-echo "hostname:               $(cat /etc/hostname)"     >> $META_FILE
+echo "hostname_run_container: $(cat /etc/hostname)"     >> "$META_FILE"
 
 # -- EXECUTE CONTAINER
 if [[ $PROJECT_URL == http* ]]

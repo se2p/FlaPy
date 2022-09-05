@@ -55,10 +55,12 @@ Parameters:
 # Structure of new scripts
 
 `run_csv.sh`
-* for line in csv:
-    `run_container.sh` (local or on cluster)
-    * podman run flapy
-        `clone_and_run_tests.sh`
-        * clone repo
-        * log further infos
-        * run `run_tests.py`
+* for line in csv: (or via array_job)
+    `run_line.sh`
+        `run_container.sh` (local or on cluster)
+        * podman run flapy
+            `clone_and_run_tests.sh`
+            * clone repo
+            * log further infos
+            * run `run_tests.py`
+
