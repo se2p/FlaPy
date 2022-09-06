@@ -95,7 +95,7 @@ PYPI_TAG is used to install the project itself via pip before executing its test
 If PYPI_TAG is empty, FlaPy will fall back to searching for requirements in common files like requirements.txt
 
 
-## Run on slurm cluster
+## Run on Slurm cluster
 
 Exporting the image:  
 We do this, so we can deploy the image on our cluster without building it multiple times.
@@ -114,6 +114,15 @@ Run on cluster
            # RUN_ON  CSV_FILE         PLUS_RANDOM_RUNS  ADDITIONAL_OPTIONS
 ./run_csv.sh cluster sample_input.csv true              ""
 ```
+
+
+### Clean Slurm nodes
+
+Remove all docker/podman images and containers via
+```bash
+./exec_on_slurm_nodes.sh nodes clean_podman.sh
+```
+
 
 
 ## TODOs
