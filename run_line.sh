@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+#SBATCH --job-name=flapy
+#SBATCH --time=24:00:00
+#SBATCH --mem=8GB
 
 # -- CHECK IF ENVIRONMENT VARIABLES ARE DEFINED
 if [[ -z "${FLAPY_INPUT_CSV_FILE}" ]]; then

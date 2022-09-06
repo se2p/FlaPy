@@ -1,7 +1,18 @@
 #!/bin/bash
-#SBATCH --job-name=flapy
-#SBATCH --time=24:00:00
-#SBATCH --mem=8GB
+
+# -- CHECK IF ENVIRONMENT VARIABLES ARE DEFINED
+if [ -z ${LOCAL_PODMAN_ROOT+x} ]; then
+    echo "LOCAL_PODMAN_ROOT not set, exiting"
+    exit
+fi
+if [ -z ${PODMAN_HOME+x} ]; then
+    echo "PODMAN_HOME not set, exiting"
+    exit
+fi
+if [ -z ${LOCAL_TMP+x} ]; then
+    echo "LOCAL_TMP not set, exiting"
+    exit
+fi
 
 # -- PARSE ARGS
 PROJECT_NAME=$1
@@ -48,12 +59,12 @@ echo "hostname_run_container: $(cat /etc/hostname)"     >> "$META_FILE"
 # -- EXECUTE CONTAINER
 if [[ $PROJECT_URL == http* ]]
 then
-    podman --root "${LOCAL_PODMAN_ROOT}" run --rm \
+    TMPDIR=$LOCAL_TMP podman --root "${LOCAL_PODMAN_ROOT}" run --rm \
         -v "$ITERATION_RESULTS_DIR:/results" \
         localhost/flapy \
         "${PROJECT_NAME}" "${PROJECT_URL}" "${PROJECT_HASH}" "${PYPI_TAG}" "${FUNCS_TO_TRACE}" "${TESTS_TO_BE_RUN}" "${NUM_RUNS}" "${PLUS_RANDOM_RUNS}" "${FLAPY_ARGS}"
 else
-    podman --root "${LOCAL_PODMAN_ROOT}" run --rm \
+    TMPDIR=$LOCAL_TMP podman --root "${LOCAL_PODMAN_ROOT}" run --rm \
         -v "$ITERATION_RESULTS_DIR:/results" \
         -v "$PROJECT_URL":"$PROJECT_URL" \
         localhost/flapy \
