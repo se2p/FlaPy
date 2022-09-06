@@ -262,6 +262,7 @@ class PyTestRunner:
         xml_coverage_file: Union[str, os.PathLike] = None,
         output_log_file: Union[str, os.PathLike] = None,
         trace_output_file: Union[str, os.PathLike] = None,
+        frozen_requirements_file: Union[str, os.PathLike] = None,
         tests_to_be_run: str = "",
         full_access_dir: str = None,
     ) -> None:
@@ -272,6 +273,7 @@ class PyTestRunner:
         self._xml_coverage_file = xml_coverage_file
         self._output_log_file = output_log_file
         self._trace_output_file = trace_output_file
+        self._frozen_requirements_file = frozen_requirements_file
         self._tests_to_be_run = tests_to_be_run
         self._full_access_dir = full_access_dir
         self._logger = logger
@@ -337,9 +339,11 @@ class PyTestRunner:
             # add debug output
             commands = [
                 'echo "which python: $(which python)"',
+                'echo "which pip:    $(which pip)"',
                 'echo "which pytest: $(which pytest)"',
-                'echo "python path"',
+                'echo "python path: "',
                 'python -c "import sys; print(sys.path)"',
+                f'pip freeze > "{self._frozen_requirements_file}"',
                 command,
             ]
 
@@ -458,6 +462,11 @@ class FlakyAnalyser:
                     self._temp_path,
                     "{}_trace{}{}".format(self._config.project_name, run_num, ttbr_id),
                 )
+                frozen_requirements_file: str = os.path.join(
+                    self._temp_path,
+                    "frozen_requirements{}{}.txt".format(run_num, ttbr_id),
+                )
+
                 runner = PyTestRunner(
                     project_name=self._config.project_name,
                     path=copy,
@@ -466,6 +475,7 @@ class FlakyAnalyser:
                     xml_coverage_file=xml_coverage_file,
                     output_log_file=output_log_file,
                     trace_output_file=trace_file,
+                    frozen_requirements_file=frozen_requirements_file,
                     tests_to_be_run=test_to_be_run,
                     full_access_dir=self._temp_path,
                     logger=self._logger,
