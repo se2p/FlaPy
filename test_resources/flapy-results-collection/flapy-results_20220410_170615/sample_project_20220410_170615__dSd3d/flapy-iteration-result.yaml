@@ -3,12 +3,11 @@ project_name:           "sample_project"
 project_url:            "https://github.com/gruberma/python-tests-minimal-examples"
 project_git_hash:       "4865a6abb232fa71ee9a8109517f5cff2cd9d502"
 project_git_hash_INPUT: "4865a6a"
-pypi_tag:               ""
 func_to_trace:          ""
 tests_to_be_run:        ""
 num_runs:               2
 plus_random_runs:       false
-flapy args:             ""
-start_time:             Sun May 22 21:53:36 UTC 2022
-end_time:               Sun May 22 21:53:54 UTC 2022
-execution_time:         18
+third_party_coverage:   false
+start_time:             Sun Apr 10 15:06:30 UTC 2022
+end_time:               Sun Apr 10 15:06:43 UTC 2022
+execution_time:         13

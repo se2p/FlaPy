@@ -1,0 +1,13 @@
+hostname:               db3
+project_name:           "sample_project"
+project_url:            "https://github.com/gruberma/python-tests-minimal-examples"
+project_git_hash:       "4865a6abb232fa71ee9a8109517f5cff2cd9d502"
+project_git_hash_INPUT: "4865a6a"
+func_to_trace:          ""
+tests_to_be_run:        ""
+num_runs:               2
+plus_random_runs:       true
+third_party_coverage:   false
+start_time:             Sun Apr 10 15:17:08 UTC 2022
+end_time:               Sun Apr 10 15:17:34 UTC 2022
+execution_time:         26

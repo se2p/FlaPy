@@ -26,7 +26,7 @@ def test_decide_overall_verdict():
 
 def test_results_dir_get_passed_failed():
     reference_pf = pd.read_csv(
-        "test_output_reference/passed_failed_20220522_235335.csv",
+        "test_output_reference/passed_failed_20220410_170615.csv",
         converters={
             "Passed_sameOrder": rp.eval_string_to_set,
             "Failed_sameOrder": rp.eval_string_to_set,
@@ -45,7 +45,7 @@ def test_results_dir_get_passed_failed():
     ).reset_index(drop=True)
 
     pf = rp.ResultsDir(
-        "test_resources/flapy-results-collection/flapy-results_20220522_235335"
+        "test_resources/flapy-results-collection/flapy-results_20220410_170615"
     ).get_passed_failed(
         read_resultsDir_cache=False,
         write_resultsDir_cache=False,
@@ -152,7 +152,7 @@ def test_results_dir_collection_get_passed_failed():
 
 def test_results_dir_get_tests_overview():
     reference_to = pd.read_csv(
-        "test_output_reference/tests_overview_20220522_235335.csv",
+        "test_output_reference/tests_overview_20220410_170615.csv",
         converters={
             "Verdicts_sameOrder": rp.eval_string_to_set,
             "Verdicts_randomOrder": rp.eval_string_to_set,
@@ -161,7 +161,7 @@ def test_results_dir_get_tests_overview():
     reference_to = reference_to.sort_values(rp.proj_cols + rp.test_cols).reset_index(drop=True)
 
     to = (
-        rp.ResultsDir("test_resources/flapy-results-collection/flapy-results_20220522_235335")
+        rp.ResultsDir("test_resources/flapy-results-collection/flapy-results_20220410_170615")
         .get_tests_overview(
             read_resultsDir_cache=False,
             write_resultsDir_cache=False,
