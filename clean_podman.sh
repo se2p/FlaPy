@@ -6,7 +6,10 @@ unset XDG_CONFIG_HOME
 export HOME=$PODMAN_HOME
 
 echo "-- Removing containers"
-podman --root "${LOCAL_PODMAN_ROOT}" rm -v --all
+podman --root "${LOCAL_PODMAN_ROOT}" rm -v --force --all
 
 echo "-- Removing images"
 podman --root "${LOCAL_PODMAN_ROOT}" rmi --all
+
+echo "-- Echo podman info"
+./echo_podman_info.sh
