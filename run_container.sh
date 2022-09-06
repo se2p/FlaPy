@@ -45,6 +45,7 @@ unset XDG_CONFIG_HOME
 # create podman folders
 mkdir -p "${PODMAN_HOME}"
 mkdir -p "${LOCAL_PODMAN_ROOT}"
+mkdir -p "${LOCAL_TMP}"
 # change home (your home dir doesn't get mounted on the cluster)
 export HOME=$PODMAN_HOME
 alias p='podman --root=$LOCAL_PODMAN_ROOT'
