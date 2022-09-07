@@ -28,22 +28,25 @@ def main(args: List[str] = None):
         print("USAGE: remove_duplicate_urls.py REPOS_CSV", file=sys.stderr)
         print(file=sys.stderr)
         print(
-            "REPOS_CSV should have two columns (project_name, url) but no header row!",
+            "REPOS_CSV should have two columns (Project_Name, Project_URL)",
             file=sys.stderr,
         )
         sys.exit()
 
-    df = pd.read_csv(args[0], names=["project", "url"])
+    # -- READ CSV
+    df = pd.read_csv(args[0])
     print(f"Input csv has {len(df)} rows", file=sys.stderr)
 
+    # -- Drop rows with identical URLs
     print(
-        f"Removed {len(df[df.duplicated(subset='url')])} rows that were already duplicated in the input data",
+        f"Removed {len(df[df.duplicated(subset='Project_URL')])} rows that were already duplicated in the input data",
         file=sys.stderr,
     )
-    df.drop_duplicates(subset="url", inplace=True)
+    df.drop_duplicates(subset="Project_URL", inplace=True)
 
+    # -- Resolve URLs
     print("Resolving URLs", end="", file=sys.stderr)
-    df["url"], df["status"] = list(zip(*df["url"].apply(resolve_url)))
+    df["Project_URL_redirected"], df["Project_URL_status"] = list(zip(*df["Project_URL"].apply(resolve_url)))
     print(file=sys.stderr)
 
     # print(file=sys.stderr)
@@ -53,7 +56,9 @@ def main(args: List[str] = None):
     # )
     # print(df[df['status'] != 200], file=sys.stderr)
     # df = df[df['status'] == 200]
-    df = df[["project", "url"]]
+    # df = df[["Project_Name", "Project_URL"]]
+
+    df["same_redirect"] = (df["Project_URL"] == df["Project_URL_redirected"])
 
     print(file=sys.stderr)
     print(
@@ -61,11 +66,11 @@ def main(args: List[str] = None):
         file=sys.stderr,
     )
     print(df[df.duplicated()], file=sys.stderr)
-    df.drop_duplicates(subset="url", inplace=True)
+    df.drop_duplicates(subset="Project_URL_redirected", inplace=True)
 
     session.close()
 
-    df.to_csv(sys.stdout, index=False, header=False)
+    df.to_csv(sys.stdout, index=False)
 
 
 if __name__ == "__main__":
