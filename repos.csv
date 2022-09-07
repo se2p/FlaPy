@@ -77,7 +77,7 @@ aioboto3,https://github.com/terrycain/aioboto3,c23639e100959ed020151c73123885fbe
 aiocaldav,https://github.com/ThomasChiroux/aiocaldav,32fbc3eeb7a0c1159e8bd8a176b6d8ecb1cc3b08
 aiochan,https://github.com/zh217/aiochan,1fd9bff74fd1092549c8969ea780cc39d2077497
 aioChatbase,https://github.com/Olegt0rr/aioChatbase,8a922d1b400fd67af9f0914d7cbf86dc784f7179
-aiocron,https://github.com/gawel/aiocron/,e82a53c3f9a7950209cee7b3e493204c1dfc8b12
+aiocron,https://github.com/gawel/aiocron,e82a53c3f9a7950209cee7b3e493204c1dfc8b12
 aiodataloader,https://github.com/syrusakbary/aiodataloader,9f55487416f89bed9163fbb660cf5a279da3e21c
 aiodec,https://github.com/cjrh/aiodec,fd4817ca3e3349bb9e4c41c282c8d1fc1c45f437
 aiodinweb,https://github.com/python-odin/aiodinweb,d89079fd42456b16656395e93d35651752e390b9
@@ -90,7 +90,7 @@ aiofiles,https://github.com/Tinche/aiofiles,c48f5b0a825f8c68c2238f098585c1f1c6ba
 aiofunctools,https://github.com/pando85/aiofunctools,a49df3b53a7e2e98f46ac02fd97ea6a4bf6f66e4
 aiogram,https://github.com/aiogram/aiogram,22094eb477711e644924eaeb2424c8cef20e637a
 aiograph,https://github.com/aiogram/aiograph,0a99df54da405f8de38afbbbc99964fd442e4457
-aiohttp_apiset,https://github.com/aamalev/aiohttp_apiset/,10221a5cf57889eb04123fc5e82c31ac28add897
+aiohttp_apiset,https://github.com/aamalev/aiohttp_apiset,10221a5cf57889eb04123fc5e82c31ac28add897
 aiohttp-apispec,https://github.com/maximdanilchenko/aiohttp-apispec,4697941a292b5b3600fd58217a420c5f402b1b05
 aiohttp_auth_autz,https://github.com/ilex/aiohttp_auth_autz,5aabbad250042a572fc13840b6b65a7ae0be1376
 aiohttp-basicauth-middleware,https://github.com/bugov/aiohttp-basicauth-middleware,c973cae5931ad3cbce95d82cb94be6006ae84872
@@ -98,14 +98,13 @@ aiohttp_cors,https://github.com/aio-libs/aiohttp-cors,73510a3a9212afd1d3740fd8b2
 aiohttp_debugtoolbar,https://github.com/aio-libs/aiohttp_debugtoolbar,0573ba8df3684f6ee19fa7a59cf6b28417f9705d
 aiohttp-limit,https://github.com/underyx/aiohttp-limit,410b395883b34105f122f97e1533e77bdf188f91
 aiohttp-login,https://github.com/imbolc/aiohttp-login,43b30d8630ca5c14d4b75c398eb5f6a27ddf0a52
-aiohttp_mako,https://github.com/aio-libs/aiohttp-mako/,df1a55de9179b321bf082480c28f0c7b9b6c6332
+aiohttp_mako,https://github.com/aio-libs/aiohttp-mako,df1a55de9179b321bf082480c28f0c7b9b6c6332
 aiohttp-proxy,https://github.com/Skactor/aiohttp-proxy,8810ab6c0daf9f537f2c2bb1ce049fbdae7b9f6e
 aiohttp_security,https://github.com/aio-libs/aiohttp_security,e41852d7632093be030a36f227d51b3b77628208
-aiohttp_security,https://github.com/aio-libs/aiohttp_security/,e41852d7632093be030a36f227d51b3b77628208
 aiohttp-send,https://github.com/Trim21/aiohttp-send,29dc5550f876a267c5695521f94c53fb41c4113c
 aiohttp-spyne,https://github.com/katajakasa/aiohttp-spyne,8b82e2027ab57ddab45fb96834a43cff73455f0c
 aiohttp-sse-client,https://github.com/rtfol/aiohttp-sse-client,2b488205914d847d86da91b391d9ef4a8848141e
-aiohttp-sse,https://github.com/aio-libs/aiohttp_sse/,66407db5752d19abd4d312f0b22fa8106feb6ca2
+aiohttp-sse,https://github.com/aio-libs/aiohttp_sse,66407db5752d19abd4d312f0b22fa8106feb6ca2
 aiohttp-swagger,https://github.com/cr0hn/aiohttp-swagger,ea321152805878abb23040fa5c7186b89d872b38
 aiohug,https://github.com/nonamenix/aiohug,5356461b9074c9310751462c2a99ac4204cb94cd
 aioimdb,https://github.com/fpierfed/aioimdb,125bb1a132c39ea6f7a41160fff87257d2f08c8b
@@ -167,7 +166,7 @@ alosi,https://github.com/harvard-vpal/alosi,aa525c1cdbfb4d16e79970540ac7136098e5
 alphabet-detector,https://github.com/EliFinkelshteyn/alphabet-detector,234682e439fa549cba9b2289c8d348f31daa7282
 alphanum-code,https://github.com/ylaizet/alphanum_code,fb5cd313dc41f046aac01ff01d6e1561d17894a6
 alphavantage,https://github.com/portfoliome/alphavantage,8ec87ede2f0ffcc0948e92b5a933193b8b201066
-alppb,https://github.com/irlrobot/alppb/,3eff4c3df1fd2ae3aaa83c03988beccc6aeb1dd1
+alppb,https://github.com/irlrobot/alppb,3eff4c3df1fd2ae3aaa83c03988beccc6aeb1dd1
 altendpy,https://github.com/altendky/altendpy,14bbe9d8a6ee4349bbd327016233d7542d50af0d
 altered.states,https://github.com/Plexical/altered.states,aa01233d02ad8aceba9183f62cdd3d1d8b2cce7a
 alteruphono,https://github.com/tresoldi/alteruphono,4572afb4f05f2fa1360464c69ec70b97abac2fe5
@@ -210,7 +209,7 @@ ansible-lint-to-junit-xml,https://github.com/andreferreirav2/ansible-lint-to-jun
 ansible-maas-dynamic-inventory,https://github.com/jsaguiar/ansible-maas-dynamic-inventories,9c04689e3b06d59f2edd0d015394642a7bc42ae0
 ansible-netbox-inventory,https://github.com/AAbouZaid/netbox-as-ansible-inventory,f021602b34ae183c68683f4caf2d006fed0aa005
 ansicolor,https://github.com/numerodix/ansicolor,a5a5c31dc6de5c864a0c5684ae326972573a712b
-ansi,https://github.com/tehmaze/ansi/,e7014adda9fdc0ab60053f4e65ff06edb2158046
+ansi,https://github.com/tehmaze/ansi,e7014adda9fdc0ab60053f4e65ff06edb2158046
 ant-colony,https://github.com/jurekpawlikowski/ant-colony,4251961cbd80e097b02f1079d0c60191630fb775
 anteater,https://github.com/anteater/anteater,b945fb27154e603d10c4926832bda1da2124d302
 antlr-ast,https://github.com/datacamp/antlr-ast,81a5b52d8eb9f40fbe0b364ecbc0c2e4a5e86ed1
@@ -244,7 +243,7 @@ apsitemap,https://github.com/gamelife1314/sitemap,79f34b31898696495b81ce8b0c5266
 apsjournals,https://github.com/JWKennington/apsjournals,c6e956d254b4d7df8b815e34a3591e243d779500
 apus,https://github.com/geislor/apus,603ec8292507da5b10c30655a1e7eec6c33e6ef6
 apypie,https://github.com/Apipie/apypie,bce4117717ffdade7d1a41314702a16dfac0d1b2
-aquaipy,https://github.com/mcclown/AquaIPy/,0d8765092dfe95e1ad603e3617e68e6f338351a0
+aquaipy,https://github.com/mcclown/AquaIPy,0d8765092dfe95e1ad603e3617e68e6f338351a0
 aqualogic,https://github.com/swilson/aqualogic,35648a286b384081837a4edbb4cddc1df0692610
 arabic_pronunciation.git,https://github.com/youssefsharief/arabic_pronunciation.git,740c547a7717890ac0e2985429e9e4c43da06605
 architect-api,https://github.com/cznewt/architect-api,fc2d78f629afb3886de8faefd5f5cbd3a5c51170
@@ -308,11 +307,11 @@ async2rewrite,https://github.com/TheTrain2000/async2rewrite,aab3dd65a70bcdf8c9a6
 asyncall,https://github.com/tiagn/asyncall,bfade3570c5ac3add2e962524788da5d954e9aea
 async_armor,https://github.com/wikibusiness/async_armor,58ac748839a8d07f2bcd8a12c46fff3be1a27489
 asynccli,https://github.com/ahopkins/asynccli,4fca1fe5522769212223f4e7657e08d4e9e5aa3b
-async-dispatch,https://github.com/tobypatterson/async-dispatch/,5ccdd84f4224ee4e54c00de8a01d31684dc86394
+async-dispatch,https://github.com/tobypatterson/async-dispatch,5ccdd84f4224ee4e54c00de8a01d31684dc86394
 async-exit-stack,https://github.com/sorcio/async_exit_stack,07a463d99d4e3b76649e97c02d8f8ec912c14318
 async-fetcher,https://github.com/night-crawler/async-fetcher,a4143d6e3a1bc67113e3f9f9c90b18d6d0cf917d
 Asynchronize,https://github.com/TMiguelT/Asynchronize,a9377c995b2c60114ca0abdf15c2f41f1d0471af
-asyncio_dispatch,https://github.com/lenzenmi/asyncio_dispatch/,9c8e7fba65c69ba146e6559ec7897bdadb24880a
+asyncio_dispatch,https://github.com/lenzenmi/asyncio_dispatch,9c8e7fba65c69ba146e6559ec7897bdadb24880a
 asynciomeasures,https://github.com/Poogles/asynciomeasures,d62482e8de56a00bce310e7c422d1a1e7a114ef7
 asyncio-railgun,https://github.com/c-goosen/asyncio-railgun,23a234d0810ae7dd3c69504232ea7b021ca7c82c
 asynciotimemachine,https://github.com/astralblue/asynciotimemachine,0fef71f45ce467f3112f6f9eea18272162f46447
@@ -326,7 +325,7 @@ async_property,https://github.com/ryananguiano/async_property,3c96948177ae9630ff
 async_retrial,https://github.com/nerandell/async_retrial,a84f5f5af3455fb085d8055a3d77e215710ab24d
 async_retrying,https://github.com/wikibusiness/async_retrying,7d53964358481e30279fa1e72c2b6583498af372
 async-stagger,https://github.com/twisteroidambassador/async_stagger,8ff3062c0953bac184e4c06821e7d42cd153fb1c
-async_timeout,https://github.com/aio-libs/async_timeout/,45bea1a497bb1f0c8b0ccca1fb1e107140ab5a82
+async_timeout,https://github.com/aio-libs/async_timeout,45bea1a497bb1f0c8b0ccca1fb1e107140ab5a82
 async-vk-api,https://github.com/Suenweek/async-vk-api,d10cdde800e4921e13f6d258d7a9f72bb4eeb37e
 async-vk-bot,https://github.com/Suenweek/async-vk-bot,bf7f4e2f8a67fd7c1e1883d940a1fee74d874ec1
 asynker,https://github.com/enkore/asynker,3806a34806e15867b59c77a806e6f398092c15ca
@@ -392,7 +391,7 @@ aws-encryption-sdk-python,https://github.com/aws/aws-encryption-sdk-python,c9619
 awsenviron,https://github.com/douglasfarinelli/python-awsenviron,6e6a363a43478bd1ddff12fab51964d78d584abd
 awsjar,https://github.com/ysawa0/awsjar,87f538da606635c93eaa4629a20a7873c3066d95
 aws-lambda-decorators,https://github.com/gridsmartercities/aws-lambda-decorators,bbd25a7002b99e57fe7da225b6aad06cb1e43b9c
-aws-lambda-pyauthlib,https://github.com/oharaandrew314/aws-lambda-pyauthlib/,ea501be56784ac22e8b6080f978f8b806ef8fd39
+aws-lambda-pyauthlib,https://github.com/oharaandrew314/aws-lambda-pyauthlib,ea501be56784ac22e8b6080f978f8b806ef8fd39
 aws_lambda_sample_events_python,https://github.com/awslabs/aws_lambda_sample_events_python,59f3a472a7b085dc3c92d467bf77a205f5c37e65
 awslimitchecker,https://github.com/jantman/awslimitchecker,2bb3ae7a8f257506022b61896507b937a6c0ec88
 aws_okta_keyman,https://github.com/nathan-v/aws_okta_keyman,a14e0b2197517eb013516dbf85b7e284c5bc6ef0
@@ -477,7 +476,7 @@ bitresource,https://github.com/hbasria/bitresource,e436a7b958206fae7c7c0eafc73e5
 bitutils,https://github.com/hbasria/bitutils,6b67c0a27db962ee28f3638cc51bdedba5a2de19
 blackmamba,https://github.com/zrzka/blackmamba,b298bc5d59e5aea9d494282910faf522c08ebba9
 blackSheep,https://github.com/ruggleslab/blackSheep,a97ce1baca2c76aa2e2d0a580b38caed0fc4ff47
-blindtex,https://github.com/blindtex/blindtex/,1f0a7f933b4ce875103af1c81cd6ecf6948a4856
+blindtex,https://github.com/blindtex/blindtex,1f0a7f933b4ce875103af1c81cd6ecf6948a4856
 blog-travis-docker,https://github.com/JayH5/blog-travis-docker-part2,888850217f869a765c0f0c76380507202872fafa
 bloomtime,https://github.com/Poogles/bloomtime,94343456192c0a4837ddad2c421d59c7a3fd02fa
 bluebees,https://github.com/matheuswhite/bluebees,ca18ee6dae60393480bac3893038790957727748
@@ -533,10 +532,10 @@ bycycle,https://github.com/voytekresearch/bycycle,ab69c6bbf518189887b16d752da3a6
 bytecode_tools,https://github.com/gsb-eng/bytecode_tools,98e1c4343a9c8285da8dec4f893dd4d6cec1ee86
 byte-sqlite,https://github.com/fuzeman/byte-sqlite,808582d55eb0eac4f29e47e70e68d7f49743c95c
 c3pred,https://github.com/steffenlem/c3pred,0788102ff874758d57a81534072cc4a77d58d574
-cabby,https://github.com/EclecticIQ/cabby/,6d6ed1ab0a5eb3f2cf6a32f7cc982f50c146dae0
+cabby,https://github.com/EclecticIQ/cabby,6d6ed1ab0a5eb3f2cf6a32f7cc982f50c146dae0
 cabrillo,https://github.com/thxo/cabrillo,456ce4b7bc782f145077df5ad9095f3fb2740a1e
 cacahuate,https://github.com/tracsa/cacahuate,d55765e97f495ed0bfc54983240f2e5ed76a53c2
-cachel,https://github.com/baverman/cachel/,24c8e4a9b004e03f78655f686d45e516a35c4429
+cachel,https://github.com/baverman/cachel,24c8e4a9b004e03f78655f686d45e516a35c4429
 cachelock,https://github.com/douglasfarinelli/python-cachelock,c00afe63255e54033ab55cfd471ac38c6cd78343
 cache_me_outside,https://github.com/mdmedley/cache_me_outside,fad2346ec5257dddf58c161a1dd6d5704f42ab07
 cacheproperty,https://github.com/mattHawthorn/cacheproperty,befad302a3b3a3d2d1f6e902f2f60228a9403b4b
@@ -583,7 +582,7 @@ cedar-datacube,https://github.com/ceholden/cedar-datacube,d9463a28ce52665faaed06
 ceedub,https://github.com/paulthebaker/ceedub,e5d3aec104222865ec22df9b6c889cc30c302b4e
 cee-formatter,https://github.com/urbaniak/cee-formatter,b0dd4b30ff68cf91cd5eecb530ed9ed2822f1c53
 celery-serverless,https://github.com/alanjds/celery-serverless,f68a6f6a468e677c6df630f0af6904ad02bd7448
-celery-statsd,https://github.com/lyst/celery-statsd/,200728d711ec83d1d277db396887a7ec8f9fce2b
+celery-statsd,https://github.com/lyst/celery-statsd,200728d711ec83d1d277db396887a7ec8f9fce2b
 cellbase,https://github.com/imjp94/cellbase,80353caee3ca0878f0f1ee8580209f5064dbdf1d
 cellstar,https://github.com/Fafa87/cellstar,0999788282c906c2cfd86fd924e55463ca971762
 cenaming,https://github.com/portfoliome/cenaming,c1d1345bc2acd199a14ea55a3cf37db18ebd885f
@@ -674,7 +673,7 @@ clkhash,https://github.com/data61/clkhash,c7e33086a16f71deab73e27c5de59f62397b1d
 clkhash,https://github.com/n1analytics/clkhash,c7e33086a16f71deab73e27c5de59f62397b1d9a
 clogging,https://github.com/RyanMillerC/clogging,b2f897a1d2523f66ea0456139429eaca9f652d8f
 cloneme,https://github.com/LucianoFromTrelew/cloneme,10eb9a6eacbf6cda070ea046db120f95c88e7f71
-closeio,https://github.com/closeio/closeio-api/,e24601c962b56f7f5990201b86199ec5d903761c
+closeio,https://github.com/closeio/closeio-api,e24601c962b56f7f5990201b86199ec5d903761c
 closure-problem,https://github.com/hochbaumGroup/closure-problem,b5401ec323a4bcb9b0535847f79b4d6bf429762c
 cloud-compose-datadog,https://github.com/cloud-compose/cloud-compose-datadog,19225a8b92816df1101009aad3e44992af7d50e0
 cloudflare-fuzzy-finder,https://github.com/dhoeric/cloudflare-fuzzy-finder,8b1ed8bb599e021a86424d226714c7e494193d7d
@@ -692,15 +691,14 @@ cobol-sharp,https://github.com/petli/cobol-sharp,d47dd8d2363d00d75b5174f66afaf96
 cobrad,https://github.com/wufeifei/cobra,02f16219bcb0b92e70e33c46c5e0f91ed1caf172
 cobrascript,https://github.com/niwibe/cobrascript,4c6a193d8745771e5fb0e277394f83e47cc7ede8
 coconut-prelude,https://github.com/evhub/coconut-prelude,3be3ab5d49f4777071fb8b971f858d2304d85085
-Cocopot,https://github.com/zeaphoo/cocopot/,d691c52ff71eeab6658b3777d95e2503f681bae2
-cocopot,https://github.com/zeaphoo/cocopot,d691c52ff71eeab6658b3777d95e2503f681bae2
+Cocopot,https://github.com/zeaphoo/cocopot,d691c52ff71eeab6658b3777d95e2503f681bae2
 codalab-worksheets,https://github.com/codalab/codalab-worksheets,bf744068aaddccd2509e31a4c3666768bc3b0d2f
 codar2netcdf,https://github.com/axiom-data-science/codar2netcdf,f29e84501db06cf9f5c86fb26fc0f007ae430c0a
 codemetrics,https://github.com/elmotec/codemetrics,b1eae9fee7142f1ead3cd8d9e8fd6851eb7c583a
 codemod,https://github.com/facebook/codemod,41d6eabad7b055a83923150efd5518813831c9a5
 codemod-unittest-to-pytest-asserts,https://github.com/hanswilw/codemod-unittest-to-pytest-asserts,adbba7183c3947a31d28fd1c6fc95003284cb29d
 code-snippet,https://github.com/ARMmbed/snippet,f37ef0048c63fd8c9039a64482ed69922a8e7498
-codespell,https://github.com/codespell-project/codespell/,88c768b084353662c255a58d122f46fbbe3d8de4
+codespell,https://github.com/codespell-project/codespell,88c768b084353662c255a58d122f46fbbe3d8de4
 codetransformer-py2,https://github.com/brthor/codetransformer-py2,473e138499e25eba1887e19d1e2f5ba2493bc47f
 codewatch,https://github.com/tophat/codewatch,67242f803c8742ec37da3ff4140b8f8173ff205a
 colify,https://github.com/looneym/colify,f8fd0cc31fca3ba6511dafa7a42940053d83d37e
@@ -760,7 +758,7 @@ context-cli,https://github.com/nicolasmesa/context-cli,2b4464b54c748d41515b53d38
 contextfun,https://github.com/mittelholcz/contextfun,7902d2d8bf73af70942b357b937454a487fb8a33
 contextily,https://github.com/darribas/contextily,9a8b652768365b24fbce912b71737f4fa6b3295c
 contributors,https://github.com/pydanny/contributors,be56a92b28e39a4294579edb68c28865b4296677
-controlhost,https://github.com/tamasgal/controlhost/,6f0b6e5c48e490580a23c47302f996bb95b52aa0
+controlhost,https://github.com/tamasgal/controlhost,6f0b6e5c48e490580a23c47302f996bb95b52aa0
 control,https://github.com/gaia-boat/control,c343ef8c5a9b275b6a8ce0f715adbd0434d24166
 converge,https://github.com/drewboswell/converge,36d86a72c4a31ca3e7cca92c7fd338aaad6ce96a
 converter-cli,https://github.com/patillacode/converter-cli,b1a5dbd556d1dc559f7d61397e9894e0f8b2ebe0
@@ -842,7 +840,7 @@ cyscore,https://github.com/inkeye/cyscore,c59a0d3794d541d01516cc9cd059370a67fde7
 cysgp4,https://github.com/bwinkel/cysgp4,c52ca9f98db4fa63169f3823ebcb1a9a95fe6b81
 cz-urnnbn-api,https://github.com/edeposit/cz-urnnbn-api,2c9d36648491bfcbf0f29bedaf6f507a51805f8e
 dabbiew,https://github.com/agtumulak/dabbiew,c5b81762447aed1eb883df606a1aea54e0b6e27f
-dadata-client,https://github.com/f213/dadata-client/,dbd619d752a96bc0d48be51e07b53e8f9a795079
+dadata-client,https://github.com/f213/dadata-client,dbd619d752a96bc0d48be51e07b53e8f9a795079
 daft-builder,https://github.com/macks22/daft-builder,54e946d07ba730d29373d4448a5278569248d87e
 dagre-py,https://github.com/Vernacular-ai/dagre-py,c7f226a10d0fb64eb7c15c53ee7d8d52a8d8c22d
 dahuffman,https://github.com/soxofaan/dahuffman,a7a94ecef1a7083cc3964014e2bc7ea2f78ed240
@@ -1063,7 +1061,7 @@ djcms-blog,https://github.com/carlosmart626/djcms_blog,39cf7b6f388f7f4717eb1fac4
 djcms-blog-plugin,https://github.com/carlosmart626/djcms_blog_plugin,70e57c45e386322202c3763392e8a67c024fa97c
 dj-haystack-url,https://github.com/simpleenergy/dj-haystack-url,4882f1fce5318bc09e2a044c4e85b9c1d0d99567
 djoser,https://github.com/sunscrapers/djoser,786edc2bb129d7343e54d59b15b682689f534e46
-dkfileutils,https://github.com/datakortet/dkfileutils/,97145d73d4f390af77ef4b40f7ef3705722d96a3
+dkfileutils,https://github.com/datakortet/dkfileutils,97145d73d4f390af77ef4b40f7ef3705722d96a3
 dlercloud,https://github.com/youfou/dlercloud,c2ded7cc174d8f46e80fd12d5ec4fac44b74b244
 dlhub_cli,https://github.com/DLHub-Argonne/dlhub_cli,4193683c92b9be546588b8e3ac419c5efecd8ef7
 dlhub_sdk,https://github.com/DLHub-Argonne/dlhub_sdk,d3bbf14c49be3077a742a1c18d5316b11b234f6d
@@ -1133,7 +1131,6 @@ DropboxSyncer,https://github.com/harsimrans/DropboxSyncer,ef700f632ca583c68e60f2
 Droptopus,https://github.com/ArtBIT/Droptopus,e4c0c9c1494bbb03da232f7ee3c63586ec3c942f
 drydock,https://github.com/Nekroze/drydock,4e62f1435292171f8b37d303ea26add426a9de50
 dsq,https://github.com/baverman/dsq,875d17a1612ae0188b0903041f2a188077e802da
-dsq,https://github.com/baverman/dsq/,875d17a1612ae0188b0903041f2a188077e802da
 DstRF,https://github.com/proloyd/DstRF,ae5e283cef054711626950778fd9ddfbb4830182
 dsv,https://github.com/kootenpv/dsv,a76c8b8ee862c7ab0d5de76232c069cfa45f82a7
 dtcwt,https://github.com/rjw57/dtcwt,ad9922d0b46698e0631992d287c81697e6aae7ee
@@ -1176,7 +1173,7 @@ ec2-reaper,https://github.com/inhumantsar/python-ec2-reaper,73d2a38984553837fa34
 ec2ssh2,https://github.com/scivey/ec2ssh2,905aa86d077033f237c8f7eb86ac9021af7b6762
 ecdsa,https://github.com/warner/python-ecdsa,14e673d287f0a15846020265d06a8d8b5c7ba3cf
 ecf_parser,https://github.com/lostinplace/ecf-parser,a422f008de6db8c7933448567c0cdcc647d460f0
-echovr-api,https://github.com/Ajedi32/echovr-api/,e135f25fb5b188e2931133d04c47c5e66e83a6c5
+echovr-api,https://github.com/Ajedi32/echovr-api,e135f25fb5b188e2931133d04c47c5e66e83a6c5
 eciespy,https://github.com/kigawas/eciespy,d998621ef70487c057f154831fd38089e228b3b3
 econ-ark,https://github.com/econ-ark/HARK,c9138af45fd0a0d97c718c8558f3ea8d9f2ae820
 ecr-tools,https://github.com/boroivanov/ecr-tools,18f1a751b18b6f11bbe8d2f01a12f594cbd6dd08
@@ -1191,7 +1188,7 @@ edwiges,https://github.com/loggi/edwiges,1439365b86015f10c8057d0bb32c3aa6810390b
 edx-dl,https://github.com/coursera-dl/edx-dl,e9a5e9c06d90d459788f5032f58f297a7fb45cca
 eea.sentry,https://github.com/eea/eea.sentry,36b11854da26d5e5817ca4ae17ece0954e233fb5
 EEPROgraMmer,https://github.com/dangrie158/EEPROgraMmer,f16235b8b59a8d1a3e52ee8859683e7207ed8009
-effect,https://github.com/python-effect/effect/,df04e119faf419a5608a51ca1af606f2874a11a7
+effect,https://github.com/python-effect/effect,df04e119faf419a5608a51ca1af606f2874a11a7
 egtest,https://github.com/kimmobrunfeldt/egtest,492a395fc37d6bbc9a80704075d08c1cbc939762
 ehex,https://github.com/makhidkarun/ehex,39d5ac2188fa2007d1dc7ecf04686f22be123786
 einder,https://github.com/OrangeTux/einder,deb2c5f79a69b684257fe939659c3bd751556fd5
@@ -1203,7 +1200,7 @@ elasticsearch-cli,https://github.com/WeslyG/elasticsearch-cli,1458a7fb2bdd07b41f
 election-night-api,https://github.com/MinnPost/election-night-api,430af61c4fb9a7fd83b9b5a8e0ad88433b2659fc
 elemental-core,https://github.com/artPlusPlus/elemental-core,41dcc787ab115f88e94a85e02cbcec14e22c538b
 elifetools,https://github.com/elifesciences/elife-tools,a5b93afbe4db7852bf1aa12265090d60140fca8e
-eliqonline,https://github.com/6d66/eliq/,eccf3135623271f562812bb87a8e7ac158bdf6a3
+eliqonline,https://github.com/6d66/eliq,eccf3135623271f562812bb87a8e7ac158bdf6a3
 eloquent,https://github.com/sdispater/eloquent,0638b688d5fd0c1a46b7471dd465eeb4c2f84666
 emailer,https://github.com/WhiteHalmos/emailer,4a905a3c9dbe7606979a01ef25847c57c951cdac
 emailz,https://github.com/hanzhichao/emailz,5758c951a2acf701a9a1e377712ac1153406c5f5
@@ -1385,9 +1382,9 @@ Flask-Excel,https://github.com/pyexcel/Flask-Excel,f962f5a2b370c1f526fb51450faf6
 Flask-FileUpload,https://github.com/speedy1991/Flask-FileUpload,149528d1a083d03a79dc96f45ff5d5b155516710
 Flask-Fool,https://github.com/Faylixe/flask-fool,6da0767fdb99a26280ba035f5bc3938c3cec9332
 flask_google_cloud_logger,https://github.com/rai200890/flask_google_cloud_logger,ba677be8ad32f4dbc1cd1bc60cd09d399df47a6e
-Flask-Googletrans,https://github.com/mrf345/flask_googletrans/,e7ec3057bdbe57bb30928edc41fdeb0d19a0984d
+Flask-Googletrans,https://github.com/mrf345/flask_googletrans,e7ec3057bdbe57bb30928edc41fdeb0d19a0984d
 flask_graphite,https://github.com/numberly/flask-graphite,48f0fee5466a6c05cc4432d5277781bdbabd6dec
-Flask-gTTS,https://github.com/mrf345/flask_gtts/,13af7a3ea7f71089365d9b6e12f822aa6eb02a3c
+Flask-gTTS,https://github.com/mrf345/flask_gtts,13af7a3ea7f71089365d9b6e12f822aa6eb02a3c
 flaskhost-cli,https://github.com/flaskhost/flaskhost-cli,fb076183283459147086788aa8f033ae2554e8e7
 Flask-InterfacePubSub,https://github.com/rafaelportugal/Flask-InterfacePubSub,60904ceafed88e25c1504aa0300d37780c09c50b
 flaskisan.git,https://github.com/ShawnZhang31/flaskisan.git,2c5868ef697c55f444b81aa2ca022682b4a08ce0
@@ -1490,7 +1487,7 @@ galaxy_updater,https://github.com/danrue/galaxy_updater,074797ab9ce68e46b5f90619
 Gallerist,https://github.com/RobertoPrevato/Gallerist,fec79775b711155f2bd48e881b8abe2e70aa3ec0
 gamoto,https://github.com/calston/gamoto,fc2c3656d88b113c2af2f3b18fa8d349b4739119
 GatsbyPythonNormalizer,https://github.com/Gatsby-Lee/GatsbyPythonNormalizer,b083e06a7961366d887d1989033e14ad20d89445
-GaussOpt,https://github.com/garrettj403/GaussOpt/,34260a3e8d89a6161689279210573dd0b4860bd7
+GaussOpt,https://github.com/garrettj403/GaussOpt,34260a3e8d89a6161689279210573dd0b4860bd7
 GC-analysis,https://github.com/tonyyzy/GC_analysis,a8c7be317d24703272d8fa3fb76a97b4d8d7b38f
 gcd,https://github.com/HunarTechie/gcd,61b9c2d06021a4801c2452d9ee17ea4193691c19
 gclone,https://github.com/mtbrock/gclone,0cff4e8d081be9180703a966a1c5f575ef313c43
@@ -1520,8 +1517,7 @@ geojson2fromto,https://github.com/weaselandfox/geojson2fromto,2d4a5d6358b830dea5
 georasters,https://github.com/ozak/georasters,9ccf84e1a778887a56781ec7535836e3335ada51
 geoscale,https://github.com/giswqs/geoscale,ce6a2cfc8e740765ff267c51b993af2d254d23f6
 geoselect,https://github.com/FreekKalter/geoselect,2c6ab869d50215eba21dce3e1770bcf8ecdb41f3
-geox-statistics,https://github.com/KDD-OpenSource/geox-young-academy/,ffa35f41d0032dcf7a9dfb9b2939402f83e9dcc2
-geox-young-academy,https://github.com/KDD-OpenSource/geox-young-academy,ffa35f41d0032dcf7a9dfb9b2939402f83e9dcc2
+geox-statistics,https://github.com/KDD-OpenSource/geox-young-academy,ffa35f41d0032dcf7a9dfb9b2939402f83e9dcc2
 germalemma,https://github.com/WZBSocialScienceCenter/germalemma,eb2b0f81fdba64d6df5297e4a5306ec3018dea52
 get-mac,https://github.com/GhostofGoes/getmac,3569b7ce503aa94f81a2d4cbab4a3aea8f44e39e
 GetMyIPcawen,https://github.com/abarik1981/getmyip,9281a0a392d6fb8b821ad0a83aa178546c71e792
@@ -1582,7 +1578,7 @@ godwill.git,https://github.com/rockyCheung/godwill.git,ecbf7b45e40d102c8e7118ac3
 goji,https://github.com/kylef/goji,66883ca4d78953066040b63c4d728b83a178ea37
 golems,https://github.com/evansde77/golems,01355c900662efc58542adce71e59e153802ba2b
 golomb_coding,https://github.com/LucaCappelletti94/golomb_coding,d64d7a3085d513d579bba4180eaad57a8bc38b74
-goodconf,https://github.com/lincolnloop/goodconf/,19515da5783f86b9516dbf81531107c2d9eae567
+goodconf,https://github.com/lincolnloop/goodconf,19515da5783f86b9516dbf81531107c2d9eae567
 goodtables,https://github.com/frictionlessdata/goodtables,7619fa311c086cf31daa9432853e071b006bd046
 googkit,https://github.com/googkit/googkit,cacb37bf65e5ac19379b329beb02af907240aa60
 google-cloud-logger,https://github.com/rai200890/python_google_cloud_logger,8431da979cffbec6df9c94ee7a10da608a3703aa
@@ -1733,7 +1729,6 @@ hurlers,https://github.com/sjbrowne/hurlers,eccd0c7402c307c136313d0fe9beba3f8bde
 hurry,https://github.com/Telichkin/hurry,56f361d3f3703be238516c8d0b8ec2be99ccdd5b
 husl-numpy,https://github.com/TadLeonard/husl-numpy,da182e2d8bf62c8e4ada530e6e8d1501f28cf582
 hutils,https://github.com/zaihui/hutils,52b4c2f83a9eada00fa94e67313774fe727bbf22
-hutils,https://github.com/zaihui/hutils/,52b4c2f83a9eada00fa94e67313774fe727bbf22
 hwtGraph,https://github.com/Nic30/hwtGraph,18e8dfaef9c7f2e440917cb7281d724915e0479d
 hyper2web,https://github.com/CreatCodeBuild/hyper2web,46f0e8f0c02d9314985da6e59241e0d676c524c0
 HyperGraph,https://github.com/oberbichler/HyperGraph,89adf81abc351e1825501bfc19499ca4718431a6
@@ -1796,12 +1791,12 @@ import-order,https://github.com/spoqa/import-order,8b5796e611382ab83b94940fbf160
 import-update,https://github.com/yehonadav/import_update,3a3b51810b6f7fde149e09c9d09231ca2cd4991a
 impysonator,https://github.com/guidiego/impysonator,df5b7a48818ead24ea6ec22b6829c643fab992aa
 incoming,https://github.com/vaidik/incoming,c0dc26a17d49723315ef6cb28df10dcd39a8104b
-indexhr,https://github.com/marinko-peso/index-hr/,db3d48228ebfb98f7b9cbb017d6302945c14eda6
+indexhr,https://github.com/marinko-peso/index-hr,db3d48228ebfb98f7b9cbb017d6302945c14eda6
 indico-plugins,https://github.com/indico/indico-plugins,d96f5fa6b76beba77e4dd02a90548f6a012324f2
 indic_transliteration,https://github.com/sanskrit-coders/indic_transliteration,0a43c6e0dc852bf13d80d7cd7a94fe9050b761c7
 infinity,https://github.com/kvesteri/infinity,1be47baffce430fa0f393fbe0d0dd4788f10d820
 inflection,https://github.com/jpvanhal/inflection,66624651e4866b103bc12b9e8f4756936b11939f
-inflow,https://github.com/AdvancedClimateSystems/inflow/,8d6e202f388b543ccf0e22ff1981084771a239de
+inflow,https://github.com/AdvancedClimateSystems/inflow,8d6e202f388b543ccf0e22ff1981084771a239de
 influxdb-client-python,https://github.com/influxdata/influxdb-client-python,020e3cb1b4f360df8e4cd957861e7574355bad5f
 infobot,https://github.com/otuk/infobot,8baac7bb33f2ef8785d79cf8e0cc2542884ea336
 ingester,https://github.com/LCOGT/ingester,ecdbb9a148982f0e627a9d0b78add037258cfe5b
@@ -1853,7 +1848,7 @@ ishell,https://github.com/italorossi/ishell,520d29187bd180474e6b139f42a56a6f759a
 isitdown,https://github.com/ovv/isitdown,fb53b4c36a4a1cd0ce7f66e20b329755ccf68004
 isitup,https://github.com/lord63/isitup,67f9c48f5c20df99fc579dada52cbab06c9bf993
 islex,https://github.com/jkahn/islex,c60fee062e9ebe34a3bef338539749463e47faf0
-isocor,https://github.com/MetaSys-LISBP/IsoCor/,10662b0b2d11ca25880de5d799a63d7a03e64f31
+isocor,https://github.com/MetaSys-LISBP/IsoCor,10662b0b2d11ca25880de5d799a63d7a03e64f31
 isort,https://github.com/timothycrosley/isort,2952db41650211984fe64ac0b856881627e55aeb
 istsos3,https://github.com/istSOS/istsos3,17d7018fce099e2daf1dc477fa03b89f49e219d2
 iterative-stratification,https://github.com/trent-b/iterative-stratification,bbfc4820a1cc2f3ccadd270a799e5b19fe2f7b0c
@@ -1962,7 +1957,7 @@ keras-piecewise-pooling,https://github.com/CyberZHG/keras-piecewise-pooling,01ff
 keras-pos-embd,https://github.com/CyberZHG/keras-pos-embd,7f9d179d361a094272ba87eaae7cdeb935b35c72
 keras-transformer,https://github.com/CyberZHG/keras-transformer,d84a50fd1986a7b343d2db024b60bfe5f3dc276b
 keybase-python3,https://github.com/SkierPGP/keybase-python3,3322b689577a49db83155a84f0c0417b346edd7a
-keyed-classes,https://github.com/buckley-w-david/keyed-classes/,c9f4bef858ea24de452148b72adb24657d438d38
+keyed-classes,https://github.com/buckley-w-david/keyed-classes,c9f4bef858ea24de452148b72adb24657d438d38
 keyname,https://github.com/mmore500/keyname,4bf4739e43f8accf0ebcbd020094d06c0724ca3d
 keyper,https://github.com/Microsoft/keyper,11e8e86f9d46b192a6e41804c913e58faf2d0a53
 khleepkg02,https://github.com/KeonHeeLee/ssl-lab-test,0f407f7195261ebc49620cf7039b0c0982a87d59
@@ -1970,8 +1965,8 @@ kibana-dashboard-api,https://github.com/harabchuk/kibana-dashboard-api,8a13d5078
 kiek,https://github.com/maartenq/kiek,af18b52ba1a5f161a32884e8a68e238285f2908c
 kieli,https://github.com/PurpleMyst/kieli,c601ce9672806a91add270482f8954dea2f6cc44
 kill_mustache,https://github.com/Vinicius-rodrigues/kill_mustache,09a84c8225ac240094078c1ed2ba3edb891908dc
-kin-base,https://github.com/kinecosystem/py-kin-base/,b6075892900b67966365aba0c6b392a6d7cd6eab
-kinda,https://github.com/schmamps/Kinda/,405058929bb3555ea6cae1d2b798bfdaad6b9d52
+kin-base,https://github.com/kinecosystem/py-kin-base,b6075892900b67966365aba0c6b392a6d7cd6eab
+kinda,https://github.com/schmamps/Kinda,405058929bb3555ea6cae1d2b798bfdaad6b9d52
 kindle-maker,https://github.com/jachinlin/kindle_maker,5c478bdaf3cb7d2e824f21462e72543d15c6cc95
 kinematics,https://github.com/skulumani/kinematics,e8cb45efb40539982025ed0f85d6561f9f10fef0
 kinesisloghandler,https://github.com/neillab/kinesisloghandler,404241e1a7b898f2c7a64b4969391fb116ca28bd
@@ -2012,7 +2007,6 @@ kytos,https://github.com/kytos/kytos,6ec3b93219743c58ae1e544339339f9c5f383cb3
 l3wtransformer,https://github.com/GeorgesAlkhouri/l3wtransformer,6414ceaf489810f7b561c5235f593f558c41ec9c
 lab_assistant,https://github.com/joealcorn/lab_assistant,564ae1eb637ec509f37ade93d4079117cc73fd58
 labstepPy,https://github.com/Labstep/labstepPy,d35cee1bf3f2873a946fd1bd69dea5b317f67002
-LabSwarmManagement,https://github.com/pypa/sampleproject/,52966defd6a61e97295b0bb82cd3474ac3e11c7a
 LabToolkit,https://github.com/DavidLutton/LabToolkit,99b6e39a333801dc1cfc73665dde24459d244ae4
 laconia,https://github.com/avengerpenguin/laconia,27e612c6f98d21d98a298b823404b11f562222bd
 lambada,https://github.com/Superpedestrian/lambada,adc4fad618f8e5383ca5cd9122e42f89079550f9
@@ -2154,7 +2148,7 @@ lump,https://github.com/viaacode/lump,02f669f7f25c2a123bc118b23dcc3d53d4cdf424
 LunarCalendar,https://github.com/wolfhong/LunarCalendar,db3717e06c04a148da87e28be874ff78b9e96e04
 lusid-sdk-python-preview,https://github.com/finbourne/lusid-sdk-python-preview,51f597d025cc03afb6877a37d68e47b0e87c4c89
 lxmlx,https://github.com/innodatalabs/lxmlx,cec1a4776c6d96efb28f4fa337c082051902e3e2
-lynx,https://github.com/omershelef/lynx/,4b0815438eb29f8be6d658ce8261aac38ec8c693
+lynx,https://github.com/omershelef/lynx,4b0815438eb29f8be6d658ce8261aac38ec8c693
 lyrebird-bugit,https://github.com/Meituan-Dianping/lyrebird-bugit,dd25cfa74beff0477883d4c382034b996ea458cf
 m2x-python,https://github.com/attm2x/m2x-python,df83f590114692b1f96577148b7ba260065905bb
 mackinac,https://github.com/mmundy42/mackinac,eccd95394e48f508576af76e6863c9f51f75a5c9
@@ -2162,7 +2156,7 @@ maggy,https://github.com/logicalclocks/maggy,531b405799b6d7c7e07fc29b097309d42e9
 magical-magic,https://github.com/tonyfast/magical-magic,36f49a490930e44e809a8841c2fbdc16b73d47fe
 magiclog,https://github.com/drcloud/magiclog,f045a68f9d3eff946c0a0d3147edff0ec0c0b344
 magic-marker,https://github.com/rcbops/magic-marker,4ac81ecaed853cf352f48e91cd416c1702391c33
-magnum-pi,https://github.com/ronaldevers/magnum-pi/,59a1b5b88e34e4ca00888ccc7e59def652ce85f4
+magnum-pi,https://github.com/ronaldevers/magnum-pi,59a1b5b88e34e4ca00888ccc7e59def652ce85f4
 mailgun-cli,https://github.com/CircleOnCircles/mailgun-cli,b6b8609529449025d6a845bfc9488babf97f7e22
 mailjet,https://github.com/WoLpH/mailjet,f7f5102bf52be6a4a9c62afe474387481c806e27
 MailManagerPythonInterface,https://github.com/KyleChamberlin/mail-manager-python-interface,81817be6d6e134353d49edacc71ffa7bbc155c49
@@ -2244,7 +2238,7 @@ metricslog,https://github.com/vmagamedov/metricslog,7c577947631a75419a1ae750f3b3
 metricz,https://github.com/jmcs/metricz,76d284a1fdbcae5bfb8cc4d4b0db544b5245047d
 metrique,https://github.com/drpoovilleorg/metrique,a10b076097441b7dde687949139f702f5c1e1b35
 metron-tagger,https://github.com/bpepple/metron-tagger,2be176293218fa101dd84c95c72b8ae646b2731a
-meuhdb,https://github.com/brunobord/meuhdb/,2ef2ea0b1065768d88f52bacf1b94b3d3ce3d9eb
+meuhdb,https://github.com/brunobord/meuhdb,2ef2ea0b1065768d88f52bacf1b94b3d3ce3d9eb
 mezzanine-heroku,https://github.com/jackvz/mezzanine-heroku,2237a3e734d10d4285671320df656854360ebcd4
 mgp2pdf,https://github.com/mgedmin/mgp2pdf,d3c9ccd138281e29cf9ee15c040227bf94d912a7
 mgun,https://github.com/maximdanilchenko/mgun,11540dd661afd2e8a18dd74ca0a5b416f671a4a1
@@ -2279,7 +2273,7 @@ mir.sqlite3m,https://github.com/darkfeline/mir.sqlite3m,9080c3347c8f0f59ec6117f3
 missingTvShows,https://github.com/digsim/missingTvShows,f17660dc965c7a6eef1b0cfad9577d62087cba56
 mitmproxy,https://github.com/mkagenius/mitmproxy,3adf07a778acdeb1d52359b144cf4307cb1d9fe4
 miur_daad_balancing,https://github.com/LucaCappelletti94/miur_daad_balancing,e29e2da6a6011ae523bce7138ad6760c397b64ac
-mkdocs-awesome-pages-plugin,https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin/,b261b3d3186d268783cffaaf6d1029f8fb259be5
+mkdocs-awesome-pages-plugin,https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin,b261b3d3186d268783cffaaf6d1029f8fb259be5
 mklists,https://github.com/tombaker/mklists,6a2a89d9f4fdb9ef155f3ac357ecdcb0a20a8ac9
 MLBlocks,https://github.com/HDI-Project/MLBlocks,3808b6514c62ad83270f0a9697a3b1110b448674
 mlbv,https://github.com/kmac/mlbv,88b194c81f11f9472dfd0ca23d3d2876a34e815f
@@ -2390,7 +2384,7 @@ napalm-yang,https://github.com/napalm-automation/napalm-yang,9148e015b086ebe311c
 napkin,https://github.com/pinetr2e/napkin,da020fb1e530926f34dc7ab95d48e201b1baa7b7
 nassl,https://github.com/nabla-c0d3/nassl,244e0e846cce4a32656b6fd34256a540a0524fa1
 nats.py,https://github.com/nats-io/nats.py,b77bd2be28296fd4e1db9082f634bb80c7690b29
-naughty,https://github.com/wildfoundry/naughtywords/,52f82ec594af6c9585fd215451340bf3d0a9bc87
+naughty,https://github.com/wildfoundry/naughtywords,52f82ec594af6c9585fd215451340bf3d0a9bc87
 naughty-string-validator,https://github.com/shashikumarraja/naughty_string_validator_python,8b0fad299aa64e99b3f8dda9f3dad7f7bef8b9af
 navmplot,https://github.com/yycen/navmplot,5d3c749ca35eecda8455fbd5c1db529a1bb115b1
 navo,https://github.com/NASA-NAVO/navo,95afb219b3e19d94e6a3c4c68b8c49e9f143d09e
@@ -2418,8 +2412,8 @@ neojsonrpc,https://github.com/ellmetha/neojsonrpc,e369b633a727482d5f9e310f0c3337
 neotiles,https://github.com/mjoblin/neotiles,f7370aefb74d4d57692d0e8a302c8c95f817a61a
 neotime,https://github.com/technige/neotime,c83da945b0a354b023f967da928e0f331e0c28cc
 nest_reset,https://github.com/viseshrp/nest_reset,9f81c95e712c8b054f4ec57b40ce09c3a1c035cc
-netaddr,https://github.com/drkjam/netaddr/,0d5318c21c7af682c842e01177fee7247416b9a3
-netconf,https://github.com/choppsv1/netconf/,f6d5b2ad8553745d489743d44b313bcc967ef0a0
+netaddr,https://github.com/drkjam/netaddr,0d5318c21c7af682c842e01177fee7247416b9a3
+netconf,https://github.com/choppsv1/netconf,f6d5b2ad8553745d489743d44b313bcc967ef0a0
 netmiko,https://github.com/ktbyers/netmiko,6e924ecc97d53263740b7c3f19a634a244b7bbe2
 netty-finder-python,https://github.com/CITGuru/netty-finder-python,85a8f7902e497ce739a043ea41cdf9820d708a8d
 network_tester,https://github.com/SpiNNakerManchester/network_tester,1dfa79d094c2f73c9cf7c8ff4c5d68a18bf4719f
@@ -2567,9 +2561,8 @@ openrange,https://github.com/josh-t/openrange,4e92fbcdfa61c323229feb139c2d79a3b2
 openrocketengine,https://github.com/cmflannery/openrocketengine,29802fe3225efb400306bdc8bfc985ef629179f5
 opentelemetry-python,https://github.com/open-telemetry/opentelemetry-python,76b1ed0d6f4d41df0075953dcfbece72dd4bb344
 openweathermap_requests,https://github.com/scls19fr/openweathermap_requests,52a609d7c1be50b4e7d16c8424cd04205b6a6d03
-opterator,https://github.com/buchuki/opterator/,84fe31f22c73dc0a3666ed82c179461b1799c257
 opterator,https://github.com/buchuki/opterator,84fe31f22c73dc0a3666ed82c179461b1799c257
-optimade,https://github.com/materialsproject/optimade/,dc47d8072c383227b5a90bba57471a6d8f517cb4
+optimade,https://github.com/materialsproject/optimade,dc47d8072c383227b5a90bba57471a6d8f517cb4
 optimo,https://github.com/fieldaware/optimoroute,dffaa22a4aa3f6992c71d394147512c84852ee96
 orange3-variants,https://github.com/biolab/orange3-variants,88aa0760525b4768496f38ba60215371a445bafa
 orange-spectroscopy,https://github.com/Quasars/orange-spectroscopy,1c55032314a3fb1c2a9d0a0a3532f6725f8aca01
@@ -2641,7 +2634,7 @@ parse_quest_manual,https://github.com/sjcasey21/parse_quest_manual,55ffdd93ca404
 parse_stuff,https://github.com/amygreen/parse_stuff,33303eaafc01d2b00ab5fcfbbb0da4dcf493f920
 partd,https://github.com/dask/partd,ba06094d2cdd3ece47abb3236017a29e951cbebd
 PassiveDataKit-Client-Python,https://github.com/audaciouscode/PassiveDataKit-Client-Python,21e50e3ab68f7848f96413979c5efdda4a7d4020
-passwordgenerator,https://github.com/gabfl/password-generator-py/,2bc5c7b59e407d8b2b71519bca677363f8111fe9
+passwordgenerator,https://github.com/gabfl/password-generator-py,2bc5c7b59e407d8b2b71519bca677363f8111fe9
 password_manager,https://github.com/patarapolw/password_manager,9de575ac6bbc75086fb968291cc4feb9100a5907
 path2insight,https://github.com/armell/path2insight,63577bab69794f06f5c0fbaa8e7b1c0f67d7b7cf
 pathlib_revised,https://github.com/jedie/pathlib_revised,284d2166b61fbf6f8f83074dc14bd879a841514d
@@ -2657,7 +2650,7 @@ pbpstats,https://github.com/dblackrun/pbpstats,f2256adb1c101c6af8cfa83d59b437f65
 pcd,https://github.com/petervaro/pcd,4db479308309e4e5f3c22417eb68dafcdca2d9d9
 pcpartpicker,https://github.com/JonathanVusich/pcpartpicker,19b505d90b2e76d747fd8b5be4d7a979da3cc365
 pcrunner,https://github.com/maartenq/pcrunner,8fee85ff399d06d04610cebdbab27ab8140f15fe
-PCSE,https://github.com/ajwdewit/pcse/,c40362be6a176dabe42a39b4526015b41cf23c48
+PCSE,https://github.com/ajwdewit/pcse,c40362be6a176dabe42a39b4526015b41cf23c48
 pctl_scale,https://github.com/kmedian/pctl_scale,18642882d685600bf4c4c5596ad44ee776089695
 pdat,https://github.com/hazboun6/PulsarDataToolbox,bf96f2eca6520a527115299c8ffb7f2fd721e540
 pdblp,https://github.com/MatthewGilbert/pdblp,016786adbf8d3b8bcf821771fe62afaac7820ee0
@@ -2744,7 +2737,7 @@ plane,https://github.com/kemingy/Plane,5f18e6aec08fc765b4722d8fc52988c0878825f5
 plico,https://github.com/ArcetriAdaptiveOptics/plico,f94bc1399db8e601a2974c38161e39d886182c07
 ploceidae,https://github.com/MATTHEWFRAZER/ploceidae,dad989756318127dc70d05b4ccdd1a3d8142dab1
 plowshare-wrapper,https://github.com/StorjOld/plowshare-wrapper,edb38d01fd1decabf92cc4f536d7404dca6a977c
-pluck,https://github.com/nvie/pluck/,8cb1186568e0b24d0f89f4ef4b79eea2b8944456
+pluck,https://github.com/nvie/pluck,8cb1186568e0b24d0f89f4ef4b79eea2b8944456
 pluralsight,https://github.com/tonybaloney/pluralsight,a15a23de6402084ced861a6f978747d3f8e6bbfc
 pluscal,https://github.com/jessemyers/pluscal,e4cfe2e8ed5a9bf28608fee0cdced1f0d1c9903c
 plyvel,https://github.com/wbolster/plyvel,647ced2d3cd9a335968aa0b09ccdb83894c7a2a4
@@ -2813,9 +2806,8 @@ protonfixes,https://github.com/simons-public/protonfixes,1a918820cbb47b2f6d6798d
 prototag,https://github.com/flxbe/prototag,3e929875005a413d7bb858ff7e92887f8910d3cd
 provider,https://github.com/jay-tyler/provider,0a0ac9f91e06d1b0282bcc86d1a61a5a4fb1cccd
 proxy-db,https://github.com/Nekmo/proxy-db,4673acccc16f863f927a39ab2838896458db5ac3
-proxy-db,https://github.com/Nekmo/proxy-db/,4673acccc16f863f927a39ab2838896458db5ac3
 prtg,https://github.com/timgates42/prtg,ebd4949f40e3aeec6015ce2a27c6c933f3246c2b
-ps_alchemy,https://github.com/sacrud/ps_alchemy/,aef982bf357ccce6cd535d0092aabe113ec55cb9
+ps_alchemy,https://github.com/sacrud/ps_alchemy,aef982bf357ccce6cd535d0092aabe113ec55cb9
 pscript,https://github.com/flexxui/pscript,cd63b55abc2530620b925791f13fb64b659fa962
 pseg,https://github.com/bvlaicu/pseg,2ccb00ebb0d92197c8d93cd067e32b37d86e50a7
 pseudb,https://github.com/harryho/pseudb,88107f3b9d267b2c23540614823e544582680a22
@@ -2834,7 +2826,7 @@ pttagger,https://github.com/jun-harashima/pttagger,d26fead72fb28d2e84007b0262457
 pubmed-bibtex,https://github.com/fphammerle/pubmed-bibtex,2d45955df1c8354104b38c7931e7d72d783c791b
 pubsubpy,https://github.com/makingspace/pubsubpy,e771d2f73233e7a6838d72d92f35a5d94e404e9e
 punch,https://github.com/lgiordani/punch,0eea823e7137ea030de4dbc02260553880b62d45
-pundle,https://github.com/Deepwalker/pundler/,dba19d6b7b8c2bc602d1ac9c5612a5cb8125cdb4
+pundle,https://github.com/Deepwalker/pundler,dba19d6b7b8c2bc602d1ac9c5612a5cb8125cdb4
 punq,https://github.com/bobthemighty/punq,b5b4b18876ade1bee2f5f62abe9842c2a374a611
 pupil-lib-python,https://github.com/gmierz/pupil-lib-python,08dd636f5b657425bc8358e2bcc4e875b2b6a4c7
 puppetdb_exporter,https://github.com/othalla/puppetdb_exporter,ef15e95b653dc02e1c6b59374adc22537fe93700
@@ -2876,7 +2868,7 @@ pybbi,https://github.com/nvictus/pybbi,0c3ebbfc485c4f09a7ba224270926ffe70f4ff2b
 pybeehive,https://github.com/sentrip/pybeehive,d4ea08fb54f475139abf11bc3848ad66ee842fe9
 pybel-ols,https://github.com/pybel/pybel-ols,18f447d025a231b069be3f6b1da3f69058ff7936
 pyberny,https://github.com/azag0/pyberny,6c3bee00ef5616e774380daf70e45d9380399250
-PyBLNET,https://github.com/nielstron/pyblnet/,24a5de966067adc492c0b5c6899c50e7822e15c1
+PyBLNET,https://github.com/nielstron/pyblnet,24a5de966067adc492c0b5c6899c50e7822e15c1
 pyblockchain,https://github.com/toidi/pyblockchain,53f54aa6c0690ccd0a329894b60190862c64e90f
 pyblockmesh,https://github.com/grokkingStuff/pyblockmesh,61438a48f7b34d15d83b07094d7ed8e36d8f2251
 PyBMRB,https://github.com/uwbmrb/PyBMRB,ad020eec22b7f5167591e78af16c9d0a47fa8f1e
@@ -2896,7 +2888,7 @@ pycards,https://github.com/mrlucascardoso/pycards,14b1ea5dcd843d3e2268f943d44c64
 pycatia,https://github.com/evereux/pycatia,d0f6aff2ff20b20ee6aa947211d6cbba05be49f0
 pycayennelpp,https://github.com/smlng/pycayennelpp,366d7958ee13c04ae72e20ab1f415a0c2976bd60
 pycdlib,https://github.com/clalancette/pycdlib,36ba6eace1993e611f292b42833985cfc1c3b668
-pyCEC,https://github.com/konikvranik/pycec/,b528dfb5f54ac8632f6cf742381dd5ee9a0a9246
+pyCEC,https://github.com/konikvranik/pycec,b528dfb5f54ac8632f6cf742381dd5ee9a0a9246
 pycentosvalidators,https://github.com/istommao/pyvalidators,e28c025ca170f75705e04d07e28ec70b0f22f994
 pycep-correios,https://github.com/mstuttgart/pycep-correios,44fd6a1ede24d6215afa573a9faa2f0db58bad25
 pycfca,https://github.com/vcancy/pycfca,4b9ea5a2900ae672e5868cc2923aee0cdb251d5a
@@ -3141,7 +3133,7 @@ pyPodcastParser,https://github.com/jrigden/pyPodcastParser,b21e027bb56ec77986d76
 pypokedex,https://github.com/arnavb/pypokedex,1175635975a8ee64fd1de3193305be2bf52ec3a8
 PyPOM,https://github.com/mozilla/PyPOM,9cb84df9d27b428b4e7423d1bbe6502e92990154
 pyppyn,https://github.com/plus3it/pyppyn,8f67fab3842254364fc666632c886248ff4512cd
-pypred,https://github.com/armon/pypred/,4f96575a9c05ab2829c0808737b146d8cc632cb7
+pypred,https://github.com/armon/pypred,4f96575a9c05ab2829c0808737b146d8cc632cb7
 pyprince,https://github.com/sufio/python-pyprince,4cf9f9ff3220b4f223fba7db27f6e7c3d8ae8a93
 pyprism,https://github.com/usnistgov/pyprism,c47f2ceda16f435f6b57e0cbda7d6f6fc4b07fe3
 pypsi,https://github.com/ameily/pypsi,a62b4f0418be392bf0d3a4d6509ae44412c231c5
@@ -3185,7 +3177,7 @@ pyserval,https://github.com/umr-ds/pyserval,073363ee56754f122d5b09544f242d54a171
 pysett,https://github.com/mlackman/pysettings,792dbbd6bf405eb14fa8d91d3cfd09847a6503b0
 PySGP30,https://github.com/Conr86/PySGP30,525202cc09849cec0320187852ea44adb279a80b
 pysh,https://github.com/gnprice/pysh,dbd14ee8445a983ee6c736e4041e47ddfa4edacc
-pyshorteners,https://github.com/ellisonleao/pyshorteners/,5d8e6cda6742f0b6b752e0ce576bb7901119c118
+pyshorteners,https://github.com/ellisonleao/pyshorteners,5d8e6cda6742f0b6b752e0ce576bb7901119c118
 pySINDy,https://github.com/luckystarufo/pySINDy,1b470bef039c20419490f82cda355ea5f6e69212
 pysm,https://github.com/pgularski/pysm,29ce7d49f4b5ca6d433841ae9eca0c0ec149e3d5
 pysmlib,https://github.com/darcato/pysmlib,e89b036953d28a53fb920afeb4a26520c791a62c
@@ -3277,7 +3269,7 @@ python3-saml,https://github.com/onelogin/python3-saml,589425d1fbd2161ce2a566dfcb
 python-actors,https://github.com/tamland/python-actors,9f826ab2947c665d61363a6ebc401e9e42cc6238
 python-alelo,https://github.com/ricardochaves/python-alelo,0098dfaa1c92a1615aa1adb23fc774c27ebc7f42
 python-alogger,https://github.com/Karaage-Cluster/python-alogger,53397a5b8854ff3afb02cf01e836497f97a2becd
-pythonanywhere,https://github.com/pythonanywhere/helper_scripts/,24b428d6ad9bd2e9c29252576661cff4ec5278c9
+pythonanywhere,https://github.com/pythonanywhere/helper_scripts,24b428d6ad9bd2e9c29252576661cff4ec5278c9
 python-app-sdk,https://github.com/TheThingsNetwork/python-app-sdk,4c9fbd0b04eb3ba393815edaba960de7fe666c5c
 python-autosemver,https://github.com/david-caro/python-autosemver,833ceb728cb618c5f4648d73e0874751a25c00a7
 python-aws-dataclasses,https://github.com/hypoport/python-aws-dataclasses,30bfe90457a83957d10ec18fe7d61439b5b74280
@@ -3439,7 +3431,7 @@ python-textmetric,https://github.com/sfischer13/python-textmetric,ce4a6e7a99a817
 python-thread_utils,https://github.com/wbcchsyn/python-thread_utils,711bc5abf37856aa75a0b6495e0d9e3aed5e1ccc
 python-throttle,https://github.com/soulomoon/python-throttle,d42808d6ff26be5fe3442e968a9cd025664e9c6b
 python-tint,https://github.com/solute/python-tint,a09e44147b9fe81a67892901960f5b8350821c95
-python-to-json,https://github.com/ingresso-group/python-to-json/,3930b854cfbb0a1f79a2f6a0ea4b1790dd5c6925
+python-to-json,https://github.com/ingresso-group/python-to-json,3930b854cfbb0a1f79a2f6a0ea4b1790dd5c6925
 python-tokens,https://github.com/zalando-stups/python-tokens,7f413e30d3899aa69f47e2373eb942a9cdd51385
 pythontranslate,https://github.com/Divirad/PythonTranslate,625e97563bb586692f4a128b284a2aa79f82c279
 python-trezor,https://github.com/trezor/python-trezor,2813522b05cef4e0e545a101f8b3559a3183b45b
@@ -3519,7 +3511,7 @@ py-zabbix,https://github.com/blacked/py-zabbix,8d2b85523370f9e9b360b47eb4dcd9641
 py-zabbix,https://github.com/nixargh/py-zabbix,33c9ab461d83836c1ca1cb2f54049cc2e9013a64
 PyZenvia,https://github.com/mrlucascardoso/pyzenvia,16b524c2ae37527ec8264cc046c98dbef2ca1fbc
 pyzmq-wrapper,https://github.com/supercoderz/pyzmq-wrapper,b16c0313dd10febd5060ee0589285025a09fa26a
-pyzpl,https://github.com/mbarkhau/pyzpl/,4944b948c1c5006b4befe03488e7d34bc06a0ea6
+pyzpl,https://github.com/mbarkhau/pyzpl,4944b948c1c5006b4befe03488e7d34bc06a0ea6
 pyzzy,https://github.com/krakozaure/pyzzy,70b9236959ecec113f493d54338d8ebbde383b47
 qacode,https://github.com/netzulo/qacode,5384c0752ab434cdb8e7dc0c096f5fd2a83afef0
 qastle,https://github.com/iris-hep/qastle,4617415f0e79846cac4860411353fcb2ff0fca83
@@ -3700,7 +3692,6 @@ s3sfe,https://github.com/jantman/s3sfe,b2965578d9a8326fe8a7784267e72f36f8dc4549
 s3sup,https://github.com/awooldrige/s3sup,56ad5112ab2e1302357891d35961b84656365859
 s3tail,https://github.com/bradrf/s3tail,8b978880a0f6e7ce584f43caeaf2eef9d69aa865
 s3-uploader,https://github.com/onfido/s3-uploader,794910f09b893f0f1fa18355765890271e686faf
-s3-uploader,https://github.com/onfido/s3-uploader/,794910f09b893f0f1fa18355765890271e686faf
 sacred,https://github.com/IDSIA/sacred,4f968b6fb946dc716bc4abe0cbe80980f604554d
 safetywrap,https://github.com/mplanchard/safetywrap,6f6f7b73f926cdd3b414e60c7854022c0470c472
 sailplay,https://github.com/klen/sailplay,e0273ae102fa763ef9955ee16a7e992f0bc2c5e8
@@ -3713,11 +3704,11 @@ samarche,https://github.com/touilleMan/samarche,20836a47eb82f9124c4e3e240c9cddb7
 sampleaoao,https://github.com/melissashopes/sampleproject,209c62da8b1db4b4f47712cf0db34e00c4f1e175
 samsung_multiroom,https://github.com/krygal/samsung_multiroom,09ca86d27b87a4aa0c97ec2accbd4ec67dd0cc61
 samuranium,https://github.com/malazay/samuranium,0b7c27d3fbbab1cb6b0db8ae2ca2e9f5871155ef
-sandman,https://github.com/jeffknupp/sandman/,253ea4d15cbccd9f0016d66fedd7478614cc0b2f
+sandman,https://github.com/jeffknupp/sandman,253ea4d15cbccd9f0016d66fedd7478614cc0b2f
 sangreal-db,https://github.com/liubola/sangreal-db,63234b542b4b7685a05fbcda17ff1ae2d6c0c33e
 sanic-jinja,https://github.com/htwenning/sanic-jinja,6dedff3f67a321dfbbb726215c18817bc39a24d5
 sanic_session,https://github.com/subyraman/sanic_session,dc8f164f7289984d279bed1a53fa387d373ee7ab
-Sanic-WTF,https://github.com/pyx/sanic-wtf/,c395e1dc08b06434732a1177971fa5e6da0ab8f8
+Sanic-WTF,https://github.com/pyx/sanic-wtf,c395e1dc08b06434732a1177971fa5e6da0ab8f8
 sanskrit_data,https://github.com/sanskrit-coders/sanskrit_data,3fd8c148441f4ce01b1d2ce9ee1cbbbf330455e7
 sarplus,https://github.com/eisber/sarplus,8049418211e5ee42b1e873ded2f13f4ad924146d
 satellite-populate,https://github.com/SatelliteQE/satellite-populate,ed7b43f93f3bf329f245f7e6c82859c43e98190e
@@ -3743,7 +3734,6 @@ scientific_library,https://github.com/the-virtual-brain/scientific_library,db1d3
 scikit-ci,https://github.com/scikit-build/scikit-ci,8a4ccfa3ef793539ab72f0b0c13d34fdd48a16d2
 scikit-fda,https://github.com/GAA-UAM/scikit-fda,cf92ab03f7853b145ffc58df55c603892937b92a
 scikit-hep,https://github.com/scikit-hep/scikit-hep,e78234da9e754e380a7d871afb56b20baa73b99b
-scikit-hep,https://github.com/scikit-hep/scikit-hep/,e78234da9e754e380a7d871afb56b20baa73b99b
 scikit-plot,https://github.com/reiinakano/scikit-plot,2dd3e6a76df77edcbd724c4db25575f70abb57cb
 scikit-procrustes,https://github.com/melissawm/skprocrustes,05b6fd4fcc6cb0d7b8d1115dc562a0f8f7e227b2
 scikit-spatial,https://github.com/ajhynes7/scikit-spatial,2aaf3de6a76d124f085ab17cd6c188f31de9c5b6
@@ -3801,8 +3791,8 @@ SerialDispatch,https://github.com/slightlynybbled/SerialDispatch,b279cb3c1dfbc78
 serializabledict,https://github.com/starofrainnight/serializabledict,bc1e0f9b3c6a0dac926c20257c427e04cfe46696
 seriesManagementSystem,https://github.com/digsim/seriesManagementSystem,e452dd0b9e0164f975fd43b798784896b8042bfe
 series-tiempo-ar,https://github.com/datosgobar/series-tiempo-ar,a0e27135a3195ad6863933f65fb9ad1d465830b6
-serpextract,https://github.com/Parsely/serpextract/,aec8f2bd79c66953938569a24b05c693ab70b4ce
-serverless-config,https://github.com/oharaandrew314/serverless-config/,246ac507553e65654aa8dfc8216caf812b0ac780
+serpextract,https://github.com/Parsely/serpextract,aec8f2bd79c66953938569a24b05c693ab70b4ce
+serverless-config,https://github.com/oharaandrew314/serverless-config,246ac507553e65654aa8dfc8216caf812b0ac780
 serverpath.git,https://github.com/deluccial/serverpath.git,45eea8b469a4b036b47962131405b93f31bd47ac
 servy,https://github.com/mylokin/servy,b03c06407ebcf2ee9b7322b501b7a645cd478ffe
 sesam,https://github.com/ovidner/python-sesam,119505a937fb6a346c939b4aeacd345069e5be2f
@@ -3922,7 +3912,7 @@ sms-toolkit,https://github.com/chrisconlon-klaviyo/sms-toolkit,42406c86147e683f8
 smsutil,https://github.com/jezeniel/smsutil,9399c96a236bd89b58972d9725fc89a7ec81a9af
 smtp2go-django,https://github.com/smtp2go-oss/smtp2go-django,446b39b6f66f4466afad8fd5a6e3931e736a681b
 smtp2go,https://github.com/smtp2go-oss/smtp2go-python,581cc33b1c6f4ca2882535a51a787c33e5cfcce7
-smugpy,https://github.com/chrishoffman/smugpy/,f698d6749ce446e3d6c7d925b2cd1cd5b3d695ea
+smugpy,https://github.com/chrishoffman/smugpy,f698d6749ce446e3d6c7d925b2cd1cd5b3d695ea
 smyte_pylib,https://github.com/smyte/smyte_pylib,21c7a610790adc760840b7a74d66e0a4c739e8e3
 snakegame-cli,https://github.com/vyahello/snakegame-cli,7d47e16df589319e5e761ad61a7d49a00c636fa1
 snap-plugin-collector-diamond,https://github.com/intelsdi-x/snap-plugin-collector-diamond,1c1a475610ca0fefb17d544cd66f8869b60e9086
@@ -4041,11 +4031,11 @@ statsd-metrics,https://github.com/farzadghanei/statsd-metrics,153ff37b79777f208e
 statstream,https://github.com/jmaces/statstream,e646a033ffedeec3f8855ad3beb2bfbd79da623a
 StdConfigParser,https://github.com/tds333/stdconfigparser,bddf667de5fbba09e4e0c3e3140283cf512971e6
 steamapi,https://github.com/ValvePython/steam,92c5107c7c300d55d37d9e681de8394d78fca841
-steenzout.object,https://github.com/steenzout/python-object/,b865e3eeb4c2435923cf900d3ef2a89c1b35fe18
+steenzout.object,https://github.com/steenzout/python-object,b865e3eeb4c2435923cf900d3ef2a89c1b35fe18
 stellargraph,https://github.com/stellargraph/stellargraph,ec132647e5cf43ff683e3f2e72e18ac6daa98202
 stellar-observatory,https://github.com/andrenarchy/stellar-observatory,42a33ede75ba300c57d80a8136442e5983eb784d
 stellar-p2p,https://github.com/craftypenguins/stellar-p2p,51aacc9d9a9f265e1e8a72ed0b258372d0f277e4
-stellar-sdk,https://github.com/stellarCN/py-stellar-base/,1a4cfa50303a5dd81827d54c0007501b00dc2166
+stellar-sdk,https://github.com/stellarCN/py-stellar-base,1a4cfa50303a5dd81827d54c0007501b00dc2166
 steppy,https://github.com/minerva-ml/steppy,856b95f1f5189e1d2ca122b891bc670adac9692b
 stfile,https://github.com/pabloriutort/stfile,0cbbb2645ac6f12ec976e7ead62b6361ab0bd437
 stimulus,https://github.com/m-deck/stimulus,f2c126aa4b9da653980b5fef0708a9cf2611f54e
@@ -4070,7 +4060,6 @@ streamstats,https://github.com/earthlab/streamstats,812bf263a25c87fd26eca09f81d7
 strictclasses,https://github.com/noamelf/strictclasses,de5a88e353fcf64723f008dc1eb270640335c2a3
 strict-hint,https://github.com/potfur/strict-hint,506fe6b317797d1785a30ec17ea59558b07768a4
 stringint,https://github.com/DasIch/stringint,4a8ac5b742cab67bd717a28a081f0bd278ebd926
-stringint,https://github.com/DasIch/stringint/,4a8ac5b742cab67bd717a28a081f0bd278ebd926
 striplog,https://github.com/agile-geoscience/striplog,02ae02ec4ec7c31990faa06e5156924a9b87254f
 struct-lmm,https://github.com/limix/struct-lmm,f7e747321fc46bf06c090210c51d95fee24aa6a7
 stsauth,https://github.com/cshamrick/stsauth,ea8c3383aa2435f534cd9d5edf7001ab74936a27
@@ -4085,7 +4074,7 @@ suds-py3,https://github.com/cackharot/suds-py3,62106bd394b8fb67a06bdd367419a3118
 suds_requests4,https://github.com/genusistimelord/suds_requests4,e124e12486e8134c3c1f2eb6be0c9400d1273837
 sufler,https://github.com/limebrains/sufler,8b3bb28ed78a088cb41a8dccfe726fc9d304a3f0
 Summarizer,https://github.com/franfj/Summarizer,9638ed117e291dab363070aa7d110f3ec4ad0c98
-sumtypes,https://github.com/radix/sumtypes/,b56016ace243d3ac36504bd26d5db9bdf108b095
+sumtypes,https://github.com/radix/sumtypes,b56016ace243d3ac36504bd26d5db9bdf108b095
 sunbear,https://github.com/OxfordHED/sunbear,9c7f368c4086f69868e7e5d87ea0b40700610e19
 superpose3d,https://github.com/jewettaij/superpose3d,cd69fbfe1a3e04885dbb0bbba3c23341c3583194
 sureal,https://github.com/Netflix/sureal,e7251384cd5f6a293e05d1450d5e8f353d137c1c
@@ -4141,7 +4130,6 @@ talons-oauth,https://github.com/swistakm/talons-oauth,5d8264f721b6118456506f3cc0
 tamarco,https://github.com/System73/tamarco,c85bec267d39057a4cd5f1c9854d5e2840cebb1e
 tangle,https://github.com/fifman/tangle,a36cff74d7f09bf8f24a91929b844ea1be7b1bcd
 tapioca-circleci,https://github.com/georgeyk/tapioca-circleci,4015425831ff8147acf3cec573ca888ea8ea5767
-tapioca-circleci,https://github.com/georgeyk/tapioca-circleci/,4015425831ff8147acf3cec573ca888ea8ea5767
 tarantool,https://github.com/tarantool/tarantool-python,bd37703cdb50983a681a08891659c5b0754be8c6
 task-dispatcher,https://github.com/PeRDy/task-dispatcher,947d7b91c2ab3e1891fb0fd5333a5c2a78380fea
 taurus,https://github.com/CitrineInformatics/gemd-python,8dddd2e6de4c329394c5408ac8114f9f3f9be993
@@ -4192,7 +4180,7 @@ textX-LS,https://github.com/textX/textX-LS,26f6dac5794cbb142d40c26b074883237d6ff
 tf-ecosystem,https://github.com/drewsonne/tf-ecosystem,f4a6a954f96baf5ba7437fc93b4f8e588d3d128d
 tf-plan,https://github.com/thiagopbueno/tf-plan,d8b6ea92604367553d566c8706a9ab0571f92a2e
 tgext.datahelpers,https://github.com/axant/tgext.datahelpers,6376965ba9100ad05e0d5a99e0600f54e6b012ec
-tgnooapi,https://github.com/shmir/PyTrafficGenerator/,61ddd0465b9ecdd72134e18668756d2a6ccbf646
+tgnooapi,https://github.com/shmir/PyTrafficGenerator,61ddd0465b9ecdd72134e18668756d2a6ccbf646
 tgo,https://github.com/stefan-endres/tgo,88e77da8440343c28ee06bd3279e28c154416efc
 tgx-cli,https://github.com/travelgateX/tgx-cli,2c6271ced619c6614889e4907d8f2eeef4420378
 thanks,https://github.com/phildini/thanks,6922dce78969760fc9237b34a7931c153dc5c373
@@ -4267,7 +4255,7 @@ tqs-client,https://github.com/st3fan/tqs-client,bd9c38e2a9f0e666e414fbdbcaa2d152
 trackerml-sdk,https://github.com/trackerml/trackerml-sdk,b9de3776e0b2360a4def63e1dc3644c3b4bc7eba
 trackingmore-python,https://github.com/marcoesposito1988/trackingmore-python,1df969346796902526b629eec67709920af8dafc
 Trade-Dangerous,https://github.com/eyeonus/Trade-Dangerous,106bd7465f1e2d3a2d431cc7986ac37ac84b0360
-trafaret_schema,https://github.com/Deepwalker/trafaret_schema/,c902440ef44fab2285df927450f49c5ec3eccc62
+trafaret_schema,https://github.com/Deepwalker/trafaret_schema,c902440ef44fab2285df927450f49c5ec3eccc62
 trafaret_validator,https://github.com/Lex0ne/trafaret_validator,d4fb35026b81270cd44d1b58f0dadc8e179219f2
 traintorch,https://github.com/rouzbeh-afrasiabi/traintorch,ac3a49e5511463cc60834a8c663f12c02282cc58
 traitlets,https://github.com/ipython/traitlets,0a56ed127aace8c5be89a2fb68f4d03d9b270f13
@@ -4396,7 +4384,7 @@ uwsgi-sloth,https://github.com/piglei/uwsgi-sloth,cac86de5a9a4c43728b3941628d9fd
 v2,https://github.com/solidsnack/v2,95736855a0188cc892dea451617df0efbfa404de
 vaex,https://github.com/maartenbreddels/vaex,8e6825bdc10f80753445b72fbffa0658eb1afe8b
 vaex,https://github.com/vaexio/vaex,8e6825bdc10f80753445b72fbffa0658eb1afe8b
-vagrant-metadata,https://github.com/lvillani/vagrant-metadata/,703d4edd0f56e88ee9b346bb90a591aeeec1335d
+vagrant-metadata,https://github.com/lvillani/vagrant-metadata,703d4edd0f56e88ee9b346bb90a591aeeec1335d
 vagranttoansible,https://github.com/haidaraM/vagranttoansibleinventory,c6cc2474c1839f7c1d20ef181054f17a899e3d48
 vagrepo,https://github.com/matthijsbos/vagrepo,59a1cedea8352bcd3627eb20f671a2e4ac1d022b
 val,https://github.com/thisfred/val,7bbe4d892d74cc5c1bc3c9345e938f9f8f6e658f
@@ -4413,7 +4401,7 @@ variants,https://github.com/python-variants/variants,1c2bf4124b4780e354d41664eb4
 vault-gatekeeper-client,https://github.com/jensendw/vault-gatekeeper-client,f20113260e3645005af34bbecbada34792d7c679
 vaultkeeper,https://github.com/praekeltfoundation/vaultkeeper,7b62b0e77b4ced618bb28ad466fa15b87d709ea9
 vbftool,https://github.com/dsch/vbftool,ef9796f0feddd10f87dccf56ec3c5b4fa6f85624
-vcspull,https://github.com/vcs-python/vcspull/,b91290db9d87085b169830213e7e3ca0f8a39572
+vcspull,https://github.com/vcs-python/vcspull,b91290db9d87085b169830213e7e3ca0f8a39572
 vcversioner,https://github.com/habnabit/vcversioner,72f8f0a7e0121cf5989a2cb00d5e1395e02a0445
 vdom,https://github.com/nteract/vdom,10a0f950730efab44574802647e15c1edb05758f
 vecnet,https://github.com/vecnet/vecnet.openmalaria,795bc9d1b81a6c664f14879edda7a7c41188e95a
@@ -4448,11 +4436,10 @@ vmprof-python,https://github.com/vmprof/vmprof-python,f0dc85b61f2a48ce5d32291012
 vmshepherd-runtime-postgres-driver,https://github.com/Dreamlab/vmshepherd-runtime-postgres-driver,2dc0f6aa3b4359e339301a4e05da57d0ff90d819
 voeventdb.remote,https://github.com/timstaley/voeventdb.remote,7bb84b249219f2294481a0cd6cefd97410e66758
 void-object,https://github.com/marcosfede/void-object,ff4edaacf94b1edc0fe9957d83b4106920011fa6
-Volt,https://github.com/bow/volt/,2936628cc716678304abad9ee03cac16d7109d1c
-volt,https://github.com/bow/volt,2936628cc716678304abad9ee03cac16d7109d1c
+Volt,https://github.com/bow/volt,2936628cc716678304abad9ee03cac16d7109d1c
 von-agent,https://github.com/PSPC-SPAC-buyandsell/von_agent,0b1c17cca3bd178b6e6974af84dbac1dfce5cf45
 voxel,https://github.com/tartavull/voxel,6631dfac893d635be74a7572d4f15345202af9ce
-voximplant-client,https://github.com/gdml/voximplant-client/,5f3c73706d04457a87d347a80111806562fc8b23
+voximplant-client,https://github.com/gdml/voximplant-client,5f3c73706d04457a87d347a80111806562fc8b23
 vsat,https://github.com/rsr5/vsat,90fe914feba95b99de8a5f6c47e63e1169be615b
 vsi,https://github.com/afaki077/vsi,bf10d444c9b980972a7ef988ae80206d5ad4e83f
 vstask,https://github.com/cmccandless/vstask,1c256618c6b3ed0cc4c1ac50b6eca1a23881f9c5
@@ -4512,7 +4499,7 @@ windflow,https://github.com/hartym/windflow,69a2aeb3ab9d5bdfcd1d2ce8d5c9af14876c
 windpowerlib,https://github.com/wind-python/windpowerlib,1273dea0fcbd4722bc96bbce4921a5c517879d01
 windrose,https://github.com/python-windrose/windrose,f55fa7306e7630897e441aebde989894a1ccfa11
 winiobinary,https://github.com/starofrainnight/winiobinary,04ecffd0c673656ccc3b7adaf117787d6b36f3e1
-wirelesstagpy,https://github.com/sergeymaysak/wirelesstagpy/,28b858e7f8178a9826a65d3a2b729742bf5d4482
+wirelesstagpy,https://github.com/sergeymaysak/wirelesstagpy,28b858e7f8178a9826a65d3a2b729742bf5d4482
 witch,https://github.com/draperjames/witch,7a9b8c9d0ed9598858d3006f2d469bc8b0fd0c1b
 wk10_package,https://github.com/EVP000/wk10_package,8c4f7c8a911702ef530b94a12d9e2fa6f81d1598
 wls-rest-python,https://github.com/magnuswatn/wls-rest-python,40f1fae07c204fcd47109fc13d65a8c0efdb24a3
@@ -4548,7 +4535,7 @@ xcrun,https://github.com/dalemyers/xcrun,e10702cd3b050be92b687b09663ffcf68164710
 xdmenu,https://github.com/cblegare/xdmenu,810d33d821ad96ade875314104930ddf3237be5f
 xdrparser,https://github.com/kinecosystem/xdrparser,27e7e6e026ca1481568f71bed797c5c7036fe29c
 xeger,https://github.com/crdoconnor/xeger,96171b4f583328a73f6907c6de126712ec8344a2
-xenavalkyrie,https://github.com/xenadevel/PyXenaValkyrie/,92b45f1f37a5589cbdb9224a287fa0426d2c8d47
+xenavalkyrie,https://github.com/xenadevel/PyXenaValkyrie,92b45f1f37a5589cbdb9224a287fa0426d2c8d47
 xfce4_terminal_themes,https://github.com/jcmuller/xfce4-terminal-themes,2478f07f871b5b3658d57223be42c9984836789c
 xframes.git,https://github.com/cchayden/xframes.git,1656cc69c814bda8132362b3a22f7cdf8a24637f
 xhistogram,https://github.com/xgcm/xhistogram,c53fea67ab8ed4cb47dac625301454433c9eab09
@@ -4872,7 +4859,6 @@ hecto,https://github.com/jpscaletti/hecto,3bb1501b5601154803a479b26372b9c62dd6bf
 SRT,https://github.com/ryanking13/SRT,3dd9b3b4cf45df4d5ed23d62483598cc34b86c55
 gplaycli,https://github.com/matlink/gplaycli,b161dbffa64ddc7081ca7c880ce27f84c2f0a0d8
 ukmdb_itop,https://github.com/mleist/ukmdb_itop,f4d4eb0410c55f8dff0b30bfb4b3c1315e6bf955
-pyzpl,https://github.com/mbarkhau/pyzpl,4944b948c1c5006b4befe03488e7d34bc06a0ea6
 madic,https://github.com/dcroote/madic,fb00f312f5abc9f5a0bfc4a00a5a2e6e1c4ee563
 grafana-snapshot.git,https://github.com/ohmrefresh/grafana-snapshot.git,2a2214662fb6f92702a60843358b462aafd5124e
 tvb-framework,https://github.com/the-virtual-brain/tvb-framework,355a254097e73a06d3541a915d68ad8445aa5e13
@@ -5004,7 +4990,6 @@ edc-model,https://github.com/clinicedc/edc-model,9894b3dd3705c02baa56c3eece2c3c5
 fedoidcmsg,https://github.com/IdentityPython/fedoidcmsg,d30107be02521fa6cdfe285da3b6b0cdd153c8cc
 python-pubsub,https://github.com/Superbalist/python-pubsub,6a828348b1a4478924dbbab4fab62d6260b9e42b
 PyDev.Debugger,https://github.com/fabioz/PyDev.Debugger,ebf29909e23b7c79353db2680262619ff504bd3f
-dadata-client,https://github.com/f213/dadata-client,dbd619d752a96bc0d48be51e07b53e8f9a795079
 omero-cli-duplicate,https://github.com/ome/omero-cli-duplicate,120836ad1ee9b08fc16db4997bce8ec9ebc0e766
 rope,https://github.com/python-rope/rope,d46aa2dcf34c6baf57b37930f5db7dc962b770b6
 warc3,https://github.com/Willian-Zhang/warc3,19ede36cb85c18575330eb8313851b219fa00c8a
@@ -5047,7 +5032,6 @@ slvcodec,https://github.com/benreynwar/slvcodec,2096b5022a7b7da37e5196e16a81b801
 easy-captcha,https://github.com/youngershen/easy-captcha,3288e98aa400725a0d4781ded477b6fd048150f3
 cexprtk,https://github.com/mjdrushton/cexprtk,279956987d27cefb7298a70a7503e91f78b279f5
 opencellid-wrapper,https://github.com/ashmastaflash/opencellid-wrapper,51089d9e1d28dd02e4fe822328817ed6f3d324ef
-sanic-wtf,https://github.com/pyx/sanic-wtf,c395e1dc08b06434732a1177971fa5e6da0ab8f8
 django-grappelli,https://github.com/sehmaschine/django-grappelli,92e173c8a83d2b6ea5c59522ff4f2ed4bb81c501
 enpyronments,https://github.com/stephen1000/enpyronments,0848c55a2a1b132b3beba94265c103ba49385c8f
 pyfcomb,https://github.com/MarcoMuellner/pyfcomb,56f7a17937ca47e0138e9ce33df78f4bf7c73f73
@@ -5140,7 +5124,6 @@ ssh2-python,https://github.com/ParallelSSH/ssh2-python,693beffac888e97227cfdd2cf
 pypher,https://github.com/aboucaud/pypher,32f606ded9276ab28c86aefadd8b9261de10aebe
 validator-collection,https://github.com/insightindustry/validator-collection,233b9fa9f115a691b7158f1c879496b51a85e29f
 hanita,https://github.com/machine23/hanita,5a7d51dc7a08e0633925ee21ca30ccee5a7547eb
-cabby,https://github.com/EclecticIQ/cabby,6d6ed1ab0a5eb3f2cf6a32f7cc982f50c146dae0
 scelvis,https://github.com/bihealth/scelvis,1db26099f4ddcae67cf7bac0c43da4c14bccf37f
 imago-forensics,https://github.com/redaelli/imago-forensics,a73f078cf2254b12e0ca86049d58ced50de4bcd4
 hstools,https://github.com/castronova/hstools,60ece2f22f84a8f20e917bfcd62c786313fff0e8
@@ -5268,7 +5251,6 @@ linky,https://github.com/x3n1x/linky,ef0823c0cc3ee8653f2ddaae8e59dbbe339a6029
 pwstore,https://github.com/rpdelaney/pwstore,b2f391480927def538dd0e56f37aa867c0b20fe1
 python-loggable-decorator,https://github.com/ateliedocodigo/python-loggable-decorator,d3933166ed632207e608bd21f8ec5f121b1386a3
 phasespace,https://github.com/zfit/phasespace,85b8532e3c670768ded83dbf4d8561980243482b
-sandman,https://github.com/jeffknupp/sandman,253ea4d15cbccd9f0016d66fedd7478614cc0b2f
 mongo_filter_evaluator,https://github.com/zlebnik/mongo_filter_evaluator,2fce2086d621e9863cbd787e12199e21db1cafbd
 shelvery-aws-backups,https://github.com/base2Services/shelvery-aws-backups,0c17194ce8addb24e6a2daffab271c9f390423d6
 mparticle-python-sdk,https://github.com/mParticle/mparticle-python-sdk,d6c2d30365ffb016aa341effac827b64cdb20c63
@@ -5542,7 +5524,6 @@ svp,https://github.com/joshmgrant/svp,fdf64445d8038b4df5ab2181eb6306d56e3b5162
 onegov.ballot,https://github.com/onegov/onegov.ballot,23d7fdcecb8c1c1f288ac2cbe860a48b93f253b1
 algorithmia-python,https://github.com/algorithmiaio/algorithmia-python,d07732d2107c49adbb0d1e142582f30975aff450
 pydapt,https://github.com/dev-prakhar/pydapt,edc26cc790a5e58773f0fc7faa2051311100c007
-pypred,https://github.com/armon/pypred,4f96575a9c05ab2829c0808737b146d8cc632cb7
 cngi_prototype,https://github.com/casangi/cngi_prototype,1260b693effaf4af1c6ceb8ab291086f6eecd020
 roulier,https://github.com/akretion/roulier,a38714148fe810182e1cfb4b384c178c9df0bb27
 whim,https://github.com/Sibilance/whim,32ace05cca4c9048bc1bd21568bc6de3e1e84ebb
@@ -5592,7 +5573,6 @@ genome-py,https://github.com/marigenhq/genome-py,c142b662ae988b01c48177ff51ef364
 eliottree,https://github.com/jonathanj/eliottree,fa4e61209413086c3b2af7d19cce4ae8c0207be0
 dabl,https://github.com/amueller/dabl,bc9210182d01ac259647b729a626655d412807a6
 testcube-client,https://github.com/tobyqin/testcube-client,be0fdf7436a527b4ad786f1b158f121f5d1b251e
-PyXenaValkyrie,https://github.com/xenadevel/PyXenaValkyrie,92b45f1f37a5589cbdb9224a287fa0426d2c8d47
 metamod,https://github.com/abe-winter/metamod,ad3a571d86ed90f342a4f03f55739106a7570015
 chaos-monkey-engine,https://github.com/BBVA/chaos-monkey-engine,f4f5fbe04b57e82b3ce1bba5469c27a2ba89ea01
 boneless,https://github.com/jakeelkins/boneless,3e863b632dcf5ee0237883306ea4f8ec27bc1f81
@@ -5763,7 +5743,6 @@ binwen-peewee,https://github.com/binwen/binwen-peewee,a7d1fe526a11a7e499d411cdd6
 seam,https://github.com/VUIIS/seam,1dabd9ca5b1fc7d66ef7d41c34ea8d42d668a484
 lfview-resources-spatial,https://github.com/seequent/lfview-resources-spatial,2b6d269de50f32f6b75f4dee8e6aa1ef6519cf71
 pyfield,https://github.com/Ublimjo/pyfield,4b066d5eaf3e94e1c911e0c4990f703b233f3cab
-py-kin-base,https://github.com/kinecosystem/py-kin-base,b6075892900b67966365aba0c6b392a6d7cd6eab
 code,https://github.com/gda-score/code,ae826722250da22141c80b8ddd3b8f6856a82b96
 imreadeval,https://github.com/quxiaofeng/imreadeval,0965036b977731060fd86de1f2b21f04d10e36c5
 pytest-circleci,https://github.com/micktwomey/pytest-circleci,1f505e62d60beb9f88999693b8db783a641f1219
@@ -6011,7 +5990,6 @@ pip_test_1,https://github.com/vinicius1889/pip_test_1,b21cfd605df64c138ae6c5372a
 check_docker,https://github.com/timdaman/check_docker,0dc64b5207138856c638bd2b23a4ac5718f4ef36
 dss_python,https://github.com/dss-extensions/dss_python,a17a3071173e1f57c4055b0bedc1edd5eef7bff5
 image_score,https://github.com/sandjaie/image_score,c7bce39b61d90e50b8311389568a503264342dc3
-optimade,https://github.com/materialsproject/optimade,dc47d8072c383227b5a90bba57471a6d8f517cb4
 inequality_coefficients,https://github.com/Grasia/inequality_coefficients,dec3ad5574344b475bb7edcfbb269552a11e0462
 HikLoad,https://github.com/Tedyst/HikLoad,b3eb7be65bd34040992e1b7b15f23ff4ce2e8dc4
 sthree,https://github.com/anatoly-scherbakov/sthree,6b431802d0fd4d8af8eb629c3f1c589e4bc60b70
@@ -7026,7 +7004,6 @@ helga-oneliner,https://github.com/shaunduncan/helga-oneliner,009b11eb7dc24d85eb6
 python-xmake,https://github.com/andreycizov/python-xmake,e3bb0f82499453be761a4be46cb1670553dcaeee
 pgs,https://github.com/Tigeraus/pgs,fd8edd25b0579ece880a0c25f126330144766bd3
 schema,https://github.com/keleshev/schema,d5ec131b86e4a6ced6efa1e23a85ab1971958281
-PyTrafficGenerator,https://github.com/shmir/PyTrafficGenerator,61ddd0465b9ecdd72134e18668756d2a6ccbf646
 certificates,https://github.com/cassiobotaro/certificates,dcc398a0cb43f18398ec52664a48b08faa7bccde
 PyLyrics-Extractor,https://github.com/Techcatchers/PyLyrics-Extractor,453686c40b4ef3bbb834dfc94c292bc888717889
 dialex-sdk-python,https://github.com/HyperLab-Solutions-Sdn-Bhd/dialex-sdk-python,6a5d39f220a369a67bbf22099ee626ce5a90e0ab
@@ -7926,7 +7903,6 @@ cv2ImageLoad.git,https://github.com/ShawnZhang31/cv2ImageLoad.git,14f40f3443a707
 facts,https://github.com/johnnoone/facts,82d38a46c15d9c01200445526f4c0d1825fc1e51
 aardvark,https://github.com/Netflix-Skunkworks/aardvark,00116baebb281d3321c94e6b279bf039744bccf1
 HadoopInspector,https://github.com/willzfarmer/HadoopInspector,ae5c2f7eaa39f2dae9d98498c581bd22975600a9
-async_timeout,https://github.com/aio-libs/async_timeout,45bea1a497bb1f0c8b0ccca1fb1e107140ab5a82
 nb2md,https://github.com/elehcimd/nb2md,5a47aae689e9c134063d8ea676bfc2a7f358e097
 gtranslate-python,https://github.com/varunbalupuri/gtranslate-python,6fe6bdd291fe505f9c05d51c9db8cc5aeef75527
 oal,https://github.com/napalm255/oal,772dc877e09354972839ee9c179f0c9939077baf
@@ -8206,12 +8182,10 @@ pyeval7,https://github.com/JulianAndrews/pyeval7,70d10fe3fb89f0af777618e0bd13279
 ansible-role,https://github.com/xoxys/ansible-role,34e5441938a793c96adc5adec982ebd65334ae57
 nio,https://github.com/niolabs/nio,e2ef4c7b56c4e7e06964fe6f64ae6c497ac31727
 QETpy,https://github.com/berkeleycdms/QETpy,1e501f68c657a4e9a20dcdec20776b6d2c465228
-trafaret_schema,https://github.com/Deepwalker/trafaret_schema,c902440ef44fab2285df927450f49c5ec3eccc62
 DateTimeRange,https://github.com/thombashi/DateTimeRange,c98134dd3188f15cc65c42c101c2b74d866f3d8a
 pyppl_flowchart,https://github.com/pwwang/pyppl_flowchart,b66f1f74f48da4c30da11687e229408010599ab3
 ceilometer-publisher-vaultaire,https://github.com/anchor/ceilometer-publisher-vaultaire,7d83200dc2b69eecb0eaad8c5d5150424e896e79
 zipit,https://github.com/OniOni/zipit,3a123ace0a36981517ec02f728369af1d60ed9f1
-pundler,https://github.com/Deepwalker/pundler,dba19d6b7b8c2bc602d1ac9c5612a5cb8125cdb4
 url64,https://github.com/puria/url64,da801effb86837ee970ceb970a3497d9063d6fc3
 RustyReturn,https://github.com/abstractequalsmagic/RustyReturn,1976f1dc41dff2e6b5c1d26efc8970c7628d0b15
 123-Fusion,https://github.com/bennymeg/123-Fusion,8336766a180efbe59dbedaa5f6f3e565025c1cb3
@@ -10312,7 +10286,6 @@ pymccrgb,https://github.com/rmsare/pymccrgb,dc8ad2e46cbe6ff8081c32fa11bce68f869b
 PyViCare,https://github.com/somm15/PyViCare,ce61eccc2052773006475c2e5bde82e966e25897
 pygame_gui,https://github.com/MyreMylar/pygame_gui,8cbadac16fc7b019ac8d5a55587f36f40257e0cd
 erizo,https://github.com/fatiando/erizo,a44ac1cc78dfda429b6c8ba8f517bdce592c4557
-serpextract,https://github.com/Parsely/serpextract,aec8f2bd79c66953938569a24b05c693ab70b4ce
 intelligent-simulation-handler,https://github.com/mbardwell/intelligent-simulation-handler,56d5943407e517b0bc265e166479e01dbeb91857
 gata,https://github.com/kodemore/gata,49efdc999a60438977a2ecb006a448fbedca16aa
 ec2mc,https://github.com/TakingItCasual/ec2mc,e0feb3c6e9ea172fc0128561789b965c29ed45ca
@@ -10447,7 +10420,6 @@ opisense_client,https://github.com/opinum/opisense_client,5332370a870a98ce1745a8
 gaecl,https://github.com/takashi8/gaecl,07be3f6feb6b2c11b3a87de7ef28aeccb8b07a43
 pymako,https://github.com/clivern/pymako,a3048b8064624849e0150a521940531b40cf265a
 BMPxlsx,https://github.com/TheAcademyofNaturalSciences/BMPxlsx,f6e3beef52e45d6bf0b2b8d23967b0d8718dd8e1
-echovr-api,https://github.com/Ajedi32/echovr-api,e135f25fb5b188e2931133d04c47c5e66e83a6c5
 kafka-logging-handler,https://github.com/redhat-aqe/kafka-logging-handler,9459c1e897b77d87c5568a12f6a3e724440e67f4
 versioner,https://github.com/Tomasz-Kluczkowski/versioner,41c7382e8d5b9438bd4c12ccc8f65e9f21fff005
 emuserema,https://github.com/endreszabo/emuserema,abb4172af0e55f5776fba1559b4223987a09308f
@@ -11565,7 +11537,6 @@ os-config,https://github.com/cfhamlet/os-config,5a875ac07972ef9e4d1d6887ea48c974
 pythonKakfaWrapper,https://github.com/Weizhang2017/pythonKakfaWrapper,390e46953b8ba99415fc03902344d1e4e76b0394
 binaryen-interfaces,https://github.com/irmen/binaryen-interfaces,3b2ec74f9b7b8de33846220ef00b58aff815063d
 binstar_client,https://github.com/Binstar/binstar_client,6d462d5429ee418ce208a7179c4b5ac4559aa879
-aiohttp_sse,https://github.com/aio-libs/aiohttp_sse,66407db5752d19abd4d312f0b22fa8106feb6ca2
 structlog-extensions-nralbers,https://github.com/nralbers/structlog-extensions-nralbers,f5a499a5f04a8e3be380b74cd217d81d9fc0b93a
 sqlbucket,https://github.com/socialpoint-labs/sqlbucket,b5e8d2a05a02e891733fbb8c87bcdfd08195e82a
 warpify,https://github.com/transformify-plugins/warpify,82782b488d26ccc53978fbe6ba8bd65839dc6937
@@ -12053,7 +12024,6 @@ wpkit,https://github.com/Peiiii/wpkit,23a07548be766b559b80e3114ecc24e3f2f65ea5
 emmental,https://github.com/SenWu/emmental,07e9576e74bf59f803cd7a29bfbd3935cc2c46ad
 xero-db-connector,https://github.com/fylein/xero-db-connector,8a8f484a1a2912a70eb27e518732d10312e741b8
 feed2mail,https://github.com/mattclement/feed2mail,31f8eea5abb43f410988aef0b9e8cd12ab09eadc
-magnum-pi,https://github.com/ronaldevers/magnum-pi,59a1b5b88e34e4ca00888ccc7e59def652ce85f4
 jsontyping,https://github.com/m-click/jsontyping,ba316b21599573ae413d28ada8a64be01a25cb1b
 pyampio,https://github.com/kstaniek/pyampio,5b93420dd6f77bfe33081e8cbe06b5231af705c6
 decompose,https://github.com/bethgelab/decompose,b6ad3e3d1a2d049f1853cdc309ad042293415ad1
@@ -12223,7 +12193,6 @@ dhelm-gfeed-python-client,https://github.com/kncsolutions/dhelm-gfeed-python-cli
 gummi,https://github.com/seboschtion/gummi,fc830ae0e72be50437c5e04bbd520b45a214e64f
 more.itsdangerous,https://github.com/morepath/more.itsdangerous,28b88cb0d1392f65e76d9033576db8f8c3942530
 crowdai_api,https://github.com/crowdai/crowdai_api,c1125028a13ee5cec80ecfe282799712e62f641f
-inflow,https://github.com/AdvancedClimateSystems/inflow,8d6e202f388b543ccf0e22ff1981084771a239de
 stormpath-cli,https://github.com/stormpath/stormpath-cli,3763938cac7a7feb2089f68afe1a9454e6753b6f
 adutils,https://github.com/benleb/adutils,dc59fc9481b22db1e09d03dde7a89bddf5457e4d
 awesomepy,https://github.com/Ankit404butfound/awesomepy,28336bb3266720c72fb68bdcf6dc29aa07d24db4
@@ -12595,7 +12564,6 @@ python-jsonrepo,https://github.com/romaryd/python-jsonrepo,08a9c039a5bd21e93e9a6
 demisto-sdk,https://github.com/demisto/demisto-sdk,925303e5c54fc3dda985ef19b6d56a956d189f69
 pyHDT,https://github.com/Callidon/pyHDT,56370143e707c1b69bdb054bd811660e6611cae1
 pyflat,https://github.com/noverde/pyflat,1bbc63e13e386bf48448365f508630db6e46456e
-closeio-api,https://github.com/closeio/closeio-api,e24601c962b56f7f5990201b86199ec5d903761c
 sleep-hotkey,https://github.com/HenleyKuang/sleep-hotkey,3c3509e59cd81be672db54af5ae5b98d135b7da0
 Navi,https://github.com/packetchaos/Navi,566153b67fa73634bba67012f07436ff160272f3
 pytest-asyncio-network-simulator,https://github.com/ethereum/pytest-asyncio-network-simulator,9a061c7fb7e75b470888a9078c5b42cb1d304703
@@ -12626,7 +12594,6 @@ btdripper,https://github.com/lalten/btdripper,ed56fafab1c1f332c4da4802c021c1a7ac
 baseband,https://github.com/mhvk/baseband,252cc1270fddff8164a67433f77c24564b705271
 simple-websocket-server,https://github.com/pikhovkin/simple-websocket-server,0f77db8d43f089c8b6a602df8b013b54d73cc367
 resgen-python,https://github.com/reservoirgenomics/resgen-python,1ecb154d9f0bc4977e841bc62ce29167be5ef178
-password-generator-py,https://github.com/gabfl/password-generator-py,2bc5c7b59e407d8b2b71519bca677363f8111fe9
 crontabparser,https://github.com/privacyidea/crontabparser,4e279a3a9d45cfc0bb3e6a9087cafd05e7f78ee1
 taiga-contrib-ping-federate-auth,https://github.com/allan-simon/taiga-contrib-ping-federate-auth,620f7acccd679883f198293a66c1347ed7324625
 hwapi,https://github.com/kittenswolf/hwapi,039d1ef928b6c4e7b74ec1c10d1ec41a53efa306
@@ -12812,7 +12779,6 @@ fast-reinforcement-learning,https://github.com/josiahls/fast-reinforcement-learn
 cis_interface,https://github.com/cropsinsilico/cis_interface,3e557dfbb634b28a85893ce13ae58d8f98e13b42
 webdav-client-python-3,https://github.com/ezhov-evgeny/webdav-client-python-3,96aebf2b86814214eb6b1e089e44f2505c40093e
 gdoc_down,https://github.com/KarrLab/gdoc_down,0ebdbe029728ad1c0cab44078acfecf1d0fef2e2
-smugpy,https://github.com/chrishoffman/smugpy,f698d6749ce446e3d6c7d925b2cd1cd5b3d695ea
 dlcli,https://github.com/dataloop/dlcli,57458b7346a9b9c92cf99628f6c051589a9edb27
 python-utopia-tools,https://github.com/lostislandlabs/python-utopia-tools,7ddbf39c0fd3973135556ba6ec0c0d478921dec4
 artifact_py,https://github.com/vitiral/artifact_py,e547542f9188dc9142b3333e6b2d2a59a4a8e3bb
@@ -13037,7 +13003,6 @@ pconf,https://github.com/andrasmaroy/pconf,9c593266cf3377c085b20dc23ee3bb9df714c
 cli,https://github.com/DeepCodeAI/cli,d10e7d2777a06ee880b1d4de770d94d6ba55a764
 BiMLPA,https://github.com/hbkt/BiMLPA,4d51558c893dc4cc7ab0fae4d696b940d7976da5
 os-spage,https://github.com/cfhamlet/os-spage,1ce54c7b7a6d1e9cbadf1a96557570a1d4c827c1
-netaddr,https://github.com/drkjam/netaddr,0d5318c21c7af682c842e01177fee7247416b9a3
 galactica,https://github.com/xuanxu/galactica,1b09a56b8e1f6505b2aad6d83fc3fc3bebe06854
 SpacePY-X,https://github.com/alshapton/SpacePY-X,c3279e1b13f6f72bf1f43c55b0d130ba5da35481
 esphomeflasher,https://github.com/esphome/esphomeflasher,1d331328781da190e668ce2b21f97978fd8e2b1c
@@ -13243,7 +13208,6 @@ objectify-json,https://github.com/weaming/objectify-json,49436209b4c7a941f11f040
 microk8s-configure,https://github.com/netsaj/microk8s-configure,2957fcbb58b25e1920a25aaa008855f2fe13c717
 sslcrypto,https://github.com/imachug/sslcrypto,c829d20599339f0f567dfae5f4dedd26311790c4
 pyTrnsysType,https://github.com/samuelduchesne/pyTrnsysType,6cf552e4ccd66f7b728e84654e580befe2061114
-goodconf,https://github.com/lincolnloop/goodconf,19515da5783f86b9516dbf81531107c2d9eae567
 DensityPlot,https://github.com/xuesoso/DensityPlot,fbe7d08b4b40ee063fb99a095b78466a5a58b883
 nvfan,https://github.com/magnusja/nvfan,3633c6e1b11dc6ab123eb250460def7a65aa473c
 pytest-docker-tools,https://github.com/Jc2k/pytest-docker-tools,4cfc68ada31745605325bdd420ad10f3f995112d
@@ -13273,7 +13237,6 @@ poledni-menu,https://github.com/oskar456/poledni-menu,c069b774d06c14f49e2eba5a7b
 chains,https://github.com/SuperCowPowers/chains,b0227847b0c43083b456f0bae52daee0b62a3e03
 flask-cachual,https://github.com/bal2ag/flask-cachual,bf0d2719b8593de3d80f6df35bd1cbc656fb14ff
 cloudwatch-metrics-buffer,https://github.com/kecabojan/cloudwatch-metrics-buffer,7c7e57ad323fc2e8bb73ac828d95b2274f82578d
-flask_googletrans,https://github.com/mrf345/flask_googletrans,e7ec3057bdbe57bb30928edc41fdeb0d19a0984d
 django-lite-captcha,https://github.com/memclutter/django-lite-captcha,0a7f95cfaa04f3ab9d075971c11da5e866bfbdcc
 mktheapidocs,https://github.com/greenape/mktheapidocs,6ff4b8825e8136641ac1bd852fbcfecc0b1ded6b
 dataflows,https://github.com/datahq/dataflows,fe9817f2b05c6cd13671f8708c9f53e4fe7d2bc0
@@ -13567,7 +13530,6 @@ NonCipher,https://github.com/NotStatilko/NonCipher,e3ba53328ffae039e24b7d4b64664
 UnifiedLogReader,https://github.com/ydkhatri/UnifiedLogReader,01d04afc6933423cafbf89fcbc6d41f9d6776154
 cyvlfeat,https://github.com/menpo/cyvlfeat,a61693bad9bf9ffed66d57089783d0ce7a96422c
 Typity,https://github.com/abstractequalsmagic/Typity,e80b484713fbf294d9fde6eeb54c33f8512af3e3
-pycec,https://github.com/konikvranik/pycec,b528dfb5f54ac8632f6cf742381dd5ee9a0a9246
 pretix-cashpayment,https://github.com/pc-coholic/pretix-cashpayment,8ec30c276e8a96ef60259059df62e5bfdfa9aa2e
 jimmy,https://github.com/ci-team/jimmy,5431942a3054aff9c217548375a8967b28eaf409
 netcdf4-python,https://github.com/Unidata/netcdf4-python,0ad67b05358d12e7223235686ec694d70fca681b
@@ -13700,7 +13662,6 @@ py-snake,https://github.com/jakehadar/py-snake,3c19d572afb275768c504c66d331b5727
 thunder-remote,https://github.com/Schrotty/thunder-remote,d0c278fe10373632d773cc4917f67aa8ffd03621
 mcastsocket,https://github.com/mcfletch/mcastsocket,e8e8671c3533124f62387636279601e3551518b0
 lazybot,https://github.com/Mojurasu/lazybot,e4fa7a6413ad030c3bbd56e954403a47a3b5afe4
-eliq,https://github.com/6d66/eliq,eccf3135623271f562812bb87a8e7ac158bdf6a3
 bhmm,https://github.com/bhmm/bhmm,6d798d43e0da92ddc6e471840ae1a68f66c14487
 lifoid-google-translate,https://github.com/romaryd/lifoid-google-translate,bac168d7200a8b15d250ec488e4a08cec81b9cc9
 probable-happiness,https://github.com/Teakowa/probable-happiness,9c3a9cac9b1d046d79709bd44e31c66cb8cc402f
@@ -13953,7 +13914,6 @@ wade,https://github.com/wizardbyron/wade,555b952d9017af912773495b458593ab6fd3c26
 astrorapid,https://github.com/daniel-muthukrishna/astrorapid,a6c9844a3ba5f50ab63300164981be75c726e528
 GuardiansOfTheMemory,https://github.com/Fafa87/GuardiansOfTheMemory,2e6e5f751b05bf84da6c8b9b2ec6ffe8a12d3e7a
 rump,https://github.com/bninja/rump,3b6c4ff29974b3c04a260d8275567beebb296e5d
-naughtywords,https://github.com/wildfoundry/naughtywords,52f82ec594af6c9585fd215451340bf3d0a9bc87
 acdb,https://github.com/pydump/acdb,7ca7f4e40cde3cf95f0a4df96a38896220936ddc
 python-fsps,https://github.com/dfm/python-fsps,6cb57695076870345439f8207fce094672566648
 wishbone-output-uds,https://github.com/smetj/wishbone-output-uds,3d0761d7c9e6795415c064e76a7b43dec54b3711
@@ -14123,7 +14083,6 @@ audiotrans-transform-fft,https://github.com/keik/audiotrans-transform-fft,62af8d
 cmd-call-graph,https://github.com/Microsoft/cmd-call-graph,e7fc5244bd7b774d0b9f481dc9ad344809a9c671
 pytorch-lr-finder,https://github.com/davidtvs/pytorch-lr-finder,2c40a1185ee0d3e4ecae93a3c664f606665d2e38
 notipy_me,https://github.com/LucaCappelletti94/notipy_me,776ca19423b88c65e1e3935a0d9ea81ef05588dd
-netconf,https://github.com/choppsv1/netconf,f6d5b2ad8553745d489743d44b313bcc967ef0a0
 aredis,https://github.com/NoneGG/aredis,cec3cdabe67f45493ac413737d8579f46c27fded
 pdb_eda,https://github.com/MoseleyBioinformaticsLab/pdb_eda,6121040391a7f0a0bb13d163a6264efe8c457fec
 wishbone-input-udp,https://github.com/smetj/wishbone-input-udp,8b352cd954be98e616c1a3f9f93ec6a87893ecba
@@ -14371,7 +14330,6 @@ django-smart-selects,https://github.com/digi604/django-smart-selects,325e0901a6c
 pytest-menu,https://github.com/nyantec/pytest-menu,5298f27619a2b7d5fb246e65d1ecf5288a85f2f5
 project-cylon,https://github.com/gigapixel/project-cylon,5893f0f9c4671184191a68bc6099dba9713957ea
 OSBot-GSuite,https://github.com/pbx-gs/OSBot-GSuite,7f9f2479439fa512f41a10d25c1ab4d7e3f3e5bf
-python-to-json,https://github.com/ingresso-group/python-to-json,3930b854cfbb0a1f79a2f6a0ea4b1790dd5c6925
 no_asyncio,https://github.com/justinbarrick/no_asyncio,6a1b6721cc838df00d4bd00ba1bdf987a54af486
 readit,https://github.com/projectreadit/readit,06e12a62af4dea38ab448edcaf65e50700a5adde
 neovim-remote,https://github.com/mhinz/neovim-remote,1ec7c6c76a66d8d381f54570d6fdd3079c190ba5
@@ -14494,7 +14452,6 @@ ginpar,https://github.com/davidomarf/ginpar,cee1676ba2280d09f43a52f5145b28388b8e
 dojo-referee,https://github.com/cacarrara/dojo-referee,4ce60247f93b252747d2bc35003cc43726f873ca
 pytest-failed-to-verify,https://github.com/gastrofix-gmbh/pytest-failed-to-verify,7efd95956e3edde2f6f03ff20d61c6cb78867844
 celery-loaders,https://github.com/jay-johnson/celery-loaders,aca8169c774582af42a377c27cb3980020080814
-GaussOpt,https://github.com/garrettj403/GaussOpt,34260a3e8d89a6161689279210573dd0b4860bd7
 py-client,https://github.com/happypandax/py-client,30c4c8b628a96f8fef68a9cd8da01038a55ad792
 synapse,https://github.com/vivisect/synapse,9094a1559e5eca82952b118611301e773cf5a2da
 tgeraser,https://github.com/eng1nerd/tgeraser,9c24a0ba01cb59f67a4d88a4f34f298d3b017f78
@@ -15036,7 +14993,6 @@ pyeltopo,https://github.com/mtao/pyeltopo,c27c30fef1073499ddcfec875e30d484f4926b
 pymedoo,https://github.com/pwwang/pymedoo,e4fa7572e3f1f0365cdc409042c27324105f9768
 singlecell,https://github.com/flo-compbio/singlecell,a7d811bab2bd0572e4a7c3d1e372b05872dbf427
 sectile,https://github.com/norm/sectile,7fa9a809902e77b378b5829867e68f689e2e5557
-index-hr,https://github.com/marinko-peso/index-hr,db3d48228ebfb98f7b9cbb017d6302945c14eda6
 reformat-money,https://github.com/MikeWooster/reformat-money,e78b1ee661cbcf8b80330ea423e1d1fd03613f80
 betsapi-python,https://github.com/qwqmeow/betsapi-python,02c7482a8e6ab975f58a73ff21662ac39e23411f
 lavender,https://github.com/spinda/lavender,29b1321394bdd3b7ded5e98f72a58500d46f445f
@@ -15499,7 +15455,6 @@ datapype,https://github.com/a-johnston/datapype,48837140735622f33adf0b5a6c9ea3c7
 SuchTree,https://github.com/ryneches/SuchTree,fc3e600369069bbdd985d2b30ae606209ae7a38b
 lars,https://github.com/Ujinjinjin/lars,8336a374992eb8bb695bd2d61c5754a6e043d022
 gpam_training,https://github.com/joaorobson/gpam_training,943c7a07ccccba4a79855e68398fc409898b55db
-dkfileutils,https://github.com/datakortet/dkfileutils,97145d73d4f390af77ef4b40f7ef3705722d96a3
 iwebhooks,https://github.com/icmdb/iwebhooks,57ed405496d7edf783a829136eacd4af1cd9bd75
 toolk,https://github.com/Alphazella/toolk,864b357369333d31388032a0b582e17f2131a88d
 EorzeaEnv,https://github.com/EltonChou/EorzeaEnv,64fef4741f0947e2bd0c588a794cd46ae0db9556
@@ -15969,7 +15924,6 @@ pygments-lexer-babylon,https://github.com/rbann/pygments-lexer-babylon,0872457ce
 django-prices-openexchangerates,https://github.com/mirumee/django-prices-openexchangerates,c8c73941d696ca2f9ee33a89e99adb151dc8fc66
 netbox-netdev-inventory,https://github.com/VictorPavlushin/netbox-netdev-inventory,579a32005897ab930586442356709465c9235707
 distri-remesa-parser,https://github.com/Som-Energia/distri-remesa-parser,fe863624de47f8dd4cd4b8130ddae41c095a40fb
-Kinda,https://github.com/schmamps/Kinda,405058929bb3555ea6cae1d2b798bfdaad6b9d52
 python-xiaomi-router,https://github.com/RiRomain/python-xiaomi-router,36867d077349a70678db75cf261428cdd80a0c51
 pyspeckit,https://github.com/pyspeckit/pyspeckit,60dcd58389d9c36d86549fd9cc85d36a6b77b1cd
 vctools,https://github.com/bmcollier/vctools,d39274721d0ac8b1ba470f3ef49f0604d067e11e
@@ -16041,7 +15995,6 @@ bonjour_monde,https://github.com/Em774/bonjour_monde,704bd550d72a5c772e6eea53cc8
 paginate,https://github.com/Pylons/paginate,0ec779aed6a652a93d5c00751b5126db25a06280
 aicrowd_api,https://github.com/AIcrowd/aicrowd_api,023518084261a1587b048213c4d55a063cc27382
 jisho-py,https://github.com/PokiDokika/jisho-py,46a9fd420f6072d6f77315262bdc381c37c2f4a0
-voximplant-client,https://github.com/gdml/voximplant-client,5f3c73706d04457a87d347a80111806562fc8b23
 mocean-sdk-python,https://github.com/MoceanAPI/mocean-sdk-python,f3f7983327f485acb6328b4396f13dab84ef4541
 beewi_smartclim,https://github.com/alemuro/beewi_smartclim,d0d74338a43507b9cc5979a7628316de35694869
 musical-robot,https://github.com/pozzocapstone/musical-robot,c4fbc5238713cac23bb9fbbe54c9f20b0be78bc8
@@ -17114,7 +17067,6 @@ sloth-cli,https://github.com/rigogsilva/sloth-cli,7cba5e263ce14fa3fab8e81f39457c
 raven-python,https://github.com/getsentry/raven-python,285b257cf386bfac78f6fe334c9044af65f98561
 cn-highcharts,https://github.com/liubola/cn-highcharts,4466d7c1e4aa75ddc69abedfe59e3b75f688fe66
 pipin,https://github.com/mattack108/pipin,bdc8f239a8b2963d2a7f7dbc805cfd5e632a5ceb
-asyncio_dispatch,https://github.com/lenzenmi/asyncio_dispatch,9c8e7fba65c69ba146e6559ec7897bdadb24880a
 diehard,https://github.com/eltonlaw/diehard,deb1e86bf6669c1b03850577204cc5a392d8d139
 pyraceview,https://github.com/jdamiani27/pyraceview,1fc8a4ba5671c5be610481e5928ad5c57002a117
 octoclient,https://github.com/hroncok/octoclient,5ad348bb78917d309727f28c7854d95964c1c4f7
@@ -17172,7 +17124,6 @@ code-annotations,https://github.com/edx/code-annotations,97cd3397c29a492929fb890
 pyjarsigner,https://github.com/appknox/pyjarsigner,9cb1491e1d195995d85612cef15a4377d2baff7f
 butterfly,https://github.com/paradoxxxzero/butterfly,da79ffe04bfeb210143df0d7374067d4b0f5f6c6
 tabellarius,https://github.com/bechtoldt/tabellarius,0b53d19f23e917084bad09e657c2d8d70fb4e0e7
-py-stellar-base,https://github.com/stellarCN/py-stellar-base,1a4cfa50303a5dd81827d54c0007501b00dc2166
 python-oligo,https://github.com/blackleg/python-oligo,803021375bc97a8a91bbbae439999794abe7eb56
 python-libjuju,https://github.com/juju/python-libjuju,65b53c112f11d6f9cde5a3f8618e4a86c1afcc78
 feature_engine,https://github.com/solegalli/feature_engine,ba4d7050b3923d620c1773b66cd4c51ed24498dd
@@ -17248,7 +17199,6 @@ spatial_access,https://github.com/GeoDaCenter/spatial_access,ddd5d1f9ff22bbe0ef0
 persipy,https://github.com/pristupa/persipy,38de6365141d075e9297d65b38813da050c0a988
 fs-onedatafs,https://github.com/onedata/fs-onedatafs,3d0f9dbdddc56419e9816e3fe5f7359dfd119ed1
 flux_led,https://github.com/Danielhiversen/flux_led,e9126523410009b9643a682c6c21f45c7f2cec94
-keyed-classes,https://github.com/buckley-w-david/keyed-classes,c9f4bef858ea24de452148b72adb24657d438d38
 ali-cli,https://github.com/leonrodenburg/ali-cli,d981905a7f5af7ac4203e99b47941f5044b76e7d
 datum,https://github.com/epicteller/datum,fb35997718bc966a8a36dd9a8aa7dde9e5e98d62
 rain,https://github.com/substantic/rain,477948554150760164c6fe48eac27bcf06c7933b
@@ -17482,7 +17432,6 @@ runjenkins,https://github.com/hughsaunders/runjenkins,98b94bb0a0ae8794f22723eb5e
 OpenAP,https://github.com/jinleic/OpenAP,c3042ab29e376d6a5e682e08d84684c61b5b8a72
 l2tpreg,https://github.com/log2timeline/l2tpreg,4c748442acbbebedc825c58430cb43d5c6e437c6
 geog,https://github.com/jwass/geog,52ceb9b543454b31c63694ee459aad9cd52f011a
-pcse,https://github.com/ajwdewit/pcse,c40362be6a176dabe42a39b4526015b41cf23c48
 distlimiter,https://github.com/observerss/distlimiter,fec00900bc9f2b2ba74720f39c31c27f3a16f24d
 CatAna,https://github.com/michaelbuehlmann/CatAna,991c015df9bc98337d8ab4253cb46b5507926927
 Anutshell,https://github.com/guokr/Anutshell,c01a681046e250c0a9a1793f3994923ac80007d4
@@ -17749,7 +17698,6 @@ rpi-7segment,https://github.com/agjendem/rpi-7segment,a568f93173672f88e6fbd32243
 info_gain,https://github.com/Thijsvanede/info_gain,2d98c18904e0b301d61f82ad74a9bf7301421205
 ruia-ua,https://github.com/python-ruia/ruia-ua,e116eaf08b4c783f578e2a00b17ba16b8acc91d7
 prometheus-api-client-python,https://github.com/AICoE/prometheus-api-client-python,12b4077a142c389dae13e3f1383b8c67dc370573
-controlhost,https://github.com/tamasgal/controlhost,6f0b6e5c48e490580a23c47302f996bb95b52aa0
 picka,https://github.com/antlong/picka,3f048b803a32213b4e3b64ccc64a4a78997f790c
 calldecorators,https://github.com/stroxler/calldecorators,024c583ff739a58b97dfdf213bd5b76ba61a2e84
 net_puppy,https://github.com/vishal-keshav/net_puppy,492b504e64879f2f7e3a7dc1c1cfb26149fb0de5
@@ -18791,7 +18739,6 @@ json-ref-dict,https://github.com/jacksmith15/json-ref-dict,1ed1c96707359b5d648ba
 via,https://github.com/kemingy/via,f58a4b6021ca10647b04505c6021cf35f44737c1
 django-strawberry,https://github.com/barseghyanartur/django-strawberry,ea0286ffc8d9b8389573608e2beb55c696786be1
 snutree,https://github.com/lucas-flowers/snutree,2d7f62a42bf374ad9c84fa00aee9721f98a3296a
-pyshorteners,https://github.com/ellisonleao/pyshorteners,5d8e6cda6742f0b6b752e0ce576bb7901119c118
 xrft,https://github.com/xgcm/xrft,176c186c4274ae88422c6b13d43f2d67cc1d95f5
 que,https://github.com/seandstewart/que,3e1fa45858950e24c54b9a904f681d45487863d9
 axclf,https://github.com/serwy/axclf,ddd3d85589db81fc1510a160091b23016bae13e2
@@ -18859,7 +18806,6 @@ python-fity3,https://github.com/cablehead/python-fity3,42ec2f5c7711f6949d46c586a
 Rammbock,https://github.com/robotframework/Rammbock,c906058d055a6f7c68fe1a6096d78c2e3f642b1c
 freactor,https://github.com/Pro-YY/freactor,cc132ea0348fdf48f993cc7a013f7d7d72a751d9
 vhdmmio,https://github.com/abs-tudelft/vhdmmio,f166b07074a9159311a01af88497df91c19e09d1
-flask_gtts,https://github.com/mrf345/flask_gtts,13af7a3ea7f71089365d9b6e12f822aa6eb02a3c
 django-idempotency-key,https://github.com/yoyowallet/django-idempotency-key,427e15fd8d42191131019209ec5e22197b2e7aac
 uplook,https://github.com/smetj/uplook,4290f59686e781a33e584ade172ad9159358db43
 pychopro,https://github.com/jontsai/pychopro,dc9287518bdee91db13c4ffe1b867584ebd0a38a
@@ -19093,7 +19039,6 @@ clean_ipynb,https://github.com/KwatME/clean_ipynb,a1daa47882c621a952527eb65a0c48
 yaml-config-parser,https://github.com/luserv/yaml-config-parser,59b8cad78d5adba4350d73f250ba8eb4f68868d5
 Ampere,https://github.com/nealde/Ampere,d51bb38b55fad533137cbdb4cdf4bf7cba6c5ac0
 gpu-utils,https://github.com/neighthan/gpu-utils,53ea91a15dc17756f40c3a47827347af8231b062
-alppb,https://github.com/irlrobot/alppb,3eff4c3df1fd2ae3aaa83c03988beccc6aeb1dd1
 catalyst,https://github.com/catalyst-team/catalyst,5d05c9d48d9603714992fdde52ca3f0a79e7a08a
 fletcher,https://github.com/abs-tudelft/fletcher,9e763f50a89eb6b7af73828c4c49bb2fcd034f6b
 MAST-ML,https://github.com/uw-cmg/MAST-ML,67dc9db47cb9cd02fbda76ec5bf8da152b68ff03
@@ -19678,7 +19623,6 @@ date_guesser,https://github.com/mitmedialab/date_guesser,db78c5654fdf8e2a7f6f0cc
 python-steemengine,https://github.com/Privex/python-steemengine,d8ab19e6c9f6e2c10933712145aa5eeedbeea4db
 torch-model-state,https://github.com/FebruaryBreeze/torch-model-state,be457be8eed2e867a19891ee6fbef55c30b017ad
 MyPack.git,https://github.com/Jonnybuoy/MyPack.git,e0f19e898c57021914ce9253aa089fc414e31dd4
-vcspull,https://github.com/vcs-python/vcspull,b91290db9d87085b169830213e7e3ca0f8a39572
 pspring-aws,https://github.com/vasudevan-palani/pspring-aws,695a9a1f27de74c741279a267e34647f44ee2bb4
 gaussian_process,https://github.com/LucaCappelletti94/gaussian_process,a070b7df96e7b79ccb09be5fe5e71a86d4dba65b
 polyaxon-pip-tests,https://github.com/polyaxon/polyaxon-pip-tests,1e445938878cc42c270737933eda8ae143eb1c3e
@@ -20380,7 +20324,6 @@ ubxtranslator,https://github.com/dalymople/ubxtranslator,da6acebc2e96974ae58fba2
 django-yearlessdate,https://github.com/seddonym/django-yearlessdate,cc9ef563eda559bdc2e3579dab2687ce0262560e
 py_parse_sber,https://github.com/Niccolum/py_parse_sber,da795b2d52254fa041aae6850f72bf7c0b71c49e
 textkit,https://github.com/learntextvis/textkit,6c482ea7d378022e10ee1002f9d9db7925856294
-aws-lambda-pyauthlib,https://github.com/oharaandrew314/aws-lambda-pyauthlib,ea501be56784ac22e8b6080f978f8b806ef8fd39
 kisenpai,https://github.com/kisenpai/kisenpai,54b9d5d7437f8513462e0cb5a1f8b83ee6f8e809
 nre,https://github.com/urigoren/nre,f9d34a8d42a8144efdbf9a2aadd410b1ef1e6f53
 nefnir-package,https://github.com/sverrirab/nefnir-package,1682c312a860d3600ac2911aef1e91027c90ea49
@@ -21024,7 +20967,6 @@ scopedconfig,https://github.com/etingof/scopedconfig,100438c4cab3842e424b1496d66
 django-exclusivebooleanfield,https://github.com/anentropic/django-exclusivebooleanfield,e94cdc0312ee9e41758126e440fee8df7ab50049
 persistent_cache,https://github.com/luiscruz/persistent_cache,95472657f32f15f8fa019664f245405ab9fb5059
 ODTbrain,https://github.com/RI-imaging/ODTbrain,667c43eba367ce4f939918f467472bec73283586
-pluck,https://github.com/nvie/pluck,8cb1186568e0b24d0f89f4ef4b79eea2b8944456
 bjarkan,https://github.com/willdeberry/bjarkan,a9e96318655c08300e7e8c2bb49ac8ead98b8434
 transit,https://github.com/mad-lab/transit,b4ce3728aa3ad9a035e4c569fb9dec2d8df6bb3c
 robotframework-keepasslibrary,https://github.com/loomanw/robotframework-keepasslibrary,e670f70d4555006d6a0f543e227953bd324c42ee
@@ -21279,7 +21221,6 @@ pyterm_progress_bar_pkg,https://github.com/wpbdry/pyterm_progress_bar_pkg,8a7d05
 cymbology,https://github.com/pmart123/cymbology,95087be9525ab8d2fd47baa93f83aaa30e76bb54
 cozy-fuse,https://github.com/cozy/cozy-fuse,bafcebae9e55b0297aaa36f3ab293ceb3f066ae9
 numba_special,https://github.com/person142/numba_special,520b98923da472942116b8bd857338f86d4e29f8
-sumtypes,https://github.com/radix/sumtypes,b56016ace243d3ac36504bd26d5db9bdf108b095
 communardo-metadata-python-lib,https://github.com/DaveTCode/communardo-metadata-python-lib,2cfe6e10bf6e3864e5a21d18665e93bea2254d4f
 rpmvenv,https://github.com/kevinconway/rpmvenv,ec349c9a83734fb610fbc40f58033a4df92579f9
 denoisify,https://github.com/transformify-plugins/denoisify,3b0a8687f05efa3a43beb75b29afff87164807ef
@@ -21637,7 +21578,6 @@ funky-collections,https://github.com/erinxocon/funky-collections,719ef32d818df1e
 axographio,https://github.com/CWRUChielLab/axographio,54eaa2d949f9b22ef20b59192f40f47b7f87150d
 permon,https://github.com/bminixhofer/permon,47fe06ebdc8c0655f865d38f073bae63a1acbd4d
 django-auth,https://github.com/noahzaozao/django-auth,9fd1b44ba83fc403f4cd3ce2f6b284836580b547
-codespell,https://github.com/codespell-project/codespell,cc51bbbe505cbc23eae32f52deb2cc7c8b33a0eb
 node-buffer,https://github.com/miraclx/node-buffer,135d641381339f9755cbba30d2261d709e74403e
 obscureridge,https://github.com/pythonflaskserverapps/obscureridge,a529aa32f5484d1239095e58eebf1c51a7bab2e6
 pymanip,https://github.com/jsalort/pymanip,6437780f364304a13f408b44bc7eafd500ee66d3
@@ -21995,7 +21935,6 @@ graphtransliterator,https://github.com/seanpue/graphtransliterator,dac25c64b9ad7
 libqrencode-cffi,https://github.com/wolever/libqrencode-cffi,b797677c1ece8cf840165b33842736af80312bad
 pancritic,https://github.com/ickc/pancritic,91ce0b95658f16db9f2906de4e20d9892e680553
 itsxpress,https://github.com/usda-ars-gbru/itsxpress,ceaf8936b1cfd1bba2a6737a8fc88841d0e49b33
-celery-statsd,https://github.com/lyst/celery-statsd,200728d711ec83d1d277db396887a7ec8f9fce2b
 numpy_utils.git,https://github.com/deluccial/numpy_utils.git,2bb8e725ef9f8aa947860cb293b64be024ef9bad
 miNER,https://github.com/Andolab/miNER,4871fce8907a554734e0e70aea33e2adf03c0ce1
 PyDTMC,https://github.com/TommasoBelluzzo/PyDTMC,e712be98447b52020d856e5adf57c1d0cbab73ba
@@ -22855,7 +22794,6 @@ efm8.git,https://github.com/BarnabyShearer/efm8.git,8f7b8646da21f375169db5ac2cf5
 solaris,https://github.com/CosmiQ/solaris,39611db0fde7877f69b819df618801136ba65691
 python-serialization-json,https://github.com/steenzout/python-serialization-json,583568e14cc02ba0bf711f56b8a0a3ad142c696d
 firex-keeper,https://github.com/FireXStuff/firex-keeper,6c24dea07f8665be316d31953bfffac77b281cb9
-python-object,https://github.com/steenzout/python-object,b865e3eeb4c2435923cf900d3ef2a89c1b35fe18
 JTune,https://github.com/linkedin/JTune,2266659f65054e7c021223eefe9e0755c4be540e
 todo-extractor,https://github.com/vikahl/todo-extractor,4afcf389d1d7ddd1920e437c3b392faf63453c7d
 SpectroscoPyx,https://github.com/PlasmaPy/SpectroscoPyx,ff1c0ae7c4245592340faf2d788d1e17f410862c
@@ -22878,7 +22816,6 @@ django-cache-lock,https://github.com/Xavier-Lam/django-cache-lock,510384cbe71b9f
 dicom_tools,https://github.com/carlomt/dicom_tools,4fc7dae1eadce562894792cae441721deaf01b5f
 aio-logstash,https://github.com/SinaKhorami/aio-logstash,6ac07898de1dce3c0ff1a6881bf54cab9d0d8a46
 kubeconf,https://github.com/Zsailer/kubeconf,15d96bf109abc87a04b3e0ac2256a706f1ee6348
-blindtex,https://github.com/blindtex/blindtex,1f0a7f933b4ce875103af1c81cd6ecf6948a4856
 python-beward,https://github.com/Limych/python-beward,d7c1d12a0a39a7c60c4f278ebea009c0a5509780
 aloisius,https://github.com/adonig/aloisius,93d7b02625464f9b2dc3f286839b911f36a86bc9
 pytest-salt-from-filenames,https://github.com/saltstack/pytest-salt-from-filenames,9d3af9cbbce7d6df8bb29bc4a70e42c7078ece79
@@ -24383,7 +24320,6 @@ backports.tempfile,https://github.com/pjdelport/backports.tempfile,828f11240fe2c
 foxmixer-python,https://github.com/teran-mckinney/foxmixer-python,67c82797e1230ab47c6e4f8382d5650bbab0df3e
 userstorage,https://github.com/nirs/userstorage,3261fd329fb3940c7788358a82ad7e5519881b62
 KUEventParser,https://github.com/kkiyama117/KUEventParser,fa6d7fc023a4e5a357e22548e4f7c127eba2ec94
-IsoCor,https://github.com/MetaSys-LISBP/IsoCor,10662b0b2d11ca25880de5d799a63d7a03e64f31
 python-crfsuite,https://github.com/bratao/python-crfsuite,6251322e228347460735d53775b85847727b7e9b
 netlookup,https://github.com/hile/netlookup,9677251aeb96789fcabe47bc487470988d51c55c
 napalm-procurve,https://github.com/ixs/napalm-procurve,bd1209b32dd698a7965b24411e3f69acfcb67d1f
@@ -25309,7 +25245,6 @@ pmxbot.saysomething,https://github.com/pmxbot/pmxbot.saysomething,46f52f47a17567
 Python-GraphQL-Subscriptions,https://github.com/willdeuschle/Python-GraphQL-Subscriptions,1c9cdb2f8952275223b853401fc7bd8c9392f462
 hydrachain,https://github.com/HydraChain/hydrachain,6c0919b0575dc8aa481f3a8c703e1a7f0575ecc3
 ParseThoseArgs,https://github.com/JakeMakesStuff/ParseThoseArgs,66c117a83e2dbde96d833c1b6df7a3008f51c2bb
-async-dispatch,https://github.com/tobypatterson/async-dispatch,5ccdd84f4224ee4e54c00de8a01d31684dc86394
 spark-py-submit,https://github.com/s8sg/spark-py-submit,16cc184136c70118598a876c6a460c737702894d
 metricfarmer,https://github.com/useblocks/metricfarmer,556b459d081f84b0d9285266ba472c7ed27ddd46
 nlplib,https://github.com/td391/nlplib,b58ec401e12750ba493f7af142b00f5a34206250
@@ -25633,7 +25568,6 @@ tpl,https://github.com/m3t0r/tpl,6aefb04dced26873ce515c2413ed3c942d2d1e45
 toucan-data-sdk,https://github.com/ToucanToco/toucan-data-sdk,629f60146536a630cfe9e41aea0dcc605a878efc
 steganosaurus,https://github.com/duongntbk/steganosaurus,d521b0a46468af70a2632f25c04000631d513869
 autodocsumm,https://github.com/Chilipp/autodocsumm,0a1b6515ba83deb70eb2c356acf956f448536c90
-mkdocs-awesome-pages-plugin,https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin,b261b3d3186d268783cffaaf6d1029f8fb259be5
 hgtparser,https://github.com/gmalt/hgtparser,c26f5860141827d4c7c41fbe2077d851a7114c10
 wsgi-aws-unproxy,https://github.com/labd/wsgi-aws-unproxy,c49a30aa935e70a84c99f043c6829f879a11d9eb
 buildnumber,https://github.com/simonski/buildnumber,4029208251fa553c945546c0dd04ea9dfe3f95e9
@@ -26487,12 +26421,10 @@ lahja,https://github.com/ethereum/lahja,607262ea9b54698c13990d32d6af3dd913d203c7
 macaw,https://github.com/mirca/macaw,36699526a0a68619de0e9f6a57a74845d5a41ce1
 flapjack,https://github.com/endlessm/flapjack,2b73f3f9c9f48367a020c2e5b39526972ebe51f8
 rsa_archer,https://github.com/mwa21/rsa_archer,bcfd38c76c0a704b80b6e317942c0c6bda0b7274
-wirelesstagpy,https://github.com/sergeymaysak/wirelesstagpy,28b858e7f8178a9826a65d3a2b729742bf5d4482
 dstruct,https://github.com/rmorshea/dstruct,c5eec8ac659c0846835e35ce1f59e7c3f9c9f25c
 laaos,https://github.com/blackhc/laaos,029a4b56a2935db792a5360bea0002d0fb8e1e6a
 fk12306,https://github.com/0xHJK/fk12306,dba3ea294f3f42033b21c8c04fb9a7a043ac50c3
 BandWagon,https://github.com/Edinburgh-Genome-Foundry/BandWagon,93cdefff8537bde7f059894f3faf38f665b66c2e
-aiohttp-mako,https://github.com/aio-libs/aiohttp-mako,df1a55de9179b321bf082480c28f0c7b9b6c6332
 res_manager,https://github.com/hosea1008/res_manager,52511d26ead2f9d94447369705d59d6af6c8610b
 pyciphersweet,https://github.com/rlittlefield/pyciphersweet,9d1fcf301fe0ad78d9d4a467dc16fd18a6cb2070
 saboteurs,https://github.com/Edinburgh-Genome-Foundry/saboteurs,92b666444f60892148275eb19cc22ae9e189e0c1
@@ -27576,7 +27508,6 @@ aiohttp_session,https://github.com/aio-libs/aiohttp_session,11bca40456a9223130c5
 python-hearthis,https://github.com/jinchuuriki91/python-hearthis,868283d5a422f671f322b42a165019050d61813a
 allestm,https://github.com/phngs/allestm,41f8b6f2786e4b9363cdebb1cac2b30e8db09fc8
 knowhere,https://github.com/sankalpjonn/knowhere,447eab31806a74ad2384b285dbbb3256a8b77acc
-effect,https://github.com/python-effect/effect,df04e119faf419a5608a51ca1af606f2874a11a7
 plotbitrate,https://github.com/rezun/plotbitrate,c8972ae69d60586a01909c4f21bb529d40ab8e0a
 decay,https://github.com/pyl1b/decay,e95933c6562d15116abc86f568baaf690c5750ec
 py7zr,https://github.com/miurahr/py7zr,156e0d99529d419711362dcd772dc3e2f0b28064
@@ -27751,7 +27682,6 @@ pygazebo,https://github.com/jpieper/pygazebo,c3047cf3ab536556ba0fa8566598f4319a0
 elixr.git,https://github.com/babdulhakim2/elixr.git,00ca115c96da4e23922555493d2068bc48f4bd66
 medcoupling,https://github.com/tianyikillua/medcoupling,148b262ed48b216692aefa33a24dd1f65ac93340
 rest-api-lib-creator,https://github.com/filwaitman/rest-api-lib-creator,298acc989732c1cdd3a1a54ba8c8969f8e5043c4
-meuhdb,https://github.com/brunobord/meuhdb,2ef2ea0b1065768d88f52bacf1b94b3d3ce3d9eb
 runtimedocs,https://github.com/junteudjio/runtimedocs,5ef9ad072d4b03616bee24019da4d0ae7de49b8a
 bibolamazi,https://github.com/phfaist/bibolamazi,b74e86e5076efbef2f42e1247a5e0fe6c9d99224
 qsiprep,https://github.com/pennbbl/qsiprep,dec2e5f55376d79f5a0289c6d5cc488bb15e5b94
@@ -27969,7 +27899,6 @@ retail_product_checkout_tools,https://github.com/DIYer22/retail_product_checkout
 ioccontainer,https://github.com/jmwri/ioccontainer,fdb606b3fd8b0fbc2ab2cabf99362baf74837f9d
 andrew-model,https://github.com/andrew-audio/andrew-model,168cb6c7510320784771805956cab98a1645b838
 md-mqtt,https://github.com/flyte/md-mqtt,174999b3c27ce77d694150964e911c12a97c5d4c
-helper_scripts,https://github.com/pythonanywhere/helper_scripts,24b428d6ad9bd2e9c29252576661cff4ec5278c9
 django-deploy,https://github.com/elvard/django-deploy,2906e99f9e88bf631ae833d11ada80ee81fd7ca8
 omnia-timeseries-sdk-python,https://github.com/equinor/omnia-timeseries-sdk-python,9826963932df763f15e44e495ffbfa7a1bea33e3
 backslash-python,https://github.com/getslash/backslash-python,37f0fe37e21c384baa27b4f5b7210e79d02a65dc
@@ -28341,7 +28270,6 @@ win_inet_pton,https://github.com/hickeroar/win_inet_pton,57e35581c4b2c25650d931f
 oidc-validators-python,https://github.com/unit9/oidc-validators-python,2e044c8a8986cb4ea5c0b4872a68d1d4d8fba847
 pytest-simple-settings,https://github.com/tkukushkin/pytest-simple-settings,53cb8970bd6484cf4be38393f6da8d7c69102211
 phasme,https://github.com/aluriak/phasme,e04d598eaf844b9d040e3ca19bd7434790e06d2f
-pyblnet,https://github.com/nielstron/pyblnet,24a5de966067adc492c0b5c6899c50e7822e15c1
 vitex,https://github.com/cfangmeier/vitex,e6bffd3428d911cb7c1c119583b729f889f15a4f
 django-tools-contact-requests,https://github.com/semicolom/django-tools-contact-requests,b972db3793e7424b44990e2568b1cc99cce7538b
 websiteTest,https://github.com/jotathebest/websiteTest,076fc83ef15197aceb3afe9a3786d4af8f1b523c
@@ -28417,7 +28345,6 @@ creditutils,https://github.com/pytxxy/creditutils,ef60cace89d32c416ed6419bd66b03
 asyncloop,https://github.com/dgkim5360/asyncloop,e4f50156a74ee6430a8ade66f201ba61066396e4
 Browserium,https://github.com/browserium/Browserium,bfdf7da0648e9a9bcb02350e92a8acf7b55d0c97
 regli,https://github.com/hypergravity/regli,07de620959cbec2b0ce46a0bdb31955da3e6d9d1
-ansi,https://github.com/tehmaze/ansi,e7014adda9fdc0ab60053f4e65ff06edb2158046
 pyramid_restful_toolkit,https://github.com/tarzanjw/pyramid_restful_toolkit,301d15e0cd62d6a0d9eb7a9d88b4c9fb48a55006
 phrase,https://github.com/brentpayne/phrase,2c25e202eff0f284cb724a36cec1b22a1169e7a2
 kinto-dist,https://github.com/mozilla-services/kinto-dist,67aaa25e5296d0e338d6a408e29ca4b9c5fdbb48
@@ -28571,7 +28498,6 @@ python-broadway-sqlalchemy,https://github.com/artisanofcode/python-broadway-sqla
 bifacial_radiance,https://github.com/NREL/bifacial_radiance,06852cf8de736e8deadb1d4547a995d3778c6df8
 hyperactive,https://github.com/SimonBlanke/hyperactive,8be4da781add263b14c270b3ac097841a2888f57
 gdget,https://github.com/v1shwa/gdget,f24688e2aa485590e74f06d49f71e312038d0c55
-serverless-config,https://github.com/oharaandrew314/serverless-config,246ac507553e65654aa8dfc8216caf812b0ac780
 obst,https://github.com/NineNein/obst,593257ad97c7d18d0620e01f43fa5f7104e6202c
 gensolution,https://github.com/thhapke/gensolution,f5e9600928ab34a5552033f6a3ef062f950a6cfa
 vixen,https://github.com/vixen-project/vixen,ef840fd9e2f472aa2f8a7dac5bbca84e245220dd
@@ -28645,7 +28571,6 @@ pyxidoc,https://github.com/merigor/pyxidoc,2fc1317bfd292fb596a69c885d17d585eadf7
 apistar-contrib,https://github.com/ryananguiano/apistar-contrib,42d4b27b15fb170b1f01ca9839c5735524ba746a
 RyGames,https://github.com/CodingPenguin1/RyGames,65b8851fc53f212c3f91689b96d3b6d95e1c8765
 whydtogo,https://github.com/Djiit/whydtogo,4f514c6bf5952d6ea0ebac4d3b6916d68bc740c8
-aiocron,https://github.com/gawel/aiocron,e82a53c3f9a7950209cee7b3e493204c1dfc8b12
 raspi,https://github.com/jcrmatos/raspi,815d7181942b86bfd1f0b7c555e9b13b116e4978
 CropMask_RCNN,https://github.com/ecohydro/CropMask_RCNN,e5e695ec389219bc2903613a2828ea477f684980
 flake8-illegal-import,https://github.com/bagerard/flake8-illegal-import,2e4e41cdb31e446d181599703aa33bdf4df76449
@@ -29144,7 +29069,6 @@ bitcoinpython,https://github.com/merc1er/bitcoinpython,8a859f3723f2a9ff09e291190
 CaLi,https://github.com/benjimor/CaLi,809f99e6dc44defdbd3ec71ba1959be408392472
 kde_gpu,https://github.com/cc20002002/kde_gpu,db738c3dc1cf9b06fa3990881a405b5b42a15845
 varyaml,https://github.com/abe-winter/varyaml,8b89229f11f149bb8b5faa48b473e704a6201e3b
-lynx,https://github.com/omershelef/lynx,4b0815438eb29f8be6d658ce8261aac38ec8c693
 flask2neo4j,https://github.com/ganggas95/flask2neo4j,172b60096cfe75e811f20f04acfd0d35dba84181
 expiringpdict,https://github.com/Pi3rral/expiringpdict,fcda66229eb2fe24dab37c89e80cf7ffe1686277
 boopsuite,https://github.com/MisterBianco/boopsuite,1c4e68d02badf9ece2ed765d7ba7fffb8dd57fc9
@@ -29488,7 +29412,6 @@ etl,https://github.com/t3eHawk/etl,779d4d5ca0aab64903038f01b3c47a35e3176941
 NetStorageKit-Python,https://github.com/MentaNetwork/NetStorageKit-Python,2d304dbed30cae4584089b8f0b75e2c4376dc8cf
 noodle,https://github.com/wilfredinni/noodle,e1c220a1a5ed4795dbc2996ea58d50e03cf67a1f
 j2v,https://github.com/Cimpress-MCP/j2v,82594eca638f631e85f1559291e05e8b61ca48f5
-cachel,https://github.com/baverman/cachel,24c8e4a9b004e03f78655f686d45e516a35c4429
 seon,https://github.com/paulossjunior/seon,69250e2f67229a9e4e1c7d7c098ba314fec7ef8b
 axisproj,https://github.com/yarden-livnat/axisproj,b3375ced14721ad5e3613b6a26b8d94cc24c6436
 valid_model,https://github.com/yoshrote/valid_model,a5c0723ed421137bfcbe6c0a4f79db4accc63133
