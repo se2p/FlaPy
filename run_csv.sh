@@ -47,10 +47,11 @@ cp "${CSV_FILE}" "${FLAPY_INPUT_META_FOLDER}/input.csv"
 FLAPY_INPUT_META_FILE="$FLAPY_INPUT_META_FOLDER/flapy_input.yaml"
 touch "$FLAPY_INPUT_META_FILE"
 {
-    echo "run_on:             \"$RUN_ON\""
-    echo "csv_file:           \"$CSV_FILE\""
-    echo "plus_random_runs:   \"$PLUS_RANDOM_RUNS\""
-    echo "flapy_args:         \"$FLAPY_ARGS\""
+    echo "run_on:                 \"$RUN_ON\""
+    echo "csv_file:               \"$CSV_FILE\""
+    echo "plus_random_runs:       \"$PLUS_RANDOM_RUNS\""
+    echo "flapy_args:             \"$FLAPY_ARGS\""
+    echo "csv_file_length:        $CSV_FILE_LENGTH"
 } >> "$FLAPY_INPUT_META_FILE"
 
 
@@ -69,13 +70,16 @@ then
     echo "running on cluster"
     # export PODMAN_HOME=
     # export LOCAL_PODMAN_ROOT=
-    sbatch \
+    sbatch_info=$(sbatch --parsable \
         --constraint="" \
         --output "$FLAPY_INPUT_META_FOLDER/log-%a.out" \
         --error  "$FLAPY_INPUT_META_FOLDER/log-%a.out" \
         --array=2-"$CSV_FILE_LENGTH" \
         -- \
         run_line.sh
+    )
+    echo "sbatch_submission_info: $sbatch_info"
+    echo "sbatch_submission_info: \"$sbatch_info\"" >> "$FLAPY_INPUT_META_FILE"
 elif [[ $RUN_ON = "local" ]]
 then
     for i in $(seq 2 "$CSV_FILE_LENGTH"); do

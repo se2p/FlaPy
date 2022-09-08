@@ -55,8 +55,13 @@ META_FILE="$ITERATION_RESULTS_DIR/flapy-iteration-result.yaml"
 touch "$META_FILE"
 
 # -- LOG
-echo "input_csv_line_num:     ${LINE_NUM}"   >> "$META_FILE"
-echo "hostname_run_line:      $(cat /etc/hostname)"     >> "$META_FILE"
+{
+    echo "slurm_array_task_id:    ${SLURM_ARRAY_TASK_ID}"
+    echo "slurm_array_job_id:     ${SLURM_ARRAY_JOB_ID}"
+    echo "slurm_job_id:           ${SLURM_JOB_ID}"
+    echo "input_csv_line_num:     ${LINE_NUM}"
+    echo "hostname_run_line:      $(cat /etc/hostname)"
+} >> "$META_FILE"
 
 # -- RUN CONTAINER
 if [[ $FLAPY_INPUT_RUN_ON = "cluster" ]]; then
