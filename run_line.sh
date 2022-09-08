@@ -20,7 +20,7 @@ fi
 echo "-- $0"
 echo "    input csv file:      $FLAPY_INPUT_CSV_FILE"
 echo "    slurm array task id: $SLURM_ARRAY_TASK_ID"
-echo "    input csv line:      $FLAPY_INPUT_CSV_LINE_NUM"
+echo "    input csv line num:  $FLAPY_INPUT_CSV_LINE_NUM"
 
 function sighdl {
   kill -INT "${srunPid}" || true
