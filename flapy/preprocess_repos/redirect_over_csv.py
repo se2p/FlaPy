@@ -15,16 +15,16 @@ session.mount("", HTTPAdapter(max_retries=10))
 
 def resolve_url(url: str) -> Tuple[str, int]:
     num_retries = 0
-    num_max_retries = 5
+    num_max_retries = 6
     sleep_time = 11
     response = session.get(url)
     while response.status_code == 429 and num_retries < num_max_retries:
         num_retries += 1
+        print(f"Sleeping {sleep_time}s due to 429 ({num_retries}/{num_max_retries})", file=sys.stderr)
         sleep(sleep_time)
-        print(f"Sleeping due to 429 ({num_retries})", file=sys.stderr)
         response = session.get(url)
     if num_retries == num_max_retries:
-        print("ERROR: sleeping didn't help", file=sys.stderr)
+        print(f"ERROR: sleeping didn't help for {url}", file=sys.stderr)
     return response.url, response.status_code
 
 
