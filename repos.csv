@@ -2304,7 +2304,6 @@ my_settings,https://github.com/gregeremeev/my_settings,3e2b2c30fe4a49397d4627aec
 mysodexo,https://github.com/andremiras/mysodexo,3d0836c38e10d579a8758b998744d1a38ff77260
 mysql-latin1-codec,https://github.com/wbolster/mysql-latin1-codec,167095e7731e4092b466623c28d4e5f1d8006118
 mysql-to-sqlite3,https://github.com/techouse/mysql-to-sqlite3,17359430af2f58fa52c0da328b0ced786ce86027
-mythril,https://github.com/muellerberndt/mythril,aa50b8e9a4e57f4c54984fb4d7fbcc41728427c0
 mythril,https://github.com/consensys/mythril,aa50b8e9a4e57f4c54984fb4d7fbcc41728427c0
 namecom,https://github.com/cthesky/namecom,16ad4a60a0d4b6d1fea2eed57674d5b020e272cf
 Namsor-API-Wrapper-Python,https://github.com/josephpallipadan/namsor-api-wrapper-python,61b9299e1da11ce102b436812a5ff3859aae3ef9
@@ -3704,7 +3703,6 @@ setuptools_svn,https://github.com/jaraco/setuptools_svn,c0398d647d92b08cc79c1c63
 sevenbridges-python,https://github.com/sbg/sevenbridges-python,0df5aaed9625076e17db39b630184738a824d36a
 sfftk-rw,https://github.com/emdb-empiar/sfftk-rw,02d6694e38ff52ba8698fe467fa3fff819dfdb1b
 shackles,https://github.com/barberj/shackles,b1b40a170ad128b413c8b7f0e372a6fcc328691d
-shadiakiki1986-python-ntlm3,https://github.com/shadiakiki1986/python-ntlm3,e660efeecdfb2fd70e83199d773d53c08429927d
 shallot,https://github.com/peterpeter5/shallot,bd6be27ad73e648f148c4aa222306e8be4eef303
 shapely-geojson,https://github.com/alekzvik/shapely-geojson,46a19f21729f5b40db1f704e2556df995824f3c8
 shapestats,https://github.com/ljwolf/shapestats,54e65ee0f0c5209e90f6b015f30a1c58b7bf687c
@@ -10276,7 +10274,6 @@ oooo,https://github.com/idleuncle/oooo,b3e7b64b4c0220939a149d98578cdadd38e1da4a
 youtube-api-wrapper,https://github.com/globalradio/youtube-api-wrapper,6c2ff41ef7a0aa565771c5cf69fe91aa6cc8a102
 tensorpac,https://github.com/etiennecmb/tensorpac,6e857f0c94c30ed81f1ac10ac4afc061f68780c0
 GSW-python,https://github.com/teos-10/gsw-python,0b8792e804cd66515e742bd670306ad8772cd309
-requests,https://github.com/kennethreitz/requests,2d39c0db054e158767ab4a755476844fe40787e7
 postgraas_server,https://github.com/blue-yonder/postgraas_server,7a258a70bc0fcc6b87a86873e776a1aa3a1af27a
 merge_args,https://github.com/kwpolska/merge_args,1cb5f77df3b7f40b874ea5db5f659c2636ccaad7
 restible-sqlalchemy,https://github.com/novopl/restible-sqlalchemy,4cb465aa3b13b64168a5da9db3c8dff40daa4f30
@@ -17203,7 +17200,6 @@ wishbone-output-http,https://github.com/smetj/wishbone-output-http,723429d7604ca
 rpi-7segment,https://github.com/agjendem/rpi-7segment,a568f93173672f88e6fbd32243de2c52b2a717dc
 info_gain,https://github.com/thijsvanede/info_gain,2d98c18904e0b301d61f82ad74a9bf7301421205
 ruia-ua,https://github.com/python-ruia/ruia-ua,e116eaf08b4c783f578e2a00b17ba16b8acc91d7
-prometheus-api-client-python,https://github.com/aicoe/prometheus-api-client-python,12b4077a142c389dae13e3f1383b8c67dc370573
 picka,https://github.com/antlong/picka,3f048b803a32213b4e3b64ccc64a4a78997f790c
 calldecorators,https://github.com/stroxler/calldecorators,024c583ff739a58b97dfdf213bd5b76ba61a2e84
 net_puppy,https://github.com/vishal-keshav/net_puppy,492b504e64879f2f7e3a7dc1c1cfb26149fb0de5
