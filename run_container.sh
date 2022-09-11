@@ -53,8 +53,10 @@ alias p='podman --root=$LOCAL_PODMAN_ROOT'
 # -- INITIALIZE META FILE
 META_FILE="$ITERATION_RESULTS_DIR/flapy-iteration-result.yaml"
 
-# -- LOG HOSTNAME
+# -- LOG META INFO
+flapy_container_id=$(podman --root="${LOCAL_PODMAN_ROOT}" images localhost/flapy --format "{{.ID}}")
 echo "hostname_run_container: $(cat /etc/hostname)"     >> "$META_FILE"
+echo "flapy_container_id:     ${flapy_container_id}"    >> "$META_FILE"
 
 # -- EXECUTE CONTAINER
 if [[ $PROJECT_URL == http* ]]
