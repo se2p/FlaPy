@@ -33,6 +33,8 @@ debug_echo "    CSV file length:   $CSV_FILE_LENGTH"
 # -- CREATE RESULTS_DIR
 if [ -z "${RESULTS_PARENT_FOLDER}" ]; then
     RESULTS_PARENT_FOLDER=$(pwd)
+else
+    RESULTS_PARENT_FOLDER=$(realpath "$RESULTS_PARENT_FOLDER")
 fi
 DATE_TIME=$(date +%Y%m%d_%H%M%S)
 RESULTS_DIR="${RESULTS_PARENT_FOLDER}/flapy-results_${DATE_TIME}"

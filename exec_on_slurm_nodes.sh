@@ -19,8 +19,8 @@ mkdir -p $LOG_DIR
 
 while read -r node; do
     sbatch \
-        -o "${LOG_DIR}/%N.out" \
-        -e "${LOG_DIR}/~%N.err" \
+        -o "${LOG_DIR}/%N.txt" \
+        -e "${LOG_DIR}/%N.txt" \
         --parsable \
         -w "$node" -- $RUN_ME $ARGS
 done < $NODES

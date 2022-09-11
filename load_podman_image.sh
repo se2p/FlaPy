@@ -37,6 +37,7 @@ mkdir -p "${PODMAN_HOME}"
 echo "-- Creating LOCAL_TMP dir: ${LOCAL_TMP}"
 mkdir -p "${LOCAL_TMP}"
 
+echo "-- Cleaning podman"
 ./clean_podman.sh
 
 echo "-- Loading image ${DOCKER_IMAGE}"
