@@ -61,16 +61,7 @@ fi
 START_TIMESTAMP=$(date +%s)
 START_DATE=$(date)
 {
-    echo "project_name:           \"$PROJECT_NAME\""
-    echo "project_url:            \"$PROJECT_URL\""
     echo "project_git_hash:       \"$REPO_HASH\""
-    echo "project_git_hash_INPUT: \"$PROJECT_HASH\""
-    echo "pypi_tag:               \"$PYPI_TAG\""
-    echo "func_to_trace:          \"$FUNCS_TO_TRACE\""
-    echo "tests_to_be_run:        \"$TESTS_TO_BE_RUN\""
-    echo "num_runs:               $NUM_RUNS"
-    echo "plus_random_runs:       $PLUS_RANDOM_RUNS"
-    echo "flapy args:             \"$FLAPY_ARGS\""
     echo "start_time:             $START_DATE"
 } >> $META_FILE
 

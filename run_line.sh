@@ -61,6 +61,16 @@ touch "$META_FILE"
     echo "slurm_job_id:           ${SLURM_JOB_ID}"
     echo "input_csv_line_num:     ${LINE_NUM}"
     echo "hostname_run_line:      $(cat /etc/hostname)"
+
+    echo "project_name:           \"$PROJECT_NAME\""
+    echo "project_url:            \"$PROJECT_URL\""
+    echo "project_git_hash_INPUT: \"$PROJECT_HASH\""
+    echo "pypi_tag:               \"$PYPI_TAG\""
+    echo "func_to_trace:          \"$FUNCS_TO_TRACE\""
+    echo "tests_to_be_run:        \"$TESTS_TO_BE_RUN\""
+    echo "num_runs:               $NUM_RUNS"
+    echo "plus_random_runs:       $FLAPY_INPUT_PLUS_RANDOM_RUNS"
+    echo "flapy args:             \"$FLAPY_INPUT_OTHER_ARGS\""
 } >> "$META_FILE"
 
 # -- RUN CONTAINER
