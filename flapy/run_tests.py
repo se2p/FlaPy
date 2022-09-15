@@ -358,7 +358,7 @@ class PyTestRunner:
         file_names = [
             "requirements.txt",
             "dev-requirements.txt",
-            "dev_requiredments.txt",
+            "dev_requirements.txt",
             "test-requirements.txt",
             "test_requirements.txt",
             "requirements-dev.txt",
