@@ -647,25 +647,13 @@ class TraceFile(MyFileWrapper):
 T1 = TypeVar("T1", bound=MyFileWrapper)
 
 
-class IterationResultsMetaInfo:
-    def __init__(self, filename):
-        with open(filename) as f:
-            self._datamap = yaml.safe_load(f)
-        self.project_name = self._datamap["project_name"]
-        self.project_url = self._datamap["project_url"]
-        self.project_git_hash = self._datamap["project_git_hash"]
-        self.func_to_trace = self._datamap["func_to_trace"]
-        self.tests_to_be_run = self._datamap["tests_to_be_run"]
-        self.num_runs = self._datamap["num_runs"]
-        self.start_time = self._datamap["start_time"]
-        self.end_time = self._datamap["end_time"]
-        self.execution_time = self._datamap["execution_time"]
-
-
 class Iteration:
     """
     Example: flapy-results_20200101/lineflow
     """
+
+    archive_name = "results.tar.xz"
+    meta_file_name = "flapy-iteration-result.yaml"
 
     def __init__(self, dir: Union[str, Path]):
         self.p = Path(dir)
@@ -679,9 +667,10 @@ class Iteration:
         self._junit_cache_file = self._results_cache / "junit_data.csv"
 
         # Read meta info if available (only in newer versions, older versions use separate files)
-        self.meta_file = self.p / "flapy-iteration-result.yaml"
+        self.meta_file = self.p / self.meta_file_name
         if self.meta_file.is_file():
-            self.meta_info = IterationResultsMetaInfo(self.meta_file)
+            with open(self.meta_file) as f:
+                self.meta_info = yaml.safe_load(f)
         else:
             self.meta_info = None
 
@@ -691,18 +680,23 @@ class Iteration:
             path.is_dir()
             and path.name != "run"
             and not path.name.startswith(".")
-            and (path / "results.tar.xz").is_file()
+            and ( (path / cls.archive_name).is_file() or (path / cls.meta_file_name).is_file() )
         )
+
+    def has_archive(self):
+        """If the results have not been written back (e.g., due to a timeout), there is no resultar.tar.xz, however, the directory with the meta infos is still counted as a failed attempt and therefore an iteration.
+        """
+        return (self.p / self.archive_name).is_file()
 
     @lru_cache()
     def get_project_name(self) -> str:
         if self.meta_info is not None:
-            return self.meta_info.project_name
+            return self.meta_info["project_name"]
         elif (self.p / "project-name.txt").is_file():
             with open(self.p / "project-name.txt") as file:
                 return file.read().replace("\n", "")
         else:
-            if len(self.get_archive_names()) == 0:
+            if (len(self.get_archive_names()) == 0) and self.has_archive():
                 return self.p.name + "_EMPTY"
             else:
                 # local/hdd/user/project_name
@@ -716,7 +710,7 @@ class Iteration:
 
     def get_project_url(self) -> str:
         if self.meta_info is not None:
-            return self.meta_info.project_url
+            return self.meta_info["project_url"]
         if (self.p / "project-url.txt").is_file():
             with open(self.p / "project-url.txt") as file:
                 return file.read().replace("\n", "")
@@ -724,7 +718,7 @@ class Iteration:
 
     def get_project_git_hash(self) -> str:
         if self.meta_info is not None:
-            return self.meta_info.project_git_hash
+            return self.meta_info["project_git_hash"]
         if (self.p / "project-git-hash.txt").is_file():
             with open(self.p / "project-git-hash.txt") as file:
                 return file.read().replace("\n", "")
@@ -784,18 +778,20 @@ class Iteration:
 
     def get_passed_failed(self, *, read_cache=True, write_cache=True) -> pd.DataFrame:
         junit_data = self.get_junit_data(
-            include_project_columns=True, read_cache=read_cache, write_cache=write_cache
+            include_project_columns=False, read_cache=read_cache, write_cache=write_cache
         )
         if len(junit_data) == 0:
             return pd.DataFrame(
                 {
                     "Iteration": [self.p.name],
                     "Iteration_EMPTY": [True],
-                    "Project_Name": [self.get_project_name()],
-                    "Project_URL": [self.get_project_url()],
-                    "Project_Hash": [self.get_project_git_hash()],
                 }
             )
+        junit_data.insert(0, "Project_Hash", self.get_project_git_hash())
+        junit_data.insert(0, "Project_URL", self.get_project_url())
+        junit_data.insert(0, "Project_Name", self.get_project_name())
+        junit_data.insert(0, "Iteration", self.p.name)
+
         junit_data["Test_filename"] = junit_data["file"]
         junit_data["Test_classname"] = junit_data["class"]
         junit_data["Test_funcname"] = [re.sub(r"\[.*\]", "", name) for name in junit_data["name"]]
@@ -953,21 +949,24 @@ class Iteration:
         return coverage_overview
 
     def get_files(self, type_: Type[T1]) -> List[T1]:
-        return [
-            type_(
-                tarinfo.name,
-                tarinfo,
-                self.get_project_name(),
-                openvia=self.get_archive().extractfile,  # type: ignore
-                archive=self.get_archive(),
-            )
-            for tarinfo in self.get_archive_members()
-            if type_.is_(
-                Path(tarinfo.name),
-                self.get_project_name(),
-                openvia=self.get_archive().extractfile,  # type: ignore
-            )
-        ]
+        if self.has_archive():
+            return [
+                type_(
+                    tarinfo.name,
+                    tarinfo,
+                    self.get_project_name(),
+                    openvia=self.get_archive().extractfile,  # type: ignore
+                    archive=self.get_archive(),
+                )
+                for tarinfo in self.get_archive_members()
+                if type_.is_(
+                    Path(tarinfo.name),
+                    self.get_project_name(),
+                    openvia=self.get_archive().extractfile,  # type: ignore
+                )
+            ]
+        else:
+            return []
 
     def get_junit_files(self) -> List[JunitXmlFile]:
         return self.get_files(JunitXmlFile)
@@ -977,7 +976,7 @@ class Iteration:
 
     def get_archive(self) -> tarfile.TarFile:
         if self._archive is None:
-            self._archive = tarfile.open(self.p / "results.tar.xz")
+            self._archive = tarfile.open(self.p / self.archive_name)
         return self._archive
 
     def get_archive_members(self) -> List[tarfile.TarInfo]:
@@ -1059,6 +1058,15 @@ class IterationCollection(ABC):
             .sort_index()
         )
         return iterations_overview
+
+    def get_iterations_meta_overview(self):
+        """
+        Return table with all meta data of each iteration
+        """
+        return pd.DataFrame([
+            {"path": self.p, "Iteration.parent": it.p.parent, "Iteration": it.p, **it.meta_info}
+            for it in self.get_iterations()
+        ])
 
     @abstractmethod
     def get_passed_failed(self) -> pd.DataFrame:
@@ -1189,9 +1197,10 @@ class ResultsDir(IterationCollection):
             cache_df: pd.DataFrame = pd.read_csv(self._pf_cache_file)
 
         # Get iterations into the format in which it is saved in passed_failed.csv
-        iterations_in_this_dir = self.get_iterations_overview()["Iteration"].apply(
-            lambda it: self.p.name + "/" + it.p.name
-        )
+        iterations_in_this_dir = [
+            self.p.name + "/" + it.p.name
+            for it in self.get_iterations()
+        ]
         return set(iterations_in_this_dir) == set(cache_df["Iteration"])
 
     def _compute_passed_failed(self, read_iteration_cache, write_iteration_cache):
