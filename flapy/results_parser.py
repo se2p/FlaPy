@@ -476,6 +476,13 @@ class MyFileWrapper(ABC):
             raise ValueError("openvia returned None")
         return f
 
+    def read(self) -> str:
+        with self.open() as f:
+            content = f.read()
+            if isinstance(content, bytes):
+                content = content.decode()
+            return content
+
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}('{self.p}')"
 
