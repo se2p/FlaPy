@@ -1093,6 +1093,8 @@ class IterationCollection(ABC):
         #   since every process hast it's own memory
         if self.tests_overview is None:
             pf = self.get_passed_failed(
+                read_resultsDir_cache=read_resultsDir_cache,
+                write_resultsDir_cache=write_resultsDir_cache,
                 read_iteration_cache=read_iteration_cache,
                 write_iteration_cache=write_iteration_cache,
             )
