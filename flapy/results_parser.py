@@ -312,23 +312,11 @@ class PassedFailed:
             )
         ) & ~test_overview["Order-dependent"]
 
-        def decide_flakiness_type(
-            flaky_sameOrder_withinIteration: bool, order_dependent: bool, infrastructure: bool,
-        ) -> str:
-            assert flaky_sameOrder_withinIteration + order_dependent + infrastructure < 2
-            if flaky_sameOrder_withinIteration:
-                return FlakinessType.NOD
-            if order_dependent:
-                return FlakinessType.OD
-            if infrastructure:
-                return FlakinessType.INFR
-            return FlakinessType.NOT_FLAKY
-
         test_overview.insert(
             7,
             "flaky?",
             test_overview.apply(
-                lambda s: decide_flakiness_type(
+                lambda s: FlakinessType.decide_flakiness_type(
                     s["Flaky_sameOrder_withinIteration"],
                     s["Order-dependent"],
                     s["Flaky_Infrastructure"],
@@ -1347,6 +1335,19 @@ class FlakinessType:
     NOT_FLAKY = "not flaky"
 
     all_types = [OD, NOD, INFR, NOT_FLAKY]
+
+    @classmethod
+    def decide_flakiness_type(
+        cls, flaky_sameOrder_withinIteration: bool, order_dependent: bool, infrastructure: bool,
+    ) -> str:
+        assert flaky_sameOrder_withinIteration + order_dependent + infrastructure < 2
+        if flaky_sameOrder_withinIteration:
+            return FlakinessType.NOD
+        if order_dependent:
+            return FlakinessType.OD
+        if infrastructure:
+            return FlakinessType.INFR
+        return FlakinessType.NOT_FLAKY
 
 
 class Verdict:
