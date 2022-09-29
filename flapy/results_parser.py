@@ -771,14 +771,15 @@ class Iteration:
             )
             if len(junit_data) == 0:
                 junit_data = pd.DataFrame(columns=columns)
-            self.close_archive()
-        if write_cache and not did_read_cache:
+        if write_cache and not did_read_cache and len(junit_data) > 0:
             junit_data.to_csv(self._junit_cache_file, index=False)
         if include_project_columns:
             junit_data.insert(0, "Project_Hash", self.get_project_git_hash())
             junit_data.insert(0, "Project_URL", self.get_project_url())
             junit_data.insert(0, "Project_Name", self.get_project_name())
             junit_data.insert(0, "Iteration", self.p.name)
+
+        self.close_archive()
         if return_nothing:
             return None
         return junit_data.fillna("")
@@ -1190,7 +1191,7 @@ class ResultsDir(IterationCollection):
         else:
             passed_failed = self._compute_passed_failed(read_iteration_cache, write_iteration_cache)
 
-        if write_resultsDir_cache and not did_read_cache:
+        if write_resultsDir_cache and not did_read_cache and len(passed_failed) > 0:
             passed_failed.to_csv(cache_file, index=False)
 
         return passed_failed
