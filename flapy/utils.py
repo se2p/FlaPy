@@ -21,7 +21,10 @@ def try_default(
 
     """
     try:
-        return function()
+        if isinstance(error_return_val, str) and error_return_val == "ERROR_MESSAGE_TUPLE":
+            return "ok", function()
+        else:
+            return function()
     except exception as e:
         if callable(error_return_val):
             return error_return_value(e)
