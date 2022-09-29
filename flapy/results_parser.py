@@ -45,7 +45,7 @@ from abc import ABC, abstractmethod
 from functools import lru_cache, reduce
 import junitparser
 
-from flapy.utils import try_default, eprint
+from flapy.utils import try_default
 
 # Initialize pandas progress bar methods
 tqdm.pandas()
@@ -85,7 +85,7 @@ default_flaky_keywords = [
 
 logging.getLogger().setLevel(logging.INFO)
 # logging.getLogger().setLevel(logging.DEBUG)
-FORMAT = "[%(asctime)s][%(levelname)s][%(filename)s:%(lineno)4s - %(funcName)20s() ] %(message)s"
+FORMAT = "[%(asctime)s][%(levelname)7s][%(filename)20s:%(lineno)4s - %(funcName)20s() ] %(message)s"
 logging.basicConfig(format=FORMAT)
 
 proj_cols = ["Project_Name", "Project_URL", "Project_Hash"]
@@ -148,7 +148,7 @@ def junitxml_classname_to_modname_and_actual_classname(classname: str) -> Tuple[
             class_ = ""
         return mod, class_
     except IndexError:
-        print(f"junitxml_classname_to_actual_classname: IndexError with classname={classname}")
+        logging.warning(f"junitxml_classname_to_actual_classname: IndexError with classname={classname}")
         return [], ""
 
 
@@ -520,10 +520,8 @@ class CoverageXmlFile(MyFileWrapper):
                 "BranchCoverage": float(root.get("branch-rate")),  # type: ignore
                 "LineCoverage": float(root.get("line-rate")),  # type: ignore
             }
-        except Exception:
-            # traceback.print_exc()
-            # eprint(f"{type(ex)}: ex")
-            # eprint(f"    in {self.p}")
+        except Exception as ex:
+            logging.error(f"{type(ex).__name__} in {self.p}: {ex}")
             return {}
 
 
@@ -552,11 +550,17 @@ class JunitXmlFile(MyFileWrapper):
             return "non-deter"
         return "COULD_NOT_GET_ORDER"
 
-    def parse(self) -> junitparser.JUnitXml:
+    def parse(self) -> Union[junitparser.JUnitXml, junitparser.TestSuite]:
+        """
+        Read the file and parse it via junitparser.
+        Some JUnit XML files have three hiearchie levels: testsuites, testsuite, testcase
+        others skip the first one and start with testsuite
+        """
         with self.open() as f:
             try:
                 return junitparser.JUnitXml.fromfile(f, ET.parse)
-            except xml.etree.ElementTree.ParseError:
+            except xml.etree.ElementTree.ParseError as ex:
+                logging.error(f"ParseError in {self.p}: {ex}")
                 return junitparser.JUnitXml()
 
     def get_hostname(self) -> str:
@@ -599,9 +603,7 @@ class JunitXmlFile(MyFileWrapper):
             ]
             return result
         except Exception as ex:
-            # traceback.print_exc()
-            eprint(f"{type(ex)} in {self.p}:")
-            eprint(f"    {ex}")
+            logging.error(f"{type(ex).__name__} in {self.p}: {ex}")
             return []
 
 
@@ -1453,7 +1455,7 @@ def to_nodeid(filename: str, classname: str, funcname: str, parametrization: str
             file[-1] = file[-1] + ".py"
             return f"{os.path.join(*file)}::{funcname}{parametrization}"
     except IndexError:
-        eprint(f"classname_to_nodeid: IndexError with classname={classname}, funcname={funcname}")
+        logging.error(f"classname_to_nodeid: IndexError with classname={classname}, funcname={funcname}")
         return funcname
 
 
