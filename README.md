@@ -59,8 +59,8 @@ podman build -t flapy .
 
 Results will be written to a folder `flapy-results_DATE_TIME`, e.g. `flapy-results_20220315_1215`
 ```bash
-           # RUN_ON  CSV_FILE         PLUS_RANDOM_RUNS  ADDITIONAL_OPTIONS
-./run_csv.sh local   sample_input.csv true              ""
+           # RUN_ON CONSTRAINT CSV_FILE         PLUS_RANDOM_RUNS  ADDITIONAL_OPTIONS
+./run_csv.sh local  ""         sample_input.csv true              ""
 ```
 
 

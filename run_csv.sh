@@ -11,10 +11,11 @@ function debug_echo {
 
 # -- PARSE ARGUMENTS
 RUN_ON=$1
-CSV_FILE=$2
-PLUS_RANDOM_RUNS=$3
-FLAPY_ARGS=$4
-RESULTS_PARENT_FOLDER=$5
+CONSTRAINT=$2
+CSV_FILE=$3
+PLUS_RANDOM_RUNS=$4
+FLAPY_ARGS=$5
+RESULTS_PARENT_FOLDER=$6
 
 # -- DEBUG OUTPUT
 debug_echo "-- $0"
@@ -77,7 +78,7 @@ then
     # export PODMAN_HOME=
     # export LOCAL_PODMAN_ROOT=
     sbatch_info=$(sbatch --parsable \
-        --constraint="" \
+        --constraint="$CONSTRAINT" \
         --output "$SBATCH_LOG_FILE_PATTERN" \
         --error  "$SBATCH_LOG_FILE_PATTERN" \
         --array=2-"$CSV_FILE_LENGTH" \
