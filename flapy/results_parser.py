@@ -554,7 +554,11 @@ class JunitXmlFile(MyFileWrapper):
 
     def get_testcases(self) -> List[junitparser.TestCase]:
         junit_xml = self.parse()
-        return [case for suite in junit_xml for case in suite]
+        if isinstance(junit_xml, junitparser.TestSuite):
+            test_cases = [case for case in junit_xml]
+        else:
+            test_cases = [case for suite in junit_xml for case in suite]
+        return test_cases
 
     def to_table(self) -> List[Dict[str, Union[str, int]]]:
         """
