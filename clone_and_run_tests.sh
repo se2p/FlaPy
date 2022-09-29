@@ -95,7 +95,7 @@ then
       --pypi-tag "${PYPI_TAG}" \
       --temp "${CWD}/non-deterministic/tmp" \
       --number-test-runs "${NUM_RUNS}" \
-      --random-order-bucket global \
+      --random-order-bucket class \
       --trace "${FUNCS_TO_TRACE}" \
       --tests-to-be-run "${TESTS_TO_BE_RUN}" \
       $FLAPY_ARGS  # do not double quote here! we want the word splitting
