@@ -441,13 +441,11 @@ class MyFileWrapper(ABC):
     # TODO is it necessary to check for is empty?
     @classmethod
     def is_(cls, path: Path, project_name: str, openvia: Callable[[str], IO]) -> bool:
-        return re.match(cls.get_regex(project_name), str(path)) is not None and not is_empty(
-            openvia, str(path)
+        return (
+            (re.match(cls.get_regex(project_name), str(path)) is not None)
+            # and
+            # (not is_empty(openvia, str(path))
         )
-
-    # @classmethod
-    # def is_(cls, path: Path, project_name: str, openvia: Callable[[str], IO]) -> bool:
-    #     return re.match(cls.get_regex(project_name), str(path)) is not None
 
     @lru_cache()
     def get_num(self) -> int:
