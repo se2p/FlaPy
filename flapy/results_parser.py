@@ -417,9 +417,9 @@ class MyFileWrapper(ABC):
     def __init__(
         self,
         path_: Union[str, Path],
-        tarinfo: tarfile.TarInfo,
         project_name: str,
         openvia: Callable[[str], IO] = open,
+        tarinfo: tarfile.TarInfo = None,
         archive: tarfile.TarFile = None,
     ):
         self.p: Path = Path(path_)
@@ -949,16 +949,16 @@ class Iteration:
         if self.has_archive():
             return [
                 type_(
-                    tarinfo.name,
-                    tarinfo,
-                    self.get_project_name(),
+                    path_=tarinfo.name,
+                    project_name=self.get_project_name(),
                     openvia=self.get_archive().extractfile,  # type: ignore
+                    tarinfo=tarinfo,
                     archive=self.get_archive(),
                 )
                 for tarinfo in self.get_archive_members()
                 if type_.is_(
-                    Path(tarinfo.name),
-                    self.get_project_name(),
+                    path=Path(tarinfo.name),
+                    project_name=self.get_project_name(),
                     openvia=self.get_archive().extractfile,  # type: ignore
                 )
             ]
