@@ -560,7 +560,7 @@ class JunitXmlFile(MyFileWrapper):
             test_cases = [case for suite in junit_xml for case in suite]
         return test_cases
 
-    def to_table(self) -> List[Dict[str, Union[str, int]]]:
+    def to_table(self, include_num_ttbr_order=True) -> List[Dict[str, Union[str, int]]]:
         """
         Transform Junit XML files into a table that shows the verdict and message for each run.
         :return:
@@ -578,19 +578,27 @@ class JunitXmlFile(MyFileWrapper):
             ]
         """
         try:
-            junit_xml = self.parse()
-            test_cases = [case for suite in junit_xml for case in suite]
+            test_cases = self.get_testcases()
             # if len(test_cases) == 0:
             #     logging.warning(f"{self.p} contains no testcases")
-            result: List[Dict[str, Union[str, int]]] = [
-                {
-                    **read_junit_testcase(test_case),
-                    "num": self.get_num(),
-                    "test_to_be_run": self.get_test_to_be_run(),
-                    "order": self.get_order(),
-                }
-                for test_case in test_cases
-            ]
+            if include_num_ttbr_order:
+                result: List[Dict[str, Union[str, int]]] = [
+                    {
+                        **read_junit_testcase(test_case),
+                        "num": self.get_num(),
+                        "test_to_be_run": self.get_test_to_be_run(),
+                        "order": self.get_order(),
+                    }
+                    for test_case in test_cases
+                ]
+            else:
+                result: List[Dict[str, Union[str, int]]] = [
+                    {
+                        **read_junit_testcase(test_case),
+                    }
+                    for test_case in test_cases
+                ]
+
             return result
         except Exception as ex:
             logging.error(f"{type(ex).__name__} in {self.p}: {ex}")
