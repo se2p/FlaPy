@@ -50,6 +50,7 @@ cp "${CSV_FILE}" "${FLAPY_META_FOLDER}/input.csv"
 FLAPY_META_FILE="$FLAPY_META_FOLDER/flapy_run.yaml"
 {
     echo "run_on:                 \"$RUN_ON\""
+    echo "constraint:             \"$CONSTRAINT\""
     echo "csv_file:               \"$CSV_FILE\""
     echo "plus_random_runs:       \"$PLUS_RANDOM_RUNS\""
     echo "flapy_args:             \"$FLAPY_ARGS\""
@@ -57,7 +58,7 @@ FLAPY_META_FILE="$FLAPY_META_FOLDER/flapy_run.yaml"
 } >> "$FLAPY_META_FILE"
 
 
-# -- EXPORT VARIALBE
+# -- EXPORT VARIABLE
 #     these variables will be picked up by run_line.sh
 export FLAPY_INPUT_CSV_FILE="${FLAPY_META_FOLDER}/input.csv"
 export FLAPY_INPUT_PLUS_RANDOM_RUNS=$PLUS_RANDOM_RUNS
