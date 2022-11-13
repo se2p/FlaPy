@@ -784,21 +784,27 @@ class Iteration:
             return None
         return junit_data.fillna("")
 
-    def get_passed_failed(self, *, read_cache=True, write_cache=True) -> pd.DataFrame:
-        junit_data = self.get_junit_data(
-            include_project_columns=False, read_cache=read_cache, write_cache=write_cache
-        )
-        if len(junit_data) == 0:
-            return pd.DataFrame(
-                {
-                    "Iteration": [self.p.name],
-                    "Iteration_EMPTY": [True],
-                }
+    def get_passed_failed(self, *, read_cache=True, write_cache=True, verdict_cols_to_strings=True) -> pd.DataFrame:
+        try:
+            junit_data = self.get_junit_data(
+                include_project_columns=False, read_cache=read_cache, write_cache=write_cache
             )
-        junit_data.insert(0, "Project_Hash", self.get_project_git_hash())
-        junit_data.insert(0, "Project_URL", self.get_project_url())
-        junit_data.insert(0, "Project_Name", self.get_project_name())
+        except Exception as e:
+            logging.error(f"{type(e).__name__}: {e} in {self.p}")
+            return pd.DataFrame({
+                "Iteration": [self.p.name],
+                "Iteration_status": [f"{type(e).__name__}: {e}"],
+            })
+
+        if len(junit_data) == 0:
+            return pd.DataFrame({
+                "Iteration": [self.p.name],
+                "Iteration_status": ["EMPTY"],
+            })
         junit_data.insert(0, "Iteration", self.p.name)
+        junit_data.insert(1, "Project_Name", self.get_project_name())
+        junit_data.insert(2, "Project_URL", self.get_project_url())
+        junit_data.insert(3, "Project_Hash", self.get_project_git_hash())
 
         junit_data["Test_filename"] = junit_data["file"]
         junit_data["Test_classname"] = junit_data["class"]
@@ -867,6 +873,10 @@ class Iteration:
 
         passed_failed["Verdict"] = passed_failed["Verdicts"].apply(Verdict.decide_overall_verdict)
 
+        if verdict_cols_to_strings:
+            for col in ["Passed", "Failed", "Error", "Skipped", "Verdicts"]:
+                passed_failed[col] = passed_failed[col].apply(str)
+
         passed_failed = pd.merge(
             passed_failed[passed_failed["order"] == "deter"],
             passed_failed[passed_failed["order"] == "non-deter"],
@@ -884,12 +894,12 @@ class Iteration:
             suffixes=("_sameOrder", "_randomOrder"),
         )
 
-        passed_failed.insert(1, "Iteration_EMPTY", False)
+        passed_failed.insert(1, "Iteration_status", "ok")
 
         return passed_failed[
             [
                 "Iteration",
-                "Iteration_EMPTY",
+                "Iteration_status",
                 #
                 "Project_Name",
                 "Project_URL",
