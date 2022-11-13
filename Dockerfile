@@ -1,5 +1,7 @@
 FROM registry.hub.docker.com/library/python:3.10.1-bullseye
 
+RUN apt-get update && apt-get install -y sqlite3 cloc
+
 WORKDIR /workdir
 
 # Input: like run_execution_container.sh
