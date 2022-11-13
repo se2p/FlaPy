@@ -42,7 +42,6 @@ junitparser = "^1.6.3"
 Jinja2 = "^3.0.3"
 PyYAML = "^6.0"
 tqdm = "^4.64.0"
-sklearn = "^0.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.7"
