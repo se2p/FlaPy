@@ -9,6 +9,24 @@ function debug_echo {
   [[ "${DEBUG}" = 1 ]] && echo "$@"
 }
 
+# -- CHECK NUMBER OF ARGUMENTS
+if [[ "$#" -lt 5 ]]; then
+    echo "Usage: $0 RUN_ON  CONSTRAINT  CSV_FILE  PLUS_RANDOM_RUNS  FLAPY_ARGS  [RESULTS_PARENT_FOLDER]
+
+    RUN_ON must be either 'local' or 'cluster'
+    CONSTRAINT is the \`sbatch --constraint\` in case RUN_ON == 'cluster'
+    CSV_FILE is the flapy input csv file, which must have the following columns in the following order:
+        PROJECT_NAME, PROJECT_URL, PROJECT_HASH, PYPI_TAG, FUNCS_TO_TRACE, TESTS_TO_BE_RUN, NUM_RUNS
+    PLUS_RANDOM_RUNS must be 'true' or 'false'
+    FLAPY_ARGS can contain the following, but must always be provided, even as empty string. Must always be one string
+        --random-order-seed
+    RESULTS_PARENT_FOLDER is the parent folder of the output results directory
+
+Example: $0 local \"\" sample_input.csv false \"\"
+"
+    exit 1
+fi
+
 # -- PARSE ARGUMENTS
 RUN_ON=$1
 CONSTRAINT=$2
@@ -19,12 +37,13 @@ RESULTS_PARENT_FOLDER=$6
 
 # -- DEBUG OUTPUT
 debug_echo "-- $0"
-debug_echo "    Run on:            $RUN_ON"
-debug_echo "    CSV file:          $CSV_FILE"
-debug_echo "    Plus random runs:  $PLUS_RANDOM_RUNS"
-debug_echo "    Flapy args:        $FLAPY_ARGS"
+debug_echo "    Run on:                $RUN_ON"
+debug_echo "    Constraint:            $CONSTRAINT"
+debug_echo "    CSV file:              $CSV_FILE"
+debug_echo "    Plus random runs:      $PLUS_RANDOM_RUNS"
+debug_echo "    Flapy args:            $FLAPY_ARGS"
+debug_echo "    Results parent folder: $RESULTS_PARENT_FOLDER"
 debug_echo "    ----"
-
 
 # -- INPUT PRE-PROCESSING
 dos2unix "${CSV_FILE}"
