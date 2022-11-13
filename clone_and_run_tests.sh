@@ -56,12 +56,33 @@ else
     cp -r "${PROJECT_URL}" "${REPOSITORY_DIR}"
 fi
 
+# -- MEASURE LINES OF CODE
+LOC_FILE="${RESULT_DIR}/loc.csv"
+CLOC_DBFILE="${CWD}/flapy_cloc.sqlite"
+cloc --sql - "$REPOSITORY_DIR" | sqlite3 "${CLOC_DBFILE}"
+# Query cloc results
+SQL="select Language                  ,
+            count(File)   as files    ,
+            sum(nBlank)   as blank    ,
+            sum(nComment) as comment  ,
+            sum(nCode)    as code     ,
+            sum(nBlank)+sum(nComment)+sum(nCode) as Total
+    from t group by Language order by code desc;
+"
+# Write header
+echo "language,files,blank,comment,code,total" > "$LOC_FILE"
+# Write cloc information
+(echo "${SQL}" | sqlite3 -csv "${CLOC_DBFILE}") >> "$LOC_FILE"
+
+# -- MEASURE SIZE
+DISK_USAGE=$(du -s "$REPOSITORY_DIR" | cut -f 1)
 
 # -- LOG META INFOS (1/2)
 START_TIMESTAMP=$(date +%s)
 START_DATE=$(date)
 {
     echo "project_git_hash:       \"$REPO_HASH\""
+    echo "disk_usage:             $DISK_USAGE"
     echo "start_time:             $START_DATE"
 } >> $META_FILE
 
@@ -114,11 +135,13 @@ then
     debug_echo "Copy results back (incl random runs)"
     tar cJf "${RESULT_DIR}/results.tar.xz" \
       "${CWD}/non-deterministic" \
-      "${CWD}/deterministic"
+      "${CWD}/deterministic" \
+      "$CLOC_DBFILE"
 else
     debug_echo "Copy results back (no random runs)"
     tar cJf "${RESULT_DIR}/results.tar.xz" \
-      "${CWD}/deterministic"
+      "${CWD}/deterministic" \
+      "$CLOC_DBFILE"
 fi
 
 debug_echo "Done"
