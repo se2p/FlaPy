@@ -1,19 +1,5 @@
 #!/bin/bash
 
-# -- CHECK IF ENVIRONMENT VARIABLES ARE DEFINED
-if [ -z ${LOCAL_PODMAN_ROOT+x} ]; then
-    echo "LOCAL_PODMAN_ROOT not set, exiting"
-    exit
-fi
-if [ -z ${PODMAN_HOME+x} ]; then
-    echo "PODMAN_HOME not set, exiting"
-    exit
-fi
-if [ -z ${LOCAL_TMP+x} ]; then
-    echo "LOCAL_TMP not set, exiting"
-    exit
-fi
-
 # -- PARSE ARGS
 PROJECT_NAME=$1
 PROJECT_URL=$2
@@ -39,37 +25,30 @@ echo "    Plus random runs:     $PLUS_RANDOM_RUNS"
 echo "    Iteration results:    $ITERATION_RESULTS_DIR"
 echo "    Flapy Args:           $FLAPY_ARGS"
 
-# -- PREPARE ENVIRONMENT
-unset XDG_RUNTIME_DIR
-unset XDG_CONFIG_HOME
-# create podman folders
-mkdir -p "${PODMAN_HOME}"
-mkdir -p "${LOCAL_PODMAN_ROOT}"
-mkdir -p "${LOCAL_TMP}"
-# change home (your home dir doesn't get mounted on the cluster)
-export HOME=$PODMAN_HOME
-alias p='podman --root=$LOCAL_PODMAN_ROOT'
+# -- SET UP ENVIRONMENT (define flapy_docker_command)
+echo "-- Preparing slurm node"
+source prepare_slurm_node.sh || exit
 
 # -- INITIALIZE META FILE
 META_FILE="$ITERATION_RESULTS_DIR/flapy-iteration-result.yaml"
 
 # -- LOG META INFO
-flapy_container_id=$(podman --root="${LOCAL_PODMAN_ROOT}" images localhost/flapy --format "{{.ID}}")
+flapy_container_id=$(flapy_docker_command images $FLAPY_DOCKER_IMAGE --format "{{.ID}}")
 echo "hostname_run_container: $(cat /etc/hostname)"     >> "$META_FILE"
 echo "flapy_container_id:     ${flapy_container_id}"    >> "$META_FILE"
 
 # -- EXECUTE CONTAINER
 if [[ $PROJECT_URL == http* ]]
 then
-    TMPDIR=$LOCAL_TMP podman --root "${LOCAL_PODMAN_ROOT}" run --rm \
+    flapy_docker_command run --rm \
         -v "$ITERATION_RESULTS_DIR:/results" \
-        localhost/flapy \
+        $FLAPY_DOCKER_IMAGE \
         "${PROJECT_NAME}" "${PROJECT_URL}" "${PROJECT_HASH}" "${PYPI_TAG}" "${FUNCS_TO_TRACE}" "${TESTS_TO_BE_RUN}" "${NUM_RUNS}" "${PLUS_RANDOM_RUNS}" "${FLAPY_ARGS}"
 else
-    TMPDIR=$LOCAL_TMP podman --root "${LOCAL_PODMAN_ROOT}" run --rm \
+    flapy_docker_command run --rm \
         -v "$ITERATION_RESULTS_DIR:/results" \
         -v "$PROJECT_URL":"$PROJECT_URL" \
-        localhost/flapy \
+        $FLAPY_DOCKER_IMAGE \
         "${PROJECT_NAME}" "${PROJECT_URL}" "${PROJECT_HASH}" "${PYPI_TAG}" "${FUNCS_TO_TRACE}" "${TESTS_TO_BE_RUN}" "${NUM_RUNS}" "${PLUS_RANDOM_RUNS}" "${FLAPY_ARGS}"
 fi
 

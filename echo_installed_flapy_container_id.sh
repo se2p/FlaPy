@@ -1,7 +1,7 @@
 #!/bin/bash
 
-unset XDG_RUNTIME_DIR
-unset XDG_CONFIG_HOME
-export HOME=$PODMAN_HOME
+# -- SET UP ENVIRONMENT (define flapy_docker_command and FLAPY_DOCKER_IMAGE)
+echo "-- Preparing slurm node"
+source prepare_slurm_node.sh || exit
 
-podman --root="${LOCAL_PODMAN_ROOT}" images localhost/flapy --format "{{.ID}}"
+flapy_docker_command images $FLAPY_DOCKER_IMAGE --format "{{.ID}}"
