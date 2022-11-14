@@ -33,11 +33,13 @@ source prepare_slurm_node.sh || exit
 META_FILE="$ITERATION_RESULTS_DIR/flapy-iteration-result.yaml"
 
 # -- LOG META INFO
+echo "-- Logging Meta info"
 flapy_container_id=$(flapy_docker_command images $FLAPY_DOCKER_IMAGE --format "{{.ID}}")
 echo "hostname_run_container: $(cat /etc/hostname)"     >> "$META_FILE"
 echo "flapy_container_id:     ${flapy_container_id}"    >> "$META_FILE"
 
 # -- EXECUTE CONTAINER
+echo "-- Running container"
 if [[ $PROJECT_URL == http* ]]
 then
     flapy_docker_command run --rm \
