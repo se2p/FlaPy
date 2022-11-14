@@ -29,7 +29,7 @@ echo "-- Re-directing HOME (necessary on slurm nodes)"
 export HOME=$PODMAN_HOME
 
 echo "-- Define FlaPy docker image"
-export FLAPY_DOCKER_IMAGE="gruberma/flapy"
+export FLAPY_DOCKER_IMAGE="registry.hub.docker.com/gruberma/flapy"
 
 echo "-- Creating alias 'flapy_docker_command'"
 function flapy_docker_command {
