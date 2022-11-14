@@ -38,3 +38,4 @@ function flapy_docker_command {
     # 2. Setting a different root, since we have no home directory on slurm
     TMPDIR="$LOCAL_TMP" podman --root="$LOCAL_PODMAN_ROOT" "$@"
 }
+alias p='flapy_docker_command'
