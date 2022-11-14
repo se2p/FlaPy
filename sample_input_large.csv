@@ -1,5 +1,5 @@
 PROJECT_NAME,PROJECT_URL,PROJECT_HASH,PYPI_TAG,FUNCS_TO_TRACE,TESTS_TO_BE_RUN,NUM_RUNS
-sample_project,https://github.com/gruberma/python-tests-minimal-examples,4865a6a,,,,2
-sample_project,https://github.com/gruberma/python-tests-minimal-examples,4865a6a,,,,2
-sample_project,https://github.com/gruberma/python-tests-minimal-examples,4865a6a,,,test_me.py::test_foo test_me.py::test_victim,2
-sample_project,https://github.com/gruberma/python-tests-minimal-examples,4865a6a,,,test_me.py::test_victim test_me.py::test_foo test_me.py::test_polluter test_me.py::test_unordered_collections,2
+sample_project,https://github.com/gruberma/minimal-flaky-tests,4865a6a,,,,2
+sample_project,https://github.com/gruberma/minimal-flaky-tests,4865a6a,,,,2
+sample_project,https://github.com/gruberma/minimal-flaky-tests,4865a6a,,,test_me.py::test_foo test_me.py::test_victim,2
+sample_project,https://github.com/gruberma/minimal-flaky-tests,4865a6a,,,test_me.py::test_victim test_me.py::test_foo test_me.py::test_polluter test_me.py::test_unordered_collections,2
