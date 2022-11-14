@@ -45,10 +45,8 @@ echo "    Num runs:          $NUM_RUNS"
 # -- CREATE ITERATION RESULTS DIRECTORY
 #     Although we have the DATE_TIME already in the RESULTS_DIR, we need it here,
 #     because the iterations-result-dirs are sometimes sym-linked to other result-dirs
-ITERATION_RESULTS_DIR=$(
-    mktemp -d "${FLAPY_RESULTS_DIR}/${PROJECT_NAME}_${FLAPY_DATE_TIME}__XXXXX"
-)
-ITERATION_NAME=$(basename ${ITERATION_RESULTS_DIR})
+ITERATION_RESULTS_DIR="${FLAPY_RESULTS_DIR}/${PROJECT_NAME}_${FLAPY_DATE_TIME}_${LINE_NUM}"
+mkdir -p "${ITERATION_RESULTS_DIR}"
 
 # -- INITIALIZE META FILE
 META_FILE="$ITERATION_RESULTS_DIR/flapy-iteration-result.yaml"
