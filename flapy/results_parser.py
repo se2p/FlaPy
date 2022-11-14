@@ -255,7 +255,7 @@ class PassedFailed:
                 "Skipped_sameOrder": lambda l: reduce(
                     op.add, map(lambda s: len(eval_string_to_set(s)), l)
                 ),
-                "#Runs_sameOrder": sum,
+                "numRuns_sameOrder": sum,
                 #
                 "Verdicts_randomOrder": lambda l: reduce(
                     set.union, map(lambda s: eval_string_to_set(s), l)
@@ -272,7 +272,7 @@ class PassedFailed:
                 "Skipped_randomOrder": lambda l: reduce(
                     op.add, map(lambda s: len(eval_string_to_set(s)), l)
                 ),
-                "#Runs_randomOrder": sum,
+                "numRuns_randomOrder": sum,
                 "Flaky_sameOrder_withinIteration": any,
                 "Flaky_randomOrder_withinIteration": any,
             }
@@ -861,7 +861,7 @@ class Iteration:
             )
         ]
 
-        passed_failed["#Runs"] = [
+        passed_failed["numRuns"] = [
             len(p.union(f).union(e).union(s))
             for p, f, e, s in zip(
                 passed_failed["Passed"],
@@ -915,7 +915,7 @@ class Iteration:
                 "Skipped_sameOrder",
                 "Verdict_sameOrder",
                 "Verdicts_sameOrder",
-                "#Runs_sameOrder",
+                "numRuns_sameOrder",
                 #
                 "Passed_randomOrder",
                 "Failed_randomOrder",
@@ -923,7 +923,7 @@ class Iteration:
                 "Skipped_randomOrder",
                 "Verdict_randomOrder",
                 "Verdicts_randomOrder",
-                "#Runs_randomOrder",
+                "numRuns_randomOrder",
             ]
         ]
 
