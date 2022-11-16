@@ -294,7 +294,7 @@ class PyTestRunner:
             # 1. search for dependencies in typical files like 'requirements.txt'
             # 2. install the project itself (requires pypi-tag to be specified)
             if self._config.pypi_tag in [None, ""]:
-                self._logger.info("no pypi tag found -> falling back to searching for requirements")
+                self._logger.info("no pypi tag specified -> falling back to searching for requirements")
                 packages = self.find_dependencies()
                 env.add_packages_for_installation(packages)
             else:
