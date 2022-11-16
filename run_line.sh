@@ -80,12 +80,12 @@ if [[ $FLAPY_INPUT_RUN_ON = "cluster" ]]; then
         run_container.sh \
             "${PROJECT_NAME}" "${PROJECT_URL}" "${PROJECT_HASH}" "${PYPI_TAG}" "${FUNCS_TO_TRACE}" "${TESTS_TO_BE_RUN}" "${NUM_RUNS}" "${FLAPY_INPUT_PLUS_RANDOM_RUNS}" "${ITERATION_RESULTS_DIR}" "${FLAPY_INPUT_OTHER_ARGS}" \
         & srunPid=$!
-elif [[ $FLAPY_INPUT_RUN_ON = "local" ]]; then
+elif [[ $FLAPY_INPUT_RUN_ON = "locally" ]]; then
     ./run_container.sh \
         "${PROJECT_NAME}" "${PROJECT_URL}" "${PROJECT_HASH}" "${PYPI_TAG}" "${FUNCS_TO_TRACE}" "${TESTS_TO_BE_RUN}" "${NUM_RUNS}" "${FLAPY_INPUT_PLUS_RANDOM_RUNS}" "${ITERATION_RESULTS_DIR}" "${FLAPY_INPUT_OTHER_ARGS}" \
     & srunPid=$!
 else
-    echo "Unknown value '$RUN_ON' for RUN_ON. Please use 'cluster' or 'local'."
+    echo "Unknown value '$RUN_ON' for RUN_ON. Please use 'cluster' or 'locally'."
     exit
 fi
 
