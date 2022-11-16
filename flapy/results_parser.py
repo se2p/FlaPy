@@ -89,9 +89,9 @@ FORMAT = "[%(asctime)s][%(levelname)7s][%(filename)20s:%(lineno)4s - %(funcName)
 logging.basicConfig(format=FORMAT)
 
 proj_cols = ["Project_Name", "Project_URL", "Project_Hash"]
-test_cols = ["Test_filename", "Test_classname", "Test_funcname", "Test_parametrization"]
-test_cols_without_parametrization = ["Test_filename", "Test_classname", "Test_funcname"]
-test_cols_without_filename = ["Test_classname", "Test_funcname", "Test_parametrization"]
+test_cols = ["Test_filename", "Test_classname", "Test_name", "Test_parametrization"]
+test_cols_without_parametrization = ["Test_filename", "Test_classname", "Test_name"]
+test_cols_without_filename = ["Test_classname", "Test_name", "Test_parametrization"]
 
 
 def read_junit_testcase(test_case: junitparser.TestCase) -> Dict[str, Union[str, int]]:
@@ -168,7 +168,7 @@ class PassedFailed:
 
         # Some junit-xml files actually had name="" in them
         #   -> replace by NaN so they get ignored in the groupby
-        self._df["Test_funcname"] = self._df["Test_funcname"].replace("", np.NaN)
+        self._df["Test_name"] = self._df["Test_name"].replace("", np.NaN)
 
         # Rows with NaN are ignored by pd.groupby -> fillna
         self._df["Test_filename"] = self._df["Test_filename"].fillna("")
@@ -234,7 +234,7 @@ class PassedFailed:
                 "Project_Hash",
                 "Test_filename",
                 "Test_classname",
-                "Test_funcname",
+                "Test_name",
                 "Test_parametrization",
             ],
             as_index=False,
@@ -333,7 +333,7 @@ class PassedFailed:
         #     m[-1] if len(m) > 0 else '' for m, _ in modname_classname
         # ]
         test_overview["Test_nodeid"] = test_overview.apply(
-            lambda s: to_nodeid(s["Test_filename"], s["Test_classname"], s["Test_funcname"]),
+            lambda s: to_nodeid(s["Test_filename"], s["Test_classname"], s["Test_name"]),
             axis=1,
         )
         test_overview["Test_nodeid_inclPara"] = (
@@ -365,7 +365,7 @@ class TestsOverview:
                 "Project_Hash",
                 "Test_filename",
                 "Test_classname",
-                "Test_funcname",
+                "Test_name",
                 "Test_parametrization",
                 "flaky?",
             ]
@@ -808,7 +808,7 @@ class Iteration:
 
         junit_data["Test_filename"] = junit_data["file"]
         junit_data["Test_classname"] = junit_data["class"]
-        junit_data["Test_funcname"] = [re.sub(r"\[.*\]", "", name) for name in junit_data["name"]]
+        junit_data["Test_name"] = [re.sub(r"\[.*\]", "", name) for name in junit_data["name"]]
         junit_data["Test_parametrization"] = [
             re.findall(r"(\[.*\])", name)[0] if len(re.findall(r"(\[.*\])", name)) > 0 else ""
             for name in junit_data["name"]
@@ -834,7 +834,7 @@ class Iteration:
                 "Project_Hash",
                 "Test_filename",
                 "Test_classname",
-                "Test_funcname",
+                "Test_name",
                 "Test_parametrization",
                 "order",
             ],
@@ -887,7 +887,7 @@ class Iteration:
                 "Project_Hash",
                 "Test_filename",
                 "Test_classname",
-                "Test_funcname",
+                "Test_name",
                 "Test_parametrization",
             ],
             how="outer",
@@ -906,7 +906,7 @@ class Iteration:
                 "Project_Hash",
                 "Test_filename",
                 "Test_classname",
-                "Test_funcname",
+                "Test_name",
                 "Test_parametrization",
                 #
                 "Passed_sameOrder",
@@ -1033,7 +1033,7 @@ class Iteration:
             "Project_Hash": self.get_project_git_hash(),
             "Test_filename": test_funcdescr[0],
             "Test_classname": test_funcdescr[1],
-            "Test_funcname": test_funcdescr[2],
+            "Test_name": test_funcdescr[2],
             **search,
         }
 
@@ -1261,7 +1261,7 @@ class ResultsDir(IterationCollection):
                         "Project_Hash",
                         "Test_filename",
                         "Test_classname",
-                        "Test_funcname",
+                        "Test_name",
                     ],
                     as_index=False,
                     group_keys=False,
@@ -1276,7 +1276,7 @@ class ResultsDir(IterationCollection):
                     "Project_Hash",
                     "Test_filename",
                     "Test_classname",
-                    "Test_funcname",
+                    "Test_name",
                 ]
             )
 
