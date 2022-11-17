@@ -10,8 +10,8 @@
 echo "-- Node $HOSTNAME"
 
 # -- SET UP ENVIRONMENT (define flapy_docker_command)
-echo "-- Preparing slurm node"
-source prepare_slurm_node.sh || exit
+echo "-- Prepare for docker command"
+source prepare_for_docker_command.sh || exit
 
 echo "-- Cleaning podman"
 ./clean_podman.sh

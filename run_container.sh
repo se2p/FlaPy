@@ -26,8 +26,8 @@ echo "    Iteration results:    $ITERATION_RESULTS_DIR"
 echo "    Flapy Args:           $FLAPY_ARGS"
 
 # -- SET UP ENVIRONMENT (define flapy_docker_command)
-echo "-- Preparing slurm node"
-source prepare_slurm_node.sh || exit
+echo "-- Prepare for docker command"
+source prepare_for_docker_command.sh || exit
 
 # -- INITIALIZE META FILE
 META_FILE="$ITERATION_RESULTS_DIR/flapy-iteration-result.yaml"
