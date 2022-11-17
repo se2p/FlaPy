@@ -1,17 +1,36 @@
-FROM registry.hub.docker.com/library/python:3.10.1-bullseye
+FROM registry.hub.docker.com/library/python:3.10.1-bullseye AS build
 
-RUN apt-get update && apt-get install -y sqlite3 cloc
+WORKDIR /flapy_build
+
+ENV POETRY_VERSION="1.1.8"
+
+# Python shall not write the byte code to *.pyc files; they cannot be cached between
+# runs of the container anyway, hence we save the required time and resources for that
+ENV PYTHONDONTWRITEBYTECODE 1
+# Prevent Python from buffering output that is written to STDOUT/STDERR; this allows to
+# monitor the output in real time
+ENV PYTHONUNBUFFERED 1
+
+COPY pyproject.toml poetry.lock README.md .
+COPY ./flapy ./flapy
+
+RUN pip install "poetry==${POETRY_VERSION}" \
+    && poetry config virtualenvs.create false \
+    && poetry build
+
+
+# -- EXECUTE --
+FROM registry.hub.docker.com/library/python:3.10.1-bullseye AS execute
+
+ENV FLAPY_VERSION="0.2.0"
 
 WORKDIR /workdir
 
-# Input: like run_execution_container.sh
-# Ouput: write results to mounted dir
+RUN apt-get update && apt-get install -y sqlite3 cloc
 
-# TODO build flapy in this container (multi-stage dockerfile)
-
-# -- INSTALL FLAPY
+COPY --from=build /flapy_build/dist/FlaPy-${FLAPY_VERSION}-py3-none-any.whl .
 COPY clone_and_run_tests.sh .
-COPY dist/FlaPy-0.2.0-py3-none-any.whl .
-RUN ["pip", "install", "FlaPy-0.2.0-py3-none-any.whl"]
+
+RUN pip install FlaPy-${FLAPY_VERSION}-py3-none-any.whl
 
 ENTRYPOINT ["./clone_and_run_tests.sh"]
