@@ -266,7 +266,6 @@ class PyTestRunner:
         output_log_file: Union[str, os.PathLike] = None,
         trace_output_file: Union[str, os.PathLike] = None,
         tests_to_be_run: str = "",
-        full_access_dir: str = None,
     ) -> None:
         self._project_name = project_name
         self._path = path
@@ -276,7 +275,6 @@ class PyTestRunner:
         self._output_log_file = output_log_file
         self._trace_output_file = trace_output_file
         self._tests_to_be_run = tests_to_be_run
-        self._full_access_dir = full_access_dir
         self._logger = logger
 
     def run(self) -> Optional[Tuple[str, str]]:
@@ -472,7 +470,6 @@ class FlakyAnalyser:
                     output_log_file=output_log_file,
                     trace_output_file=trace_file,
                     tests_to_be_run=test_to_be_run,
-                    full_access_dir=self._temp_path,
                     logger=self._logger,
                 )
                 out, err = runner.run()
