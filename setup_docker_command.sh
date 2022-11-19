@@ -15,5 +15,5 @@ function flapy_docker_command {
     # Possible modifications to the normal docker command:
     # * Setting a different tmp-dir to avoid overflowing /tmp by prepending TMPDIR=...
     # * Use 'podman' instead of docker
-    docker $@
+    docker "$@"
 }
