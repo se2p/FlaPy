@@ -34,9 +34,9 @@ META_FILE="$ITERATION_RESULTS_DIR/flapy-iteration-result.yaml"
 
 # -- LOG META INFO
 echo "-- Logging Meta info"
-flapy_container_id=$(flapy_docker_command images $FLAPY_DOCKER_IMAGE --format "{{.ID}}")
-echo "hostname_run_container: $(cat /etc/hostname)"     >> "$META_FILE"
-echo "flapy_container_id:     ${flapy_container_id}"    >> "$META_FILE"
+FLAPY_IMAGE_ID=$(flapy_docker_command images $FLAPY_DOCKER_IMAGE --format "{{.ID}}" | head -n 1)
+echo "hostname_run_container: $(cat /etc/hostname)" >> "$META_FILE"
+echo "flapy_image_id:         ${FLAPY_IMAGE_ID}"    >> "$META_FILE"
 
 # -- EXECUTE CONTAINER
 echo "-- Running container"
