@@ -1,6 +1,10 @@
+import sys
+import time
 import random
-import numpy as np
 from pathlib import Path
+from threading import Thread
+import requests
+import numpy as np
 
 
 # Luo 2014 Categories:
@@ -58,7 +62,7 @@ def test_network_remote_connection_failure():
 
 
 def test_io():
-    assert pathlib.Path("/bin").is_dir()
+    assert Path("/bin").is_dir()
 
 
 def test_numpy_random():

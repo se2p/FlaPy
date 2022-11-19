@@ -1,12 +1,8 @@
 import sys
-from concurrent.futures.thread import ThreadPoolExecutor
-
-import numpy as np
-import requests
 import time
-import pathlib
 import asyncio
 from threading import Thread
+from concurrent.futures.thread import ThreadPoolExecutor
 
 
 # HELPER FUNCTIONS
