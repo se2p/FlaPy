@@ -10,5 +10,5 @@ flapy_docker_command rm -v --force --all
 echo "-- Removing images"
 flapy_docker_command rmi --force --all
 
-echo "-- Echo podman info"
-./echo_podman_info.sh
+echo "-- Echo image+container info"
+./echo_flapy_docker_info.sh

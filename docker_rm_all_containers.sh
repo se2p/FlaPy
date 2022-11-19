@@ -7,5 +7,5 @@ source prepare_for_docker_command.sh || exit
 echo "-- Removing containers"
 flapy_docker_command rm -v --force --all
 
-echo "-- Echo podman info"
-./echo_podman_info.sh
+echo "-- Echo image+container info"
+./echo_flapy_docker_info.sh
