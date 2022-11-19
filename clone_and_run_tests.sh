@@ -53,7 +53,7 @@ then
     fi
     REPO_HASH=$(git --git-dir="${REPOSITORY_DIR}/.git" rev-parse HEAD)
 else
-    cp -r "${PROJECT_URL}" "${REPOSITORY_DIR}"
+    cp -r /project_sources "${REPOSITORY_DIR}"
 fi
 
 # -- MEASURE LINES OF CODE
