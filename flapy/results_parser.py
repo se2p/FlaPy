@@ -1093,7 +1093,7 @@ class IterationCollection(ABC):
     def get_tests_overview(
         self,
         *,
-        read_resultsDir_cache=True,
+        read_resultsDir_cache=False,
         write_resultsDir_cache=True,
         read_iteration_cache=True,
         write_iteration_cache=True,
@@ -1168,7 +1168,7 @@ class ResultsDir(IterationCollection):
     def get_passed_failed(
         self,
         *,
-        read_resultsDir_cache=True,
+        read_resultsDir_cache=False,
         write_resultsDir_cache=True,
         read_iteration_cache=True,
         write_iteration_cache=True,
@@ -1181,6 +1181,14 @@ class ResultsDir(IterationCollection):
         The iteration_cache is RESULTS_DIR/ITERATION/results_cache/junit_data.csv
             and it is processed in Iteration.get_junit_data.
         """
+
+        # TODO: fix resultsDir cache
+        #   the problem with the resultsDir cache is that iterations might be found EMPTY
+        #   just because they haven't finished yet. Then, even after the iteration has finished,
+        #   the results-parser will still assume them to be empty, because it reads from the cache.
+        #   Just not including empty iterations in the cache also not good, because some iterations
+        #   are legitimately empty, even after finishing.
+        #   To mitigate the issue, I just disabled reading from the resulsDir cache for now.
 
         did_read_cache = False
         cache_file = self._pf_cache_file
@@ -1307,7 +1315,7 @@ class ResultsDirCollection(IterationCollection):
     def get_passed_failed(
         self,
         *,
-        read_resultsDir_cache=True,
+        read_resultsDir_cache=False,
         write_resultsDir_cache=True,
         read_iteration_cache=True,
         write_iteration_cache=True,
