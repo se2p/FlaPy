@@ -5,10 +5,10 @@ echo "-- Prepare for docker command"
 source prepare_for_docker_command.sh || exit
 
 echo "-- Removing containers"
-flapy_docker_command rm -v --force --all
+flapy_docker_command rm -vf $(flapy_docker_command ps -aq)
 
 echo "-- Removing images"
-flapy_docker_command rmi --force --all
+flapy_docker_command rmi -f $(flapy_docker_command images -aq)
 
 echo "-- Echo image+container info"
 ./echo_flapy_docker_info.sh
