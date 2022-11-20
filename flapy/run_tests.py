@@ -281,7 +281,6 @@ class PyTestRunner:
         logger,
         xml_output_file: Path = None,
         xml_coverage_file: Path = None,
-        output_log_file: Path = None,
         trace_output_file: Path = None,
         tests_to_be_run: str = "",
     ) -> None:
@@ -290,7 +289,6 @@ class PyTestRunner:
         self._config = config
         self._xml_output_file = xml_output_file
         self._xml_coverage_file = xml_coverage_file
-        self._output_log_file = output_log_file
         self._trace_output_file = trace_output_file
         self._tests_to_be_run = tests_to_be_run
         self._logger = logger
@@ -301,9 +299,6 @@ class PyTestRunner:
         with virtualenv(self._project_name, None) as env:
             old_cwd = Path(os.getcwd())
             os.chdir(self._path)
-
-            if self._output_log_file is None:
-                self._output_log_file = self._path / "output.log"
 
             # INSTALL PROJECT DEPENDENCIES
             # There are two different methods for dependency installation
@@ -475,7 +470,6 @@ class FlakyAnalyser:
 
                 xml_output_file: Path = get_output_filename("output", "xml")
                 xml_coverage_file: Path = get_output_filename("coverage", "xml")
-                output_log_file: Path = get_output_filename("output", "log")
                 trace_file: Path = get_output_filename("trace", "")
 
                 runner = PyTestRunner(
@@ -484,7 +478,6 @@ class FlakyAnalyser:
                     config=self._config,
                     xml_output_file=xml_output_file,
                     xml_coverage_file=xml_coverage_file,
-                    output_log_file=output_log_file,
                     trace_output_file=trace_file,
                     tests_to_be_run=test_to_be_run,
                     logger=self._logger,
