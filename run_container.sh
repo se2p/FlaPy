@@ -31,6 +31,10 @@ debug_echo "    Flapy Args:           $FLAPY_ARGS"
 debug_echo "-- Prepare for docker command"
 source prepare_for_docker_command.sh || exit
 
+# -- PULL IMAGE
+debug_echo "-- Pulling FlaPY docker image"
+./pull_flapy_docker_image.sh
+
 # -- INITIALIZE META FILE
 META_FILE="$ITERATION_RESULTS_DIR/flapy-iteration-result.yaml"
 
