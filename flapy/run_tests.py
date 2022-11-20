@@ -146,6 +146,7 @@ class VirtualEnvironment:
         """
         self._env_name = env_name
         self._packages: List[str] = []
+        self._requirements_files: List[Path] = []
         self._env_dir = tempfile_seeded.mkdtemp(  # type: ignore
             suffix=env_name, dir=tmp_dir
         )
@@ -186,6 +187,20 @@ class VirtualEnvironment:
         """
         self._packages.extend(package_names)
 
+    def add_requirements_file_for_installation(self, requirements_file_path: Path) -> None:
+        """Add a requirements file to be installed via `pip -r`
+
+        :param requirements_file_path: Path to the requirements_file
+        """
+        self._requirements_files.append(requirements_file_path)
+
+    def add_requirements_files_for_installation(self, requirements_file_paths: Path) -> None:
+        """Add a list of requirements files to be installed via `pip -r`
+
+        :param requirements_file_path: List of paths to the requirements_files
+        """
+        self._requirements_files.extend(requirements_file_paths)
+
     def run_commands(self, commands: List[str]) -> Tuple[str, str]:
         """Run commands in the virtual environment setting.
 
@@ -202,6 +217,8 @@ class VirtualEnvironment:
             "python -V",
         ]
         # Install dependencies
+        for reqs_file in self._requirements_files:
+            command_list.append(f"pip install -r {reqs_file}")
         for package in self._packages:
             command_list.append(f"pip install {package}")
         # Append other commands
@@ -294,8 +311,12 @@ class PyTestRunner:
             # 2. install the project itself (requires pypi-tag to be specified)
             if self._config.pypi_tag in [None, ""]:
                 self._logger.info("no pypi tag specified -> falling back to searching for requirements")
-                packages = self.find_dependencies()
-                env.add_packages_for_installation(packages)
+                # packages = self.find_dependencies()
+                # env.add_packages_for_installation(packages)
+
+                reqs_files = self.find_requirements_files()
+                self._logger.info(f"found the following requirements files: {[str(reqs_file) for reqs_file in reqs_files]}")
+                env.add_requirements_files_for_installation(reqs_files)
             else:
                 self._logger.info(f"pypi tag found {self._config.pypi_tag}")
                 env.add_package_for_installation(f"{self._project_name}=={self._config.pypi_tag}")
@@ -350,6 +371,14 @@ class PyTestRunner:
             out, err = env.run_commands(commands)
             os.chdir(old_cwd)
             return out, err
+
+    def find_requirements_files(self) -> List[Path]:
+        """ Search for *requirements*.txt files in the project path
+
+        :returns: List of existing requirements files
+
+        """
+        return list(self._path.glob("*requirements*.txt"))
 
     def find_dependencies(self) -> List[str]:
         """Search for dependencies in common files"""
