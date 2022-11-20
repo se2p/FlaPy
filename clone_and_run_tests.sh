@@ -1,10 +1,7 @@
 #!/bin/bash
 set -e
 
-# -- HELPER FUNCTIONS
-function debug_echo {
-  [[ "${DEBUG}" = 1 ]] && echo "$@"
-}
+source utils.sh
 
 # -- CONSTANTS
 DEBUG=1
@@ -22,7 +19,7 @@ PLUS_RANDOM_RUNS=$8
 FLAPY_ARGS=$9
 
 # -- DEBUG OUTPUT
-echo "-- $0"
+debug_echo "-- $0"
 debug_echo "    Project name:         $PROJECT_NAME"
 debug_echo "    Project url:          $PROJECT_URL"
 debug_echo "    Project hash:         $PROJECT_HASH"

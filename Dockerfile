@@ -29,7 +29,7 @@ WORKDIR /workdir
 RUN apt-get update && apt-get install -y sqlite3 cloc
 
 COPY --from=build /flapy_build/dist/FlaPy-${FLAPY_VERSION}-py3-none-any.whl .
-COPY clone_and_run_tests.sh .
+COPY utils.sh clone_and_run_tests.sh .
 
 RUN pip install FlaPy-${FLAPY_VERSION}-py3-none-any.whl
 

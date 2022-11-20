@@ -7,20 +7,22 @@
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-socket=1
 
+source utils.sh
+
 DOCKER_IMAGE=$1
 
-echo "-- Node $HOSTNAME"
+debug_echo "-- Node $HOSTNAME"
 
 # -- SET UP ENVIRONMENT (define flapy_docker_command)
-echo "-- Prepare for docker command"
+debug_echo "-- Prepare for docker command"
 source prepare_for_docker_command.sh || exit
 
-echo "-- Loading image ${DOCKER_IMAGE}"
+debug_echo "-- Loading image ${DOCKER_IMAGE}"
 date -Iseconds
 flapy_docker_command load -i "${DOCKER_IMAGE}"
 date -Iseconds
 
-echo "-- Echo image+container info"
+debug_echo "-- Echo image+container info"
 ./echo_flapy_docker_info.sh
 
-echo "-- $0: Done!"
+debug_echo "-- $0: Done!"

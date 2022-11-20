@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source utils.sh
+
 function all_available_nodes() {
   function all_nodes() {
     sinfo --Node --noheader --format="%N" "$@" | sort
@@ -16,7 +18,7 @@ function all_available_nodes() {
 function available_cluster_nodes() {
     for cluster in "$@"; do
       for node in $(all_available_nodes | grep "${cluster}"); do
-          echo $node
+          debug_echo $node
           # setup_docker_on_node "${node}"
       done
     done

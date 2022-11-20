@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 
+source utils.sh
+
 # -- SET UP ENVIRONMENT (define flapy_docker_command)
-echo "-- Prepare for docker command"
+debug_echo "-- Prepare for docker command"
 source prepare_for_docker_command.sh || exit
 
 
-echo "-- IMAGES"
+debug_echo "-- IMAGES"
 flapy_docker_command images
 
-echo
+debug_echo
 
 # echo all containers
-echo "-- CONTAINERS"
+debug_echo "-- CONTAINERS"
 flapy_docker_command ps -a

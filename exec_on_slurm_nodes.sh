@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 
+source utils.sh
+
 NODES=$1
 RUN_ME=$2
 ARGS="${@:3}"
 
-echo "-- $0"
-echo "    NODES=$NODES"
-echo "    RUN_ME=$RUN_ME"
-echo "    ARGS=$ARGS"
+debug_echo "-- $0"
+debug_echo "    NODES=$NODES"
+debug_echo "    RUN_ME=$RUN_ME"
+debug_echo "    ARGS=$ARGS"
 
 DATE_TIME=$(date +%Y%m%d_%H%M%S)
 

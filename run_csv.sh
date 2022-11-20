@@ -1,17 +1,13 @@
 #!/usr/bin/env bash
 
+source utils.sh
+
 # -- DOC
 # This scripts require LOCAL_PODMAN_ROOT to be set
 
-# -- HELPER FUNCTIONS
-DEBUG=1
-function debug_echo {
-  [[ "${DEBUG}" = 1 ]] && echo "$@"
-}
-
 # -- CHECK NUMBER OF ARGUMENTS
 if [[ "$#" -lt 5 ]]; then
-    echo "Usage: $0 RUN_ON  CONSTRAINT  INPUT_CSV  PLUS_RANDOM_RUNS  FLAPY_ARGS  [OUT_DIR]
+    debug_echo "Usage: $0 RUN_ON  CONSTRAINT  INPUT_CSV  PLUS_RANDOM_RUNS  FLAPY_ARGS  [OUT_DIR]
 
     RUN_ON must be either 'locally' or 'cluster'
     CONSTRAINT is the \`sbatch --constraint\` in case RUN_ON == 'cluster'
@@ -94,7 +90,7 @@ SBATCH_LOG_FILE_PATTERN="$SBATCH_LOG_FOLDER/log-%a.out"
 # -- RUN
 if [[ $RUN_ON = "cluster" ]]
 then
-    echo "running on cluster"
+    debug_echo "running on cluster"
     # export PODMAN_HOME=
     # export LOCAL_PODMAN_ROOT=
     sbatch_info=$(sbatch --parsable \
@@ -105,7 +101,7 @@ then
         -- \
         run_line.sh
     )
-    echo "sbatch_submission_info: $sbatch_info"
+    debug_echo "sbatch_submission_info: $sbatch_info"
     echo "sbatch_submission_info: \"$sbatch_info\"" >> "$FLAPY_META_FILE"
 elif [[ $RUN_ON = "locally" ]]
 then
@@ -113,7 +109,7 @@ then
         FLAPY_INPUT_CSV_LINE_NUM=$i ./run_line.sh
     done
 else
-    echo "Unknown value '$RUN_ON' for RUN_ON. Please use 'cluster' or 'locally'."
+    debug_echo "Unknown value '$RUN_ON' for RUN_ON. Please use 'cluster' or 'locally'."
     exit
 fi
 
