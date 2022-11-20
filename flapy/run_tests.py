@@ -22,6 +22,7 @@ import subprocess
 import sys
 import xml.etree.ElementTree as ET
 from abc import ABCMeta, abstractmethod
+from pathlib import Path
 from dataclasses import dataclass
 from enum import Enum
 from typing import (
@@ -258,17 +259,17 @@ class PyTestRunner:
     def __init__(
         self,
         project_name: str,
-        path: Union[str, os.PathLike],
+        path: Path,
         config: argparse.Namespace,
         logger,
-        xml_output_file: Union[str, os.PathLike] = None,
-        xml_coverage_file: Union[str, os.PathLike] = None,
-        output_log_file: Union[str, os.PathLike] = None,
-        trace_output_file: Union[str, os.PathLike] = None,
+        xml_output_file: Path = None,
+        xml_coverage_file: Path = None,
+        output_log_file: Path = None,
+        trace_output_file: Path = None,
         tests_to_be_run: str = "",
     ) -> None:
         self._project_name = project_name
-        self._path = path
+        self._path = Path(path)
         self._config = config
         self._xml_output_file = xml_output_file
         self._xml_coverage_file = xml_coverage_file
@@ -281,11 +282,11 @@ class PyTestRunner:
         """Install dependencies and execute pytest"""
 
         with virtualenv(self._project_name, None) as env:
-            old_dir = os.getcwd()
+            old_cwd = Path(os.getcwd())
             os.chdir(self._path)
 
             if self._output_log_file is None:
-                self._output_log_file = os.path.join(os.getcwd(), "output.log")
+                self._output_log_file = self._path / "output.log"
 
             # INSTALL PROJECT DEPENDENCIES
             # There are two different methods for dependency installation
@@ -347,13 +348,13 @@ class PyTestRunner:
 
             self._logger.info(f"executing commands {commands}")
             out, err = env.run_commands(commands)
-            os.chdir(old_dir)
+            os.chdir(old_cwd)
             return out, err
 
     def find_dependencies(self) -> List[str]:
         """Search for dependencies in common files"""
         packages: List[str] = []
-        file_names = [
+        possible_requirements_filenames = [
             "requirements.txt",
             "dev-requirements.txt",
             "dev_requirements.txt",
@@ -364,22 +365,18 @@ class PyTestRunner:
             "requirements-test.txt",
             "requirements_test.txt",
         ]
-        for file_name in file_names:
+        for file_name in possible_requirements_filenames:
             packages.extend(
-                self.read_dependencies_from_requirements_file(os.path.join(self._path, file_name))
+                self.read_dependencies_from_requirements_file(self._path / file_name)
             )
-        if os.path.exists(os.path.join(self._path, "Pipfile")) and os.path.isfile(
-            os.path.join(self._path, "Pipfile")
-        ):
+        if (self._path / "Pipfile").is_file():
             packages.extend(self.read_dependencies_from_pipfile())
         return packages
 
     @staticmethod
-    def read_dependencies_from_requirements_file(
-        requirements_file: Union[str, os.PathLike]
-    ) -> List[str]:
+    def read_dependencies_from_requirements_file(requirements_file: Path) -> List[str]:
         packages: List[str] = []
-        if os.path.exists(requirements_file) and os.path.isfile(requirements_file):
+        if requirements_file.is_file():
             with open(requirements_file) as req_file:
                 packages = [
                     line.strip() for line in req_file.readlines() if "requirements" not in line
@@ -388,7 +385,7 @@ class PyTestRunner:
 
     def read_dependencies_from_pipfile(self) -> List[str]:
         packages: List[str] = []
-        pip_file = pipfile.load(os.path.join(self._path, "Pipfile"))
+        pip_file = pipfile.load(self._path / "Pipfile")
         data = pip_file.data
         if data["default"]:
             for key, _ in data["default"].items():
@@ -416,7 +413,7 @@ class FlakyAnalyser:
         self._config = parser.parse_args(argv[1:])
         self._logger = self._configure_logger()
         self._repo_path = self._config.repository
-        self._temp_path = self._config.temp
+        self._temp_path = Path(self._config.temp)
         self._flaky_tests: Set[str] = set()
         self._test_cases: Dict[str, str] = {}
         self._tests_to_be_run: str = self._config.tests_to_be_run
@@ -444,26 +441,17 @@ class FlakyAnalyser:
                 run_num = i + naming_offset
                 ttbr_id = test_to_be_run.replace("/", ".")
 
-                xml_output_file: str = os.path.join(
-                    self._temp_path,
-                    "{}_output{}{}.xml".format(self._config.project_name, run_num, ttbr_id),
-                )
-                xml_coverage_file: str = os.path.join(
-                    self._temp_path,
-                    "{}_coverage{}{}.xml".format(self._config.project_name, run_num, ttbr_id),
-                )
-                output_log_file: str = os.path.join(
-                    self._temp_path,
-                    "{}_output{}{}.log".format(self._config.project_name, run_num, ttbr_id),
-                )
-                trace_file: str = os.path.join(
-                    self._temp_path,
-                    "{}_trace{}{}".format(self._config.project_name, run_num, ttbr_id),
-                )
+                def get_output_filename(keyword, ending) -> Path:
+                    return self._temp_path / "{self._config.project_name}_{keyword}{run_num}{tbbr_id}.{ending}"
+
+                xml_output_file: Path = get_output_filename("output", "xml")
+                xml_coverage_file: Path = get_output_filename("coverage", "xml")
+                output_log_file: Path = get_output_filename("output", "log")
+                trace_file: Path = get_output_filename("trace", "")
 
                 runner = PyTestRunner(
                     project_name=self._config.project_name,
-                    path=copy,
+                    path=Path(copy),
                     config=self._config,
                     xml_output_file=xml_output_file,
                     xml_coverage_file=xml_coverage_file,
@@ -476,7 +464,7 @@ class FlakyAnalyser:
                 self._logger.debug("OUT: %s", out)
                 self._logger.debug("ERR: %s", err)
 
-                if not os.path.exists(xml_output_file):
+                if not xml_output_file.is_file():
                     self._logger.warning(
                         "Did not create file %s while running the tests.", xml_output_file,
                     )
