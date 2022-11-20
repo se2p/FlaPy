@@ -9,7 +9,7 @@ podman run \
     -it \
     -v ~/flapy-results-tryout/sample_123:/results localhost/flapy \
   # PROJECT_NAME   PROJECT_URL                                                 PROJECT_HASH  FUNCS_TO_TRACE  TESTS_TO_BE_RUN  NUM_RUNS  PLUS_RANDOM_RUNS
-    sample_project "https://github.com/gruberma/python-tests-minimal-examples" 4865a6a       ""              ""               2         true
+    sample_project "./minimal_flaky_python_tests" 4865a6a       ""              ""               2         true
 ```
 
 Parameters:
