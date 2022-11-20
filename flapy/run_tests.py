@@ -442,7 +442,7 @@ class FlakyAnalyser:
                 ttbr_id = test_to_be_run.replace("/", ".")
 
                 def get_output_filename(keyword, ending) -> Path:
-                    return self._temp_path / "{self._config.project_name}_{keyword}{run_num}{tbbr_id}.{ending}"
+                    return self._temp_path / f"{self._config.project_name}_{keyword}{run_num}{ttbr_id}.{ending}"
 
                 xml_output_file: Path = get_output_filename("output", "xml")
                 xml_coverage_file: Path = get_output_filename("coverage", "xml")
