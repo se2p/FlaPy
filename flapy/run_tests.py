@@ -448,7 +448,7 @@ class FlakyAnalyser:
         the given runner_class and creates xml files containing the results.
         """
         self._logger.info(f"Config: {self._config}")
-        naming_offset = self._config.num_runs if self._config.random_order_bucket is None else 0
+        naming_offset = 0 if self._config.random_order_bucket is None else self._config.num_runs
         tmp_dir_path = FileUtils.get_available_tempdir_path(self._temp_path)
 
         # TODO add option to run tests_to_be_run one at a time or all togehter
