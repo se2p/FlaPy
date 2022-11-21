@@ -203,7 +203,7 @@ class PassedFailed:
         return cls(_df)
 
     def add_rerun_column(self) -> pd.DataFrame:
-        self._df["ids_deter"] = [
+        self._df["ids_sameOrder"] = [
             p.union(f).union(e).union(s)
             for p, f, e, s in zip(
                 self._df["Passed_sameOrder"],
@@ -479,10 +479,10 @@ class CoverageXmlFile(MyFileWrapper):
         return rf".*/{project_name}_coverage(\d+)(.*)\.xml$"
 
     def get_order(self) -> str:
-        if CoverageXmlFileDeter.is_(self.p, self.project_name, self.openvia):
-            return "deter"
-        if CoverageXmlFileNonDeter.is_(self.p, self.project_name, self.openvia):
-            return "non-deter"
+        if CoverageXmlFileSameOrder.is_(self.p, self.project_name, self.openvia):
+            return "same"
+        if CoverageXmlFileRandomOrder.is_(self.p, self.project_name, self.openvia):
+            return "random"
         return "COULD_NOT_GET_ORDER"
 
     def to_dict(self) -> Dict[str, Union[str, int, float]]:
@@ -492,7 +492,7 @@ class CoverageXmlFile(MyFileWrapper):
             EXAMPLE:
                 {
                     'num': 0,
-                    'order': "deter",
+                    'order': "same",
                     "BranchCoverage": 0.7,
                     "LineCoverage": 0.6
                 }
@@ -511,16 +511,18 @@ class CoverageXmlFile(MyFileWrapper):
             return {}
 
 
-class CoverageXmlFileDeter(CoverageXmlFile):
+class CoverageXmlFileSameOrder(CoverageXmlFile):
     @classmethod
     def get_regex(cls, project_name: str):
-        return rf".*/deterministic/tmp/{project_name}_coverage(\d+)(.*)\.xml"
+        # deterministic was the legacy name sameOrder
+        return rf".*/(?:deterministic|sameOrder)/tmp/{project_name}_coverage(\d+)(.*)\.xml"
 
 
-class CoverageXmlFileNonDeter(CoverageXmlFile):
+class CoverageXmlFileRandomOrder(CoverageXmlFile):
     @classmethod
     def get_regex(cls, project_name: str):
-        return rf".*/non-deterministic/tmp/{project_name}_coverage(\d+)(.*)\.xml"
+        # non-deterministic was the legacy name randomOrder
+        return rf".*/(?:non-deterministic|randomOrder)/tmp/{project_name}_coverage(\d+)(.*)\.xml"
 
 
 class JunitXmlFile(MyFileWrapper):
@@ -530,10 +532,10 @@ class JunitXmlFile(MyFileWrapper):
 
     @lru_cache()
     def get_order(self) -> str:
-        if JunitXmlFileDeter.is_(self.p, self.project_name, self.openvia):
-            return "deter"
-        if JunitXmlFileNonDeter.is_(self.p, self.project_name, self.openvia):
-            return "non-deter"
+        if JunitXmlFileSameOrder.is_(self.p, self.project_name, self.openvia):
+            return "same"
+        if JunitXmlFileRandomOrder.is_(self.p, self.project_name, self.openvia):
+            return "random"
         return "COULD_NOT_GET_ORDER"
 
     def parse(self) -> Union[junitparser.JUnitXml, junitparser.TestSuite]:
@@ -605,16 +607,18 @@ class JunitXmlFile(MyFileWrapper):
             return []
 
 
-class JunitXmlFileDeter(JunitXmlFile):
+class JunitXmlFileSameOrder(JunitXmlFile):
     @classmethod
     def get_regex(cls, project_name: str):
-        return rf".*/deterministic/tmp/{project_name}_output(\d+)(.*)\.xml"
+        # deterministic was the legacy name sameOrder
+        return rf".*/(?:deterministic|sameOrder)/tmp/{project_name}_output(\d+)(.*)\.xml"
 
 
-class JunitXmlFileNonDeter(JunitXmlFile):
+class JunitXmlFileRandomOrder(JunitXmlFile):
     @classmethod
     def get_regex(cls, project_name: str):
-        return rf".*/non-deterministic/tmp/{project_name}_output(\d+)(.*)\.xml"
+        # non-deterministic was the legacy name randomOrder
+        return rf".*/(?:non-deterministic|randomOrder)/tmp/{project_name}_output(\d+)(.*)\.xml"
 
 
 class TraceFile(MyFileWrapper):
@@ -668,7 +672,7 @@ class Iteration:
         self._archive: Optional[tarfile.TarFile] = None
 
         # Setup cache
-        self._results_cache = self.p / "results_cache"
+        self._results_cache = self.p / "flapy.cache"
         if not self._results_cache.is_dir():
             self._results_cache.mkdir()
         self._junit_cache_file = self._results_cache / "junit_data.csv"
@@ -878,8 +882,8 @@ class Iteration:
                 passed_failed[col] = passed_failed[col].apply(str)
 
         passed_failed = pd.merge(
-            passed_failed[passed_failed["order"] == "deter"],
-            passed_failed[passed_failed["order"] == "non-deter"],
+            passed_failed[passed_failed["order"] == "same"],
+            passed_failed[passed_failed["order"] == "random"],
             on=[
                 "Iteration",
                 "Project_Name",
@@ -932,7 +936,7 @@ class Iteration:
 
         :returns: EXAMPLE:
             [
-                { 'num': 0, 'order': "deter", "BranchCoverage": 0.7, "LineCoverage": 0.6 },
+                { 'num': 0, 'order': "same", "BranchCoverage": 0.7, "LineCoverage": 0.6 },
                 ...
             ]
         """

@@ -84,18 +84,15 @@ START_DATE=$(date)
 } >> $META_FILE
 
 # -- EXECUTE TESTS
-#  In the following two paragraphs, "non-deterministic" means executing the project's tests in random
-#  order and "deterministic" means executing them in same order (default of pytest).
-#  This naming convention is not good, but I keep it for legacy reasons.
 debug_echo "Run tests in same order mode"
-mkdir -p "${CWD}/deterministic"
-mkdir -p "${CWD}/deterministic/tmp"
+mkdir -p "${CWD}/sameOrder"
+mkdir -p "${CWD}/sameOrder/tmp"
 flapy_run_tests \
-  --logfile "${CWD}/deterministic/execution.log" \
+  --logfile "${CWD}/sameOrder/execution.log" \
   --repository "${REPOSITORY_DIR}" \
   --project-name "${PROJECT_NAME}" \
   --pypi-tag "${PYPI_TAG}" \
-  --temp "${CWD}/deterministic/tmp" \
+  --temp "${CWD}/sameOrder/tmp" \
   --number-test-runs "${NUM_RUNS}" \
   --trace "${FUNCS_TO_TRACE}" \
   --tests-to-be-run "${TESTS_TO_BE_RUN}" \
@@ -104,14 +101,14 @@ flapy_run_tests \
 if [[ $PLUS_RANDOM_RUNS = true ]]
 then
     debug_echo "Run tests in random order mode"
-    mkdir -p "${CWD}/non-deterministic"
-    mkdir -p "${CWD}/non-deterministic/tmp"
+    mkdir -p "${CWD}/randomOrder"
+    mkdir -p "${CWD}/randomOrder/tmp"
     flapy_run_tests \
-      --logfile "${CWD}/non-deterministic/execution.log" \
+      --logfile "${CWD}/randomOrder/execution.log" \
       --repository "${REPOSITORY_DIR}" \
       --project-name "${PROJECT_NAME}" \
       --pypi-tag "${PYPI_TAG}" \
-      --temp "${CWD}/non-deterministic/tmp" \
+      --temp "${CWD}/randomOrder/tmp" \
       --number-test-runs "${NUM_RUNS}" \
       --random-order-bucket class \
       --trace "${FUNCS_TO_TRACE}" \
@@ -131,13 +128,13 @@ if [[ $PLUS_RANDOM_RUNS = true ]]
 then
     debug_echo "Copy results back (incl random runs)"
     tar cJf "${RESULT_DIR}/results.tar.xz" \
-      "${CWD}/non-deterministic" \
-      "${CWD}/deterministic" \
+      "${CWD}/randomOrder" \
+      "${CWD}/sameOrder" \
       "$CLOC_DBFILE"
 else
     debug_echo "Copy results back (no random runs)"
     tar cJf "${RESULT_DIR}/results.tar.xz" \
-      "${CWD}/deterministic" \
+      "${CWD}/sameOrder" \
       "$CLOC_DBFILE"
 fi
 
