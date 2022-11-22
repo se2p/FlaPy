@@ -16,7 +16,6 @@ fi
 
 COMMAND=$1
 ARGS="${@:2}"
-echo $ARGS
 
 if [ "$COMMAND" == "run" ]; then
     # TODO: use ARGS here and getopts in ./run_csv.sh
