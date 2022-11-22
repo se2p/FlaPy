@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-source utils.sh
+SCRIPT_DIR=$(dirname $0)
+
+source "$SCRIPT_DIR/utils.sh"
 
 # -- DOC
 # This scripts require LOCAL_PODMAN_ROOT to be set
@@ -121,7 +123,7 @@ then
 elif [[ $RUN_ON = "locally" ]]
 then
     for i in $(seq 2 "$CSV_FILE_LENGTH"); do
-        FLAPY_INPUT_CSV_LINE_NUM=$i ./run_line.sh
+        FLAPY_INPUT_CSV_LINE_NUM=$i "$SCRIPT_DIR/run_line.sh"
     done
 else
     debug_echo "Unknown value '$RUN_ON' for RUN_ON. Please use 'cluster' or 'locally'."

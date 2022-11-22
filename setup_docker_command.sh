@@ -7,7 +7,9 @@
 # This script can either be modified, or a custom script can be used instead by setting the
 # FLAPY_DOCKER_COMMAND_SETUP_SCRIPT variable
 
-source utils.sh
+SCRIPT_DIR=$(dirname $0)
+
+source "$SCRIPT_DIR/utils.sh"
 
 debug_echo "-- Define FlaPy docker image"
 export FLAPY_DOCKER_IMAGE="registry.hub.docker.com/gruberma/flapy"
