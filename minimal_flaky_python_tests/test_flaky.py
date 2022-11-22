@@ -47,7 +47,6 @@ def test_random():
 
 def test_time():
     t = time.time()
-    print(t)
     assert round(t) % 2 == 0
 
 
