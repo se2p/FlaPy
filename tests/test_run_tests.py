@@ -74,7 +74,7 @@ def generic_test_tracing(flaky_analyser: FlakyAnalyser):
         shutil.move(path, str(path.absolute()).replace("::", "__"))
         shutil.move(str(path.absolute()).replace("::", "__"), out_dir)
 
-    assert (out_dir / f"{project_name}_output1test_trace_me.py.xml").is_file()
+    assert (out_dir / f"{project_name}_output0test_trace_me.py.xml").is_file()
 
     shutil.rmtree(tmp_dir)
 
@@ -119,6 +119,6 @@ def generic_test_isolation(flaky_analyser: FlakyAnalyser):
         shutil.copy(str(path.absolute()).replace("::", "__"), out_dir)
 
     # assert junit-xml output exists
-    assert (out_dir / f"{project_name}_output1test_trace_me.py__test_quick_math.xml").is_file()
+    assert (out_dir / f"{project_name}_output0test_trace_me.py__test_quick_math.xml").is_file()
 
     shutil.rmtree(tmp_dir)
