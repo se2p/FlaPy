@@ -2,6 +2,8 @@
 
 source utils.sh
 
+export DEBUG=0
+
 debug_echo "-- Prepare for docker command"
 source prepare_for_docker_command.sh || exit
 
