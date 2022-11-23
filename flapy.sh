@@ -37,7 +37,7 @@ if [ "$COMMAND" == "run" ]; then
         OUT_DIR is the parent folder of the output results directory.
             If this option is not provided, the current directory is used
 
-    Example (takes ~30min): ./flapy.sh run locally \"\" flapy_input_example.csv false \"\" example_results
+    Example (takes ~1h):  ./flapy.sh run locally \"\" flapy_input_example.csv false \"\" example_results
 
     Example (takes ~30s): ./flapy.sh run locally \"\" flapy_input_example_tiny.csv false \"\" example_results_tiny"
 
