@@ -4,85 +4,53 @@ SCRIPT_DIR=$(dirname $0)
 
 source "$SCRIPT_DIR/utils.sh"
 
-# HELP_MESSAGE="Usage: ./flapy.sh run RUN_ON  CONSTRAINT  INPUT_CSV  PLUS_RANDOM_RUNS  CORE_ARGS  [OUT_DIR]
-#
-#     RUN_ON must be either 'locally' or 'cluster'
-#     CONSTRAINT is the \`sbatch --constraint\` in case RUN_ON == 'cluster'
-#     INPUT_CSV is the flapy input csv file,
-#         which must have the following columns in the following order:
-#         PROJECT_NAME, PROJECT_URL, PROJECT_HASH, PYPI_TAG, FUNCS_TO_TRACE, TESTS_TO_RUN, NUM_RUNS
-#     PLUS_RANDOM_RUNS must be 'true' or 'false'
-#     CORE_ARGS can contain the following, but must always be provided, even as empty string.
-#         Must always be one string.
-#         Available options:
-#         --random-order-seed <seed>
-#     OUT_DIR is the parent folder of the output results directory.
-#         If this option is not provided, the current directory is used
-#
-# Example (takes ~30min): ./flapy.sh run locally \"\" flapy_input_example.csv false \"\" example_results
-#
-# Example (takes ~30s): ./flapy.sh run locally \"\" flapy_input_example_tiny.csv false \"\" example_results_tiny"
-#
-# # -- CHECK NUMBER OF ARGUMENTS
-# if [ "$#" -lt 5 ]; then
-#     debug_echo $HELP_MESSAGE
-#     exit 1
-# fi
-
-# TODO: use getopts
-# SHORT="r,c:,a:"
-# LONG="plus-random-runs,constraint:,additional-args:"
-# OPTS=$(getopts --options $SHORT --longoptions $LONG)
-# echo $OPTS
-
 
 # -- PARSE ARGUMENTS
 RUN_ON=$1
 CONSTRAINT=$2
-CSV_FILE=$3
+INPUT_CSV=$3
 PLUS_RANDOM_RUNS=$4
 CORE_ARGS=$5
-RESULTS_PARENT_FOLDER=$6
+OUT_DIR=$6
 
 # -- DEBUG OUTPUT
 debug_echo "-- $0"
 debug_echo "    Run on:                $RUN_ON"
 debug_echo "    Constraint:            $CONSTRAINT"
-debug_echo "    CSV file:              $CSV_FILE"
+debug_echo "    CSV file:              $INPUT_CSV"
 debug_echo "    Plus random runs:      $PLUS_RANDOM_RUNS"
 debug_echo "    CORE args:             $CORE_ARGS"
-debug_echo "    Results parent folder: $RESULTS_PARENT_FOLDER"
+debug_echo "    Results parent folder: $OUT_DIR"
 debug_echo "    ----"
 
 # -- INPUT PRE-PROCESSING
-dos2unix "${CSV_FILE}"
-CSV_FILE_LENGTH=$(wc -l < "$CSV_FILE")
-debug_echo "    CSV file length:   $CSV_FILE_LENGTH"
+INPUT_CSV_LENGTH=$(wc -l < "$INPUT_CSV")
+debug_echo "    input csv length:      $INPUT_CSV_LENGTH"
 
 # -- CREATE RESULTS_DIR
-if [ -z "${RESULTS_PARENT_FOLDER}" ]; then
-    RESULTS_PARENT_FOLDER=$(pwd)
+if [ -z "${OUT_DIR}" ]; then
+    OUT_DIR=$(pwd)
 else
-    RESULTS_PARENT_FOLDER=$(realpath "$RESULTS_PARENT_FOLDER")
+    OUT_DIR=$(realpath "$OUT_DIR")
 fi
 DATE_TIME=$(date +%Y%m%d_%H%M%S)
-RESULTS_DIR="${RESULTS_PARENT_FOLDER}/flapy-results_${DATE_TIME}"
+RESULTS_DIR="${OUT_DIR}/flapy-results_${DATE_TIME}"
 mkdir -p "${RESULTS_DIR}"
 
 # -- SAVE INPUT FILE
 FLAPY_META_FOLDER="$RESULTS_DIR/!flapy.run/"
 mkdir "${FLAPY_META_FOLDER}"
-cp "${CSV_FILE}" "${FLAPY_META_FOLDER}/input.csv"
+cp "${INPUT_CSV}" "${FLAPY_META_FOLDER}/input.csv"
 
 # -- LOG META INFOS
 FLAPY_META_FILE="$FLAPY_META_FOLDER/flapy_run.yaml"
 {
     echo "run_on:                 \"$RUN_ON\""
     echo "constraint:             \"$CONSTRAINT\""
-    echo "csv_file:               \"$CSV_FILE\""
+    echo "input_csv:              \"$INPUT_CSV\""
     echo "plus_random_runs:       \"$PLUS_RANDOM_RUNS\""
     echo "core_args:              \"$CORE_ARGS\""
-    echo "csv_file_length:        $CSV_FILE_LENGTH"
+    echo "input_csv_length:       $INPUT_CSV_LENGTH"
 } >> "$FLAPY_META_FILE"
 
 
@@ -110,7 +78,7 @@ then
         --constraint="$CONSTRAINT" \
         --output "$SBATCH_LOG_FILE_PATTERN" \
         --error  "$SBATCH_LOG_FILE_PATTERN" \
-        --array=2-"$CSV_FILE_LENGTH" \
+        --array=2-"$INPUT_CSV_LENGTH" \
         -- \
         run_line.sh
     )
@@ -118,7 +86,7 @@ then
     echo "sbatch_submission_info: \"$sbatch_info\"" >> "$FLAPY_META_FILE"
 elif [[ $RUN_ON = "locally" ]]
 then
-    for i in $(seq 2 "$CSV_FILE_LENGTH"); do
+    for i in $(seq 2 "$INPUT_CSV_LENGTH"); do
         FLAPY_INPUT_CSV_LINE_NUM=$i "$SCRIPT_DIR/run_line.sh"
     done
 else
