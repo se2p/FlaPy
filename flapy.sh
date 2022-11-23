@@ -22,18 +22,32 @@ if [ "$COMMAND" == "run" ]; then
     # problem: arguments get expanded, specifically the additional arguments -> I have to escape
     # them again
 
-    HELP_MESSAGE="Usage: ./flapy.sh run RUN_ON  CONSTRAINT  INPUT_CSV  PLUS_RANDOM_RUNS  CORE_ARGS  [OUT_DIR]
+    HELP_MESSAGE="Usage: ./flapy.sh run [OPTION...] INPUT_CSV
 
-        RUN_ON must be either 'locally' or 'cluster'
-        CONSTRAINT is the \`sbatch --constraint\` in case RUN_ON == 'cluster'
-        INPUT_CSV is the flapy input csv file,
-            which must have the following columns in the following order:
+        INPUT_CSV
+            is the input-csv file must have the following columns in the following order:
             PROJECT_NAME, PROJECT_URL, PROJECT_HASH, PYPI_TAG, FUNCS_TO_TRACE, TESTS_TO_RUN, NUM_RUNS
-        PLUS_RANDOM_RUNS must be 'true' or 'false'
-        CORE_ARGS can contain the following, but must always be provided, even as empty string.
-            Must always be one string.
-            Available options:
-            --random-order-seed <seed>
+
+OPTIONS
+
+        -r, --run-on RUN_ON
+            RUN_ON must be either 'locally' or 'cluster'
+            if this option is not specified, TARGET defaults to 'locally'
+
+        -c, --constraint CONSTRAINT
+            CONSTRAINT is the \`sbatch --constraint\` in case RUN_ON == 'cluster'
+
+        -p, --plus-random-runs
+            Additional to the same-order runs, conduct the same number of runs where the
+            tests are shuffeled on class level (pytest-random-order plugin)
+
+        -a, --core-args CORE_ARGS
+            Used for extensions to the core test execution process.
+            Must always be one string, even if multiple options are specified, e.g. \"--foo --bar\"
+            Currently available options:
+
+                --random-order-seed <seed>
+
         OUT_DIR is the parent folder of the output results directory.
             If this option is not provided, the current directory is used
 
@@ -41,13 +55,61 @@ if [ "$COMMAND" == "run" ]; then
 
     Example (takes ~30s): ./flapy.sh run locally \"\" flapy_input_example_tiny.csv false \"\" example_results_tiny"
 
-    # -- CHECK NUMBER OF ARGUMENTS
-    if [ "$#" -lt 6 ]; then
+
+    # -- PARSE ARGUMENT
+    SHORT=r:,p,c:,a:,o:
+    LONG=run-on:,plus-random-runs,constraint:,core-args:,out-dir:
+    OPTS=$(getopt --name "flapy.sh run" --options $SHORT --longoptions $LONG -- "${@:2}")
+    #
+    eval set -- "$OPTS"
+    while :
+    do
+        case "$1" in
+            -r | --run-on )
+                RUN_ON="$2"
+                shift 2
+                ;;
+            -p | --plus-random-runs )
+                PLUS_RANDOM_RUNS=true
+                shift 1
+                ;;
+            -c | --constraint )
+                CONSTRAINT="$2"
+                shift 2
+                ;;
+            -a | --core-args )
+                CORE_ARGS="$2"
+                shift 2
+                ;;
+            -o | --out-dir )
+                OUT_DIR="$2"
+                shift 2
+                ;;
+            --)
+                INPUT_CSV="$2"
+                shift;
+                break
+                ;;
+            *)
+                echo "Unexpected option: $1"
+                exit 1
+                ;;
+        esac
+    done
+    #
+    if [ -z $INPUT_CSV ]; then
+        debug_echo "ERROR: no INPUT_CSV specified -> exiting"
+        debug_echo
         debug_echo "$HELP_MESSAGE"
         exit 1
-    else
-        "$SCRIPT_DIR/run_csv.sh" "$2" "$3" "$4" "$5" "$6" "$7"
     fi
+    if [ -z $RUN_ON ]; then
+        RUN_ON="locally"
+        debug_echo "--run-on not specified -> defaulting to 'locally'"
+    fi
+
+    "$SCRIPT_DIR/run_csv.sh" "$RUN_ON" "$CONSTRAINT" "$INPUT_CSV" "$PLUS_RANDOM_RUNS" "$CORE_ARGS" "$OUT_DIR"
+
 elif [ "$COMMAND" == "parse" ]; then
     $SCRIPT_DIR/results_parser.sh $ARGS
 else
