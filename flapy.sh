@@ -22,7 +22,7 @@ if [ "$COMMAND" == "run" ]; then
     # problem: arguments get expanded, specifically the additional arguments -> I have to escape
     # them again
 
-    HELP_MESSAGE="Usage: ./flapy.sh run RUN_ON  CONSTRAINT  INPUT_CSV  PLUS_RANDOM_RUNS  FLAPY_ARGS  [OUT_DIR]
+    HELP_MESSAGE="Usage: ./flapy.sh run RUN_ON  CONSTRAINT  INPUT_CSV  PLUS_RANDOM_RUNS  CORE_ARGS  [OUT_DIR]
 
         RUN_ON must be either 'locally' or 'cluster'
         CONSTRAINT is the \`sbatch --constraint\` in case RUN_ON == 'cluster'
@@ -30,7 +30,7 @@ if [ "$COMMAND" == "run" ]; then
             which must have the following columns in the following order:
             PROJECT_NAME, PROJECT_URL, PROJECT_HASH, PYPI_TAG, FUNCS_TO_TRACE, TESTS_TO_RUN, NUM_RUNS
         PLUS_RANDOM_RUNS must be 'true' or 'false'
-        FLAPY_ARGS can contain the following, but must always be provided, even as empty string.
+        CORE_ARGS can contain the following, but must always be provided, even as empty string.
             Must always be one string.
             Available options:
             --random-order-seed <seed>

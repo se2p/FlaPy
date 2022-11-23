@@ -4,7 +4,7 @@ SCRIPT_DIR=$(dirname $0)
 
 source "$SCRIPT_DIR/utils.sh"
 
-# HELP_MESSAGE="Usage: ./flapy.sh run RUN_ON  CONSTRAINT  INPUT_CSV  PLUS_RANDOM_RUNS  FLAPY_ARGS  [OUT_DIR]
+# HELP_MESSAGE="Usage: ./flapy.sh run RUN_ON  CONSTRAINT  INPUT_CSV  PLUS_RANDOM_RUNS  CORE_ARGS  [OUT_DIR]
 #
 #     RUN_ON must be either 'locally' or 'cluster'
 #     CONSTRAINT is the \`sbatch --constraint\` in case RUN_ON == 'cluster'
@@ -12,7 +12,7 @@ source "$SCRIPT_DIR/utils.sh"
 #         which must have the following columns in the following order:
 #         PROJECT_NAME, PROJECT_URL, PROJECT_HASH, PYPI_TAG, FUNCS_TO_TRACE, TESTS_TO_RUN, NUM_RUNS
 #     PLUS_RANDOM_RUNS must be 'true' or 'false'
-#     FLAPY_ARGS can contain the following, but must always be provided, even as empty string.
+#     CORE_ARGS can contain the following, but must always be provided, even as empty string.
 #         Must always be one string.
 #         Available options:
 #         --random-order-seed <seed>
@@ -41,7 +41,7 @@ RUN_ON=$1
 CONSTRAINT=$2
 CSV_FILE=$3
 PLUS_RANDOM_RUNS=$4
-FLAPY_ARGS=$5
+CORE_ARGS=$5
 RESULTS_PARENT_FOLDER=$6
 
 # -- DEBUG OUTPUT
@@ -50,7 +50,7 @@ debug_echo "    Run on:                $RUN_ON"
 debug_echo "    Constraint:            $CONSTRAINT"
 debug_echo "    CSV file:              $CSV_FILE"
 debug_echo "    Plus random runs:      $PLUS_RANDOM_RUNS"
-debug_echo "    Flapy args:            $FLAPY_ARGS"
+debug_echo "    CORE args:            $CORE_ARGS"
 debug_echo "    Results parent folder: $RESULTS_PARENT_FOLDER"
 debug_echo "    ----"
 
@@ -81,7 +81,7 @@ FLAPY_META_FILE="$FLAPY_META_FOLDER/flapy_run.yaml"
     echo "constraint:             \"$CONSTRAINT\""
     echo "csv_file:               \"$CSV_FILE\""
     echo "plus_random_runs:       \"$PLUS_RANDOM_RUNS\""
-    echo "flapy_args:             \"$FLAPY_ARGS\""
+    echo "core_args:             \"$CORE_ARGS\""
     echo "csv_file_length:        $CSV_FILE_LENGTH"
 } >> "$FLAPY_META_FILE"
 
@@ -90,7 +90,7 @@ FLAPY_META_FILE="$FLAPY_META_FOLDER/flapy_run.yaml"
 #     these variables will be picked up by run_line.sh
 export FLAPY_INPUT_CSV_FILE="${FLAPY_META_FOLDER}/input.csv"
 export FLAPY_INPUT_PLUS_RANDOM_RUNS=$PLUS_RANDOM_RUNS
-export FLAPY_INPUT_OTHER_ARGS=$FLAPY_ARGS
+export FLAPY_INPUT_OTHER_ARGS=$CORE_ARGS
 export FLAPY_INPUT_RUN_ON=$RUN_ON
 export FLAPY_DATE_TIME=$DATE_TIME
 export FLAPY_RESULTS_DIR=$RESULTS_DIR
