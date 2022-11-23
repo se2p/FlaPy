@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 SCRIPT_DIR=$(dirname $0)
 
 source "$SCRIPT_DIR/utils.sh"
@@ -17,9 +19,9 @@ OUT_DIR=$6
 debug_echo "-- $0"
 debug_echo "    Run on:                $RUN_ON"
 debug_echo "    Constraint:            $CONSTRAINT"
-debug_echo "    CSV file:              $INPUT_CSV"
+debug_echo "    Input CSV:             $INPUT_CSV"
 debug_echo "    Plus random runs:      $PLUS_RANDOM_RUNS"
-debug_echo "    CORE args:             $CORE_ARGS"
+debug_echo "    Core args:             $CORE_ARGS"
 debug_echo "    Results parent folder: $OUT_DIR"
 debug_echo "    ----"
 
