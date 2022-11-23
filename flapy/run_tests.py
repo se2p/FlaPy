@@ -341,6 +341,10 @@ class PyTestRunner:
             if self._config.random_order_bucket is not None:
                 command += f"--random-order-bucket={self._config.random_order_bucket} "
 
+            # RANDOM ORDER SEED?
+            if self._config.random_order_seed is not None:
+                command += f"--random-order-seed={self._config.random_order_seed} "
+
             # COVERAGE
             if self._xml_coverage_file is not None:
                 env.add_package_for_installation("pytest-cov==2.8.1")
