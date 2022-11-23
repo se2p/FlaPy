@@ -48,12 +48,15 @@ OPTIONS
 
                 --random-order-seed <seed>
 
-        OUT_DIR is the parent folder of the output results directory.
-            If this option is not provided, the current directory is used
+        -o, --out-dir OUT_DIR
+            OUT_DIR is the parent folder of the newly created results-directory.
+            If this option is not provided, the current directory is used.
 
-    Example (takes ~1h):  ./flapy.sh run locally \"\" flapy_input_example.csv false \"\" example_results
+EXAMPLES
 
-    Example (takes ~30s): ./flapy.sh run locally \"\" flapy_input_example_tiny.csv false \"\" example_results_tiny"
+    Example (takes ~1h):  ./flapy.sh run --plus-random-runs --out-dir example_results flapy_input_example.csv
+
+    Example (takes ~30s): ./flapy.sh run --out-dir example_results_tiny flapy_input_example_tiny.csv"
 
 
     # -- PARSE ARGUMENT
