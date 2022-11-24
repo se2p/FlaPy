@@ -43,7 +43,7 @@ If PYPI_TAG is empty, FlaPy will fall back to searching for requirements in comm
 
 Example (takes ~ 1h):
 ```bash
-#              [OPTIONS...]                                 [INPUT_CSV]
+#              [OPTIONS...]                                 INPUT_CSV
 ./flapy.sh run --out-dir example_results --plus-random-runs flapy_input_example.csv
 ```
 
@@ -72,13 +72,6 @@ Note: the directory specified after `--dir` needs to be accessible from the curr
 
 ## Contributing
 
-### Prerequisites
-
-Before you begin, ensure you have met the following requirements:
-- Python in at least version 3.8.
-- You have installed the latest version of [`poetry`](https://python-poetry.org).
-    - `pip install poetry`
-
 ### Building FlaPy
 
 Clone FlaPy:
@@ -87,6 +80,22 @@ Clone FlaPy:
 git clone https://github.com/se2p/flapy
 cd flapy
 ```
+
+Building the container image:  
+We use containers to run the projects' test suites in an isolated environment.
+
+```bash
+docker build -t my_flapy -f Dockerfile .
+```
+This image can be used together with all existing scripts by changing the `FLAPY_DOCKER_IMAGE` variable in `setup_docker_command.sh` to `localhost/my_flapy`.
+
+
+### Building and running outside docker
+
+Prerequisites
+- Python in at least version 3.8.
+- You have installed the latest version of [`poetry`](https://python-poetry.org).
+    - `pip install poetry`
 
 
 Install FlaPy locally:
@@ -98,63 +107,17 @@ poetry install
 
 Build FlaPy using the `poetry` tool:  
 This command will build two files in the `dist` folder: A `tar.gz` archive and a `whl` Python wheel file.
-The wheel will be used in the next step to install FlaPy inside the container.
 
 ```bash
 poetry build
 ```
 
 
-Building the container image:  
-We use containers to run the projects' test suites in an isolated environment.
-
-```bash
-podman build -t flapy .
-```
-
-
-
-
-
-## Run on Slurm cluster
-
-Exporting the image:  
-We do this, so we can deploy the image on our cluster without building it multiple times.
-
-```bash
-podman save -o flapy_image.tar localhost/flapy
-```
-
-Roll out image to slurm nodes (requires line-separated file `nodes` containing the names of all slurm nodes)
-```bash
-./exec_on_slurm_nodes.sh nodes load_podman_image.sh flapy.tar
-```
-
-Run on cluster
-```bash
-           # RUN_ON  CSV_FILE         PLUS_RANDOM_RUNS  ADDITIONAL_OPTIONS
-./run_csv.sh cluster sample_input.csv true              ""
-```
-
-
-### Clean Slurm nodes
-
-Remove all docker/podman images and containers via
-```bash
-./exec_on_slurm_nodes.sh nodes clean_podman.sh
-```
-
-
-
 ## TODOs
 
-- [ ] Make output deterministic ^^
+- [ ] Use ordered sets or lists in output csv files to always get the same (string-equivalent) output
     * Many columns in passed_failed.csv are sets and their ordering is different from run to run
 
-
-## Contributors
-
-See the contributors list
 
 ## Contact
 
