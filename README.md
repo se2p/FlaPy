@@ -23,13 +23,28 @@ cd flapy/
 FlaPy’s main entry point is the script `flapy.sh`, which offers two commands: `run` and `parse`.
 The FlaPy docker image will be pulled automatically on first usage.
 
+### Preparing the input-csv
+
+Prepare a CSV file with the following columns (example: `flapy_input_example.csv`):
+```
+PROJECT_NAME,PROJECT_URL,PROJECT_HASH,PYPI_TAG,FUNCS_TO_TRACE,TESTS_TO_BE_RUN,NUM_RUNS
+```
+
+Every line in the input file will result in one execution of the container. We call this an *iteration*.
+You can have duplicate lines in this input file to analyze the same project multiple times.
+In fact, we actively use this to detect infrastructure flakiness, which might occur only between iterations, not within.
+PROJECT_NAME, PROJECT_URL and PROJECT_HASH will be used to uniquely identify a project when accumulating results across multiple iterations.
+PROJECT_URL can also be local directory, which will then be copied into the container.
+PYPI_TAG is used to install the project itself via pip before executing its testsuite to fetch it's dependencies.
+If PYPI_TAG is empty, FlaPy will fall back to searching for requirements in common files like requirements.txt
+
 
 ### Run tests locally
 
 Example (takes ~ 1h):
 ```bash
-./flapy.sh run --out-dir example_results\
-  --plus-random-runs flapy_input_example.csv
+#              [OPTIONS...]                                 [INPUT_CSV]
+./flapy.sh run --out-dir example_results --plus-random-runs flapy_input_example.csv
 ```
 
 
@@ -41,7 +56,7 @@ Example (takes ~ 1h):
   --run-on cluster --constraint CONSTRAINT \
   flapy_input_example.csv
 ```
-where `CONSTRAINT` forwarded to `sbatch --constraint`
+where `CONSTRAINT` is forwarded to `sbatch --constraint`
 
 
 ### Analyze results
@@ -52,7 +67,7 @@ where `CONSTRAINT` forwarded to `sbatch --constraint`
   get_tests_overview _df \
   to_csv --index=False example_results_to.csv
 ```
-Note: the directory specified after --dir needs to be accessible from the current working directory since only the current working directory is mounted to the container that is started in the background!!
+Note: the directory specified after `--dir` needs to be accessible from the current working directory since only the current working directory is mounted to the container that is started in the background!!
 
 
 ## Contributing
@@ -98,44 +113,7 @@ podman build -t flapy .
 ```
 
 
-### Run FlaPy
 
-Results will be written to a folder `flapy-results_DATE_TIME`, e.g. `flapy-results_20220315_1215`
-```bash
-           # RUN_ON CONSTRAINT CSV_FILE         PLUS_RANDOM_RUNS  ADDITIONAL_OPTIONS
-./run_csv.sh local  ""         sample_input.csv true              ""
-```
-
-
-### Analyse results
-
-
-Parse the results (replace `flapy-results_DATE_TIME` with the actual name of the directory)
-```bash
-poetry run results_parser ResultsDir --dir=flapy-results_DATE_TIME get_passed_failed to_csv --index=False > passed_failed_sample.csv
-```
-In `passed_failed_sample.csv` you can now find for each iteration and each test case in the project's test suite, which test runs passed, failed, errored, and skip, for both same_order and random_order executions.
-
-To accumulate the results across iterations (group by project and test-case), use:
-```bash
-poetry run results_parser PassedFailed load passed_failed_sample.csv to_tests_overview to_csv --index=False > test_overview_sample.csv
-```
-
-
-## About the input
-
-Prepare a CSV file with the following columns (example: `sample_input.csv`):
-```
-PROJECT_NAME,PROJECT_URL,PROJECT_HASH,PYPI_TAG,FUNCS_TO_TRACE,TESTS_TO_BE_RUN,NUM_RUNS
-```
-
-Every line in the input file will result in one execution of the container. We call this an 'Iteration'.
-You can have duplicate lines in this input file to analyze the same project multiple times.
-In fact, we actively use this to detect infrastructure flakiness, which might occur only between iterations, not within.
-PROJECT_NAME, PROJECT_URL and PROJECT_HASH will be used to uniquely identify a project when accumulating results across multiple iterations.
-PROJECT_URL can also be local directory, which will then be copied into the container.
-PYPI_TAG is used to install the project itself via pip before executing its testsuite to fetch it's dependencies.
-If PYPI_TAG is empty, FlaPy will fall back to searching for requirements in common files like requirements.txt
 
 
 ## Run on Slurm cluster
