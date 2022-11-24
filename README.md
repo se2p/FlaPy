@@ -7,8 +7,53 @@ It is the result of research carried out at the
 at the [University of Passau](https://www.uni-passau.de), Germany.
 
 
-## Build and run FlaPy
+## Using FlaPy
 
+
+### Installation
+
+system requirements: docker (executable without root privileges)
+
+
+Clone the repository to get the helper scripts:
+```bash
+git clone https://github.com/se2p/flapy
+
+cd flapy/
+```
+FlaPy’s main entry point is the script `flapy.sh`, which offers two commands: `run` and `parse`.
+The FlaPy docker image will be pulled automatically on first usage.
+
+
+### Run tests locally
+
+```bash
+./flapy.sh run --out-dir example_results\
+  --plus-random-runs flapy_input_example.csv
+```
+
+
+### Run tests on SLURM cluster
+
+```bash
+./flapy.sh run --out-dir example_results \
+  --plus-random-runs \
+  --run-on cluster --constraint CONSTRAINT \
+  flapy_input_example.csv
+```
+
+### Analyze results
+
+```bash
+./flapy.sh parse ResultsDirCollection \
+  --dir example_results \
+  get_tests_overview _df \
+  to_csv --index=False example_results_to.csv
+```
+Note: the directory specified after --dir needs to be accessible from the current working directory since only the current working directory is mounted to the container that is started in the background!!
+
+
+## Contributing
 
 ### Prerequisites
 
@@ -16,10 +61,6 @@ Before you begin, ensure you have met the following requirements:
 - Python in at least version 3.8.
 - You have installed the latest version of [`poetry`](https://python-poetry.org).
     - `pip install poetry`
-- You have [`podman`](https://podman.io/) installed
-    - podman is an alternative to docker, which can run rootless containers natively
-    - you can use docker instead, but you might have to adjust some scripts, especially `run_container.sh`
-
 
 ### Building FlaPy
 
