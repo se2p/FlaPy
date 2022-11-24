@@ -12,8 +12,7 @@ at the [University of Passau](https://www.uni-passau.de), Germany.
 
 ### Installation
 
-system requirements: docker (executable without root privileges)
-
+System requirements: `docker` (executable without root privileges)
 
 Clone the repository to get the helper scripts:
 ```bash
@@ -27,6 +26,7 @@ The FlaPy docker image will be pulled automatically on first usage.
 
 ### Run tests locally
 
+Example (takes ~ 1h):
 ```bash
 ./flapy.sh run --out-dir example_results\
   --plus-random-runs flapy_input_example.csv
@@ -41,6 +41,8 @@ The FlaPy docker image will be pulled automatically on first usage.
   --run-on cluster --constraint CONSTRAINT \
   flapy_input_example.csv
 ```
+where `CONSTRAINT` forwarded to `sbatch --constraint`
+
 
 ### Analyze results
 
