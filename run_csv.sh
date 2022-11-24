@@ -22,12 +22,12 @@ debug_echo "    Constraint:            $CONSTRAINT"
 debug_echo "    Input CSV:             $INPUT_CSV"
 debug_echo "    Plus random runs:      $PLUS_RANDOM_RUNS"
 debug_echo "    Core args:             $CORE_ARGS"
-debug_echo "    Results parent folder: $OUT_DIR"
+debug_echo "    Out-dir:               $OUT_DIR"
 debug_echo "    ----"
 
 # -- INPUT PRE-PROCESSING
 INPUT_CSV_LENGTH=$(wc -l < "$INPUT_CSV")
-debug_echo "    input csv length:      $INPUT_CSV_LENGTH"
+debug_echo "    input-csv length:      $INPUT_CSV_LENGTH"
 
 # -- CREATE RESULTS_DIR
 if [ -z "${OUT_DIR}" ]; then
@@ -52,6 +52,7 @@ FLAPY_META_FILE="$FLAPY_META_FOLDER/flapy_run.yaml"
     echo "input_csv:              \"$INPUT_CSV\""
     echo "plus_random_runs:       \"$PLUS_RANDOM_RUNS\""
     echo "core_args:              \"$CORE_ARGS\""
+    echo "out_dir:                \"$OUT_DIR\""
     echo "input_csv_length:       $INPUT_CSV_LENGTH"
 } >> "$FLAPY_META_FILE"
 
