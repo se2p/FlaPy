@@ -32,7 +32,7 @@ OPTIONS
 
         -r, --run-on RUN_ON
             RUN_ON must be either 'locally' or 'cluster'
-            if this option is not specified, TARGET defaults to 'locally'
+            if this option is not specified, RUN_ON defaults to 'locally'
 
         -c, --constraint CONSTRAINT
             CONSTRAINT is the \`sbatch --constraint\` in case RUN_ON == 'cluster'
