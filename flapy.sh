@@ -24,9 +24,9 @@ if [ "$COMMAND" == "run" ]; then
 
     HELP_MESSAGE="Usage: ./flapy.sh run [OPTION...] INPUT_CSV
 
-        INPUT_CSV
-            is the input-csv file must have the following columns in the following order:
-            PROJECT_NAME, PROJECT_URL, PROJECT_HASH, PYPI_TAG, FUNCS_TO_TRACE, TESTS_TO_RUN, NUM_RUNS
+INPUT_CSV
+    The input-csv file must have the following columns in the following order:
+    PROJECT_NAME, PROJECT_URL, PROJECT_HASH, PYPI_TAG, FUNCS_TO_TRACE, TESTS_TO_RUN, NUM_RUNS
 
 OPTIONS
 
@@ -43,7 +43,7 @@ OPTIONS
 
         -a, --core-args CORE_ARGS
             Used for extensions to the core test execution process.
-            Must always be one string, even if multiple options are specified, e.g. \"--foo --bar\"
+            Must always be one string, even if multiple options are specified, e.g. \"--foo --bar\".
             Currently available options:
 
                 --random-order-seed <seed>
