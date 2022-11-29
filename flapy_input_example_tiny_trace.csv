@@ -1,0 +1,2 @@
+PROJECT_NAME,PROJECT_URL,PROJECT_HASH,PYPI_TAG,FUNCS_TO_TRACE,TESTS_TO_RUN,NUM_RUNS
+flapy_example,./minimal_flaky_python_tests,,,test_flaky.py::test_network_remote_connection_failure test_flaky.py::test_concurrency,test_flaky.py,1
