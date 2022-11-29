@@ -23,6 +23,7 @@ cd flapy/
 FlaPy’s main entry point is the script `flapy.sh`, which offers two commands: `run` and `parse`.
 The FlaPy docker image will be pulled automatically on first usage.
 
+
 ### Preparing the input-csv
 
 Prepare a CSV file with the following columns (example: `flapy_input_example.csv`):
@@ -47,6 +48,11 @@ Example (takes ~ 1h):
 ./flapy.sh run --out-dir example_results --plus-random-runs flapy_input_example.csv
 ```
 
+Example (takes ~30s):
+```bash
+./flapy.sh run --out-dir example_results flapy_input_example_tiny.csv
+```
+
 
 ### Run tests on SLURM cluster
 
@@ -68,6 +74,36 @@ where `CONSTRAINT` is forwarded to `sbatch --constraint`
   to_csv --index=False example_results_to.csv
 ```
 Note: the directory specified after `--dir` needs to be accessible from the current working directory since only the current working directory is mounted to the container that is started in the background!!
+
+
+### Tracing
+
+FlaPy offers an option to trace the execution of a function, i.e., to log all function and method calls made in the course of its execution.
+The functions that shall be traced must be specified as a space separated list in the fifth column of the input-csv.
+For example `test_flaky.py::test_network_remote_connection_failure test_flaky.py::test_concurrency` in [flapy_input_example_tiny_trace.csv](flapy_input_example_tiny_trace.csv).
+
+Example (takes ~30s):
+```bash
+./flapy.sh run --out-dir example_results flapy_input_example_tiny_trace.csv
+```
+
+Within the resulting results.tar.xz archive, we can now find two extra files:
+```
+workdir/sameOrder/tmp/flapy_example_trace0test_flaky.py._('test_flaky.py', 'test_concurrency').txt
+workdir/sameOrder/tmp/flapy_example_trace0test_flaky.py._('test_flaky.py', 'test_network_remote_connection_failure').txt
+```
+containing the traces:
+```
+--> ('test_flaky', '', 'test_network_remote_connection_failure')
+----> ('requests.api', '', 'get')
+------> ('requests.api', '', 'request')
+--------> ('requests.sessions', 'Session', '__init__')
+----------> ('requests.utils', '', 'default_headers')
+------------> ('requests.utils', '', 'default_user_agent')
+<------------ ('requests.utils', '', 'default_user_agent')
+------------> ('requests.structures', 'CaseInsensitiveDict', '__init__')
+...
+```
 
 
 ## Contributing
