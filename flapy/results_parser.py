@@ -1121,6 +1121,28 @@ class IterationCollection(ABC):
             self.tests_overview = TestsOverview(to)
         return self.tests_overview
 
+    def get_junit_data(
+        self,
+        *,  # After this star, there must only be parameters with default values. Needed for fire.
+        include_project_columns=True,
+        read_cache=True,
+        write_cache=True,
+        return_nothing=False,
+    ) -> pd.DataFrame:
+        with multiprocessing.Pool() as pool:
+            return pd.concat(
+                pool.map(
+                    partial(
+                        Iteration.get_junit_data,
+                        include_project_columns=include_project_columns,
+                        read_cache=read_cache,
+                        write_cache=write_cache,
+                        return_nothing=return_nothing,
+                    ),
+                    self.get_iterations(),
+                )
+            )
+
 
 class ResultsDir(IterationCollection):
     """
@@ -1151,28 +1173,6 @@ class ResultsDir(IterationCollection):
     def clear_junit_data_cache(self):
         for dir in self.get_iterations():
             dir.clear_junit_data_cache()
-
-    def get_junit_data(
-        self,
-        *,  # After this star, there must only be parameters with default values. Needed for fire.
-        include_project_columns=True,
-        read_cache=True,
-        write_cache=True,
-        return_nothing=False,
-    ) -> pd.DataFrame:
-        with multiprocessing.Pool() as pool:
-            return pd.concat(
-                pool.map(
-                    partial(
-                        Iteration.get_junit_data,
-                        include_project_columns=include_project_columns,
-                        read_cache=read_cache,
-                        write_cache=write_cache,
-                        return_nothing=return_nothing,
-                    ),
-                    self.get_iterations(),
-                )
-            )
 
     def get_passed_failed(
         self,
