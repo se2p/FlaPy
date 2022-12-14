@@ -111,14 +111,20 @@ def read_junit_testcase(test_case: junitparser.TestCase) -> Dict[str, Union[str,
             else "NO MESSAGE"
         ),
         "errors_in_stacktrace": (
-            re.findall(r"(.*(?:error|exception).*)", test_case.result._elem.text, flags=re.IGNORECASE)
-            if test_case.result is not None and test_case.result._elem is not None
-            else []
+            re.findall(
+                r"(.*(?:error|exception).*)", test_case.result._elem.text, flags=re.IGNORECASE
+            )
+            if (
+                test_case.result is not None and
+                test_case.result._elem is not None and
+                test_case.result._elem.text is not None
+            )
+            else None
         ),
         "errors_in_system_err": (
             re.findall(r"(.*(?:error|exception).*)", test_case.system_err, flags=re.IGNORECASE)
             if test_case.system_err is not None
-            else []
+            else None
         ),
         "type": (
             test_case.result.type if test_case.result is not None else ""
