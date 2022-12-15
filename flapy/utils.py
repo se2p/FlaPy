@@ -1,5 +1,6 @@
 """ Provides helper functions """
 import sys
+import logging
 from typing import Callable, Type, TypeVar, Any, Union
 
 
@@ -11,6 +12,7 @@ def try_default(
     function: Callable[[], T],
     exception: Type[BaseException],
     error_return_val: Union[U, Callable[[Type[BaseException]], U]],
+    log_error_info = None,
     finally_: Callable[[], Any] = None,
 ) -> Union[T, U]:
     """ Helper function. Try-except is not allowed in lambdas.
@@ -26,6 +28,8 @@ def try_default(
         else:
             return function()
     except exception as e:
+        if log_error_info is not None:
+            logging.error(f"{log_error_info} | {type(e).__name__}: {e}")
         if callable(error_return_val):
             return error_return_value(e)
         elif isinstance(error_return_val, str) and error_return_val == "ERROR_MESSAGE":

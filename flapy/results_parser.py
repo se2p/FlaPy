@@ -789,7 +789,7 @@ class Iteration:
         if write_cache and not did_read_cache and len(junit_data) > 0:
             junit_data.to_csv(self._junit_cache_file, index=False)
         if include_project_columns:
-            junit_data.insert(0, "Project_Hash", self.get_project_git_hash())
+            junit_data.insert(0, "Project_Hash", try_default(lambda: self.get_project_git_hash(), Exception, "error"))
             junit_data.insert(0, "Project_URL", self.get_project_url())
             junit_data.insert(0, "Project_Name", self.get_project_name())
             junit_data.insert(0, "Iteration", self.p.name)
