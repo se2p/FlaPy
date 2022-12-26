@@ -11,4 +11,8 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this project.  If not, see <https://www.gnu.org/licenses>.
 """Detects flaky tests within a project by repeatedly execution its testsuite"""
+
+from . import results_parser
+from . import run_tests
+
 __version__ = "0.2.0"
