@@ -29,7 +29,7 @@ def try_default(
             return function()
     except exception as e:
         if log_error_info is not None:
-            logging.error(f"{log_error_info} | {type(e).__name__}: {e}")
+            logging.error(f"{type(e).__name__}: {e} | {log_error_info}")
         if callable(error_return_val):
             return error_return_value(e)
         elif isinstance(error_return_val, str) and error_return_val == "ERROR_MESSAGE":
