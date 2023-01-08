@@ -525,14 +525,14 @@ class CoverageXmlFile(MyFileWrapper):
 class CoverageXmlFileSameOrder(CoverageXmlFile):
     @classmethod
     def get_regex(cls, project_name: str):
-        # deterministic was the legacy name sameOrder
+        # 'deterministic' was the legacy name sameOrder
         return rf".*/(?:deterministic|sameOrder)/tmp/{project_name}_coverage(\d+)(.*)\.xml"
 
 
 class CoverageXmlFileRandomOrder(CoverageXmlFile):
     @classmethod
     def get_regex(cls, project_name: str):
-        # non-deterministic was the legacy name randomOrder
+        # 'non-deterministic' was the legacy name randomOrder
         return rf".*/(?:non-deterministic|randomOrder)/tmp/{project_name}_coverage(\d+)(.*)\.xml"
 
 
@@ -621,14 +621,14 @@ class JunitXmlFile(MyFileWrapper):
 class JunitXmlFileSameOrder(JunitXmlFile):
     @classmethod
     def get_regex(cls, project_name: str):
-        # deterministic was the legacy name sameOrder
+        # 'deterministic' was the legacy name sameOrder
         return rf".*/(?:deterministic|sameOrder)/tmp/{project_name}_output(\d+)(.*)\.xml"
 
 
 class JunitXmlFileRandomOrder(JunitXmlFile):
     @classmethod
     def get_regex(cls, project_name: str):
-        # non-deterministic was the legacy name randomOrder
+        # 'non-deterministic' was the legacy name randomOrder
         return rf".*/(?:non-deterministic|randomOrder)/tmp/{project_name}_output(\d+)(.*)\.xml"
 
 
