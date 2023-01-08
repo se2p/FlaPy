@@ -753,6 +753,25 @@ class Iteration:
                 return file.read().replace("\n", "")
         return "COULD_NOT_GET_FLAKYANALYSIS_GIT_HASH"
 
+    def get_status_and_info(self):
+        """Critical information such as the project-name, -url, or -hash might not be present (e.g. due to aborted jobs) and raise exceptions when try to be accessed. This method offers a save way to retrieve these information, returning them in a dictionary with a 'iteration_status' field indicating if something went wrong.
+        """
+        try:
+            return {
+                "Iteration": self,
+                "Iteration_status": "ok",
+                "Iteration_error": None,
+                "Project_Name": self.get_project_name(),
+                "Project_URL": self.get_project_url(),
+                "Project_Hash": self.get_project_git_hash(),
+            }
+        except Exception as e:
+            return {
+                "Iteration": self,
+                "Iteration_status": "error",
+                "Iteration_error": f"{type(e).__name__}: {e}",
+            }
+
     def clear_results_cache(self):
         for file_ in self._results_cache.iterdir():
             file_.unlink()
@@ -1078,19 +1097,19 @@ class IterationCollection(ABC):
         pass
 
     @lru_cache()
-    def get_iterations_overview(self) -> pd.DataFrame:
+    def get_iterations_overview(self, filter_out_errors=False) -> pd.DataFrame:
         iterations_overview = (
-            pd.DataFrame(
-                [
-                    (it, it.get_project_name(), it.get_project_url(), it.get_project_git_hash(),)
-                    for it in self.get_iterations()
-                ],
-                columns=["Iteration", "Project_Name", "Project_URL", "Project_Hash"],
-            )
+            pd.DataFrame([
+                it.get_status_and_info()
+                for it in self.get_iterations()
+            ])
             .set_index(["Project_Name", "Project_URL", "Project_Hash"])
             .sort_index()
         )
-        return iterations_overview
+        if filter_out_errors:
+            return iterations_overview[iterations_overview["Iteration_status"] == "ok"]
+        else:
+            return iterations_overview
 
     def get_iterations_meta_overview(self):
         """
