@@ -116,3 +116,4 @@ output_from_exec_on_slurm_node/
 /flapy-results*
 dataset*
 to*
+test_output/run_tests
