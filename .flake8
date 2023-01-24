@@ -2,7 +2,7 @@
 ignore = E203, E266, E501, W503
 show-source = true
 enable-extensions = G
-max-line-length = 88
+max-line-length = 100
 max-complexity = 18
 select = B,C,E,F,W,T4,B9
 exclude = my_garlicsim_py3,flaky_analysis/pickle_fallback.py,flaky_analysis/pickle_tools.py
