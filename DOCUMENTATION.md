@@ -1,27 +1,3 @@
-# run_container.sh
-
-Run the image:
-
-```bash
-mkdir -p ~/flapy-results-tryout/sample_123
-
-podman run \
-    -it \
-    -v ~/flapy-results-tryout/sample_123:/results localhost/flapy \
-  # PROJECT_NAME   PROJECT_URL                                                 PROJECT_HASH  FUNCS_TO_TRACE  TESTS_TO_BE_RUN  NUM_RUNS  PLUS_RANDOM_RUNS
-    sample_project "./minimal_flaky_python_tests" 4865a6a       ""              ""               2         true
-```
-
-Parameters:
-* PROJECT_NAME: name of the project you want to analyze (can be anything, just for convenience)
-* PROJECT_URL: URL leading to your project. Will be used to clone the project via git.
-* PROJECT_HASH: the git hash of the commit you want to analyze.
-* FUNCS_TO_TRACE: deprecated, leave empty
-* TESTS_TO_BE_RUN: deprecated, leave empty
-* NUM_RUNS: number of times you would like to execute the test suite of the project
-* PLUS_RANDOM_RUNS: would you like to additionally executed the test suite in randomly shuffled order? (also NUM_RUNS times) value: true / false
-
-
 # clone_and_run_tests.sh
 
 `clone_and_run_tests.sh` builds up the following structure for a Project "PROJ"
@@ -52,15 +28,20 @@ Parameters:
 # * = packaged in an archive called "results.tar.xz" and copied over to ITERATION_RESULTS_DIR
 ```
 
-# Structure of new scripts
+# Structure of scripts
 
-`run_csv.sh`
-* for line in csv: (or via array_job)
-    `run_line.sh`
-        `run_container.sh` (local or on cluster)
-        * podman run flapy
-            `clone_and_run_tests.sh`
-            * clone repo
-            * log further infos
-            * run `run_tests.py`
+`flapy.sh run`
+    `run_csv.sh` (run_on, constraint, input_csv, plus_random_runs, core_args, out_dir)
+    * for line in csv (or via array_job):
+        `run_line.sh`
+            `run_container.sh`
+            * podman run flapy
+                `clone_and_run_tests.sh`
+                * clone repo
+                * log further infos
+                * run `run_tests.py`
+
+`flapy.sh parse`
+    `results_parser.sh`
+    * run flapy docker image with mounted CWD
 

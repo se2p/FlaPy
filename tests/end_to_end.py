@@ -32,7 +32,7 @@ def test_end_to_end():
     logging.info("RUNNING TESTS")
     cmd = (
         "./flapy.sh run "
-        f"--out-dir {out_dir} --plus-random-runs "
+        f"--num-runs 1 --out-dir {out_dir} --plus-random-runs "
         "flapy_input_example_tiny.csv"
     )
     process = subprocess.Popen(

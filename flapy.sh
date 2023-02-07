@@ -25,10 +25,15 @@ if [ "$COMMAND" == "run" ]; then
     HELP_MESSAGE="Usage: ./flapy.sh run [OPTION...] INPUT_CSV
 
 INPUT_CSV
+
     The input-csv file must have the following columns in the following order:
-    PROJECT_NAME, PROJECT_URL, PROJECT_HASH, PYPI_TAG, FUNCS_TO_TRACE, TESTS_TO_RUN, NUM_RUNS
+    PROJECT_NAME, PROJECT_URL, PROJECT_HASH, PYPI_TAG, FUNCS_TO_TRACE, TESTS_TO_RUN
+
 
 OPTIONS
+
+        -n, --num-runs NUM_RUNS  (mandatory)
+            Number of times the test suites should be executed
 
         -r, --run-on RUN_ON
             RUN_ON must be either 'locally' or 'cluster'
@@ -52,22 +57,27 @@ OPTIONS
             OUT_DIR is the parent folder of the newly created results-directory.
             If this option is not provided, the current directory is used.
 
+
 EXAMPLES
 
-    Example (takes ~1h):  ./flapy.sh run --plus-random-runs --out-dir example_results flapy_input_example.csv
+    Example (takes ~1h):  ./flapy.sh run --num-runs 5 --plus-random-runs --out-dir example_results flapy_input_example.csv
 
-    Example (takes ~30s): ./flapy.sh run --out-dir example_results_tiny flapy_input_example_tiny.csv"
+    Example (takes ~30s): ./flapy.sh run --num-runs 1 --out-dir example_results_tiny flapy_input_example_tiny.csv"
 
 
     # -- PARSE ARGUMENT
-    SHORT=r:,p,c:,a:,o:
-    LONG=run-on:,plus-random-runs,constraint:,core-args:,out-dir:
+    SHORT=n:,r:,p,c:,a:,o:
+    LONG=num-runs:,run-on:,plus-random-runs,constraint:,core-args:,out-dir:
     OPTS=$(getopt --name "flapy.sh run" --options $SHORT --longoptions $LONG -- "${@:2}")
     #
     eval set -- "$OPTS"
     while :
     do
         case "$1" in
+            -n | --num-runs )
+                NUM_RUNS="$2"
+                shift 2
+                ;;
             -r | --run-on )
                 RUN_ON="$2"
                 shift 2
@@ -106,12 +116,18 @@ EXAMPLES
         debug_echo "$HELP_MESSAGE"
         exit 1
     fi
+    if [ -z $NUM_RUNS ]; then
+        debug_echo "ERROR: --num-runs not specified -> exiting"
+        debug_echo
+        debug_echo "$HELP_MESSAGE"
+        exit 1
+    fi
     if [ -z $RUN_ON ]; then
         RUN_ON="locally"
         debug_echo "--run-on not specified -> defaulting to 'locally'"
     fi
 
-    "$SCRIPT_DIR/run_csv.sh" "$RUN_ON" "$CONSTRAINT" "$INPUT_CSV" "$PLUS_RANDOM_RUNS" "$CORE_ARGS" "$OUT_DIR"
+    "$SCRIPT_DIR/run_csv.sh" "$RUN_ON" "$CONSTRAINT" "$INPUT_CSV" "$PLUS_RANDOM_RUNS" "$NUM_RUNS" "$CORE_ARGS" "$OUT_DIR"
 
 elif [ "$COMMAND" == "parse" ]; then
     $SCRIPT_DIR/results_parser.sh $ARGS
