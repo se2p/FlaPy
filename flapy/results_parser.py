@@ -1000,6 +1000,16 @@ class Iteration:
             coverage_overview["LineCoverage"] = -1
         return coverage_overview
 
+    def get_meta_overview(self) -> Dict:
+        """Collect meta informations (e.g. runtime) of iteration
+        :returns: TODO
+
+        """
+        return {
+            "Iteration": self.p,
+            **self.meta_info,
+        }
+
     def get_files(self, type_: Type[T1]) -> List[T1]:
         if self.has_archive():
             return [
@@ -1167,6 +1177,10 @@ class IterationCollection(ABC):
                     self.get_iterations(),
                 )
             )
+
+    def get_meta_overview(self) -> pd.DataFrame:
+        result = pd.DataFrame([it.get_meta_overview() for it in self.get_iterations()])
+        return result
 
 
 class ResultsDir(IterationCollection):
