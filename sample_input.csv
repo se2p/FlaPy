@@ -1,3 +1,0 @@
-PROJECT_NAME,PROJECT_URL,PROJECT_HASH,PYPI_TAG,FUNCS_TO_TRACE,TESTS_TO_BE_RUN,NUM_RUNS
-flapy_example,./minimal_flaky_python_tests,,,,test_flaky.py,5
-flapy_example,./minimal_flaky_python_tests,,,,test_flaky.py,5
