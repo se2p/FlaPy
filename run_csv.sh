@@ -48,6 +48,7 @@ cp "${INPUT_CSV}" "${FLAPY_META_FOLDER}/input.csv"
 # -- LOG META INFOS
 FLAPY_META_FILE="$FLAPY_META_FOLDER/flapy_run.yaml"
 {
+    echo "num_runs:               $NUM_RUNS"
     echo "run_on:                 \"$RUN_ON\""
     echo "constraint:             \"$CONSTRAINT\""
     echo "input_csv:              \"$INPUT_CSV\""
