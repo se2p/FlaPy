@@ -22,7 +22,7 @@ if [ "$COMMAND" == "run" ]; then
     # problem: arguments get expanded, specifically the additional arguments -> I have to escape
     # them again
 
-    HELP_MESSAGE="Usage: ./flapy.sh run [OPTION...] INPUT_CSV
+    HELP_MESSAGE="Usage: ./flapy.sh run [OPTION]... INPUT_CSV NUM_RUNS
 
 INPUT_CSV
 
@@ -30,10 +30,12 @@ INPUT_CSV
     PROJECT_NAME, PROJECT_URL, PROJECT_HASH, PYPI_TAG, FUNCS_TO_TRACE, TESTS_TO_RUN
 
 
-OPTIONS
+NUM_RUNS
 
-        -n, --num-runs NUM_RUNS  (mandatory)
-            Number of times the test suites should be executed
+    Number of times the test suites should be executed.
+
+
+OPTIONS
 
         -r, --run-on RUN_ON
             RUN_ON must be either 'locally' or 'cluster'
@@ -60,24 +62,20 @@ OPTIONS
 
 EXAMPLES
 
-    Example (takes ~1h):  ./flapy.sh run --num-runs 5 --plus-random-runs --out-dir example_results flapy_input_example.csv
+    Example (takes ~1h):  ./flapy.sh run --plus-random-runs --out-dir example_results flapy_input_example.csv 5
 
-    Example (takes ~30s): ./flapy.sh run --num-runs 1 --out-dir example_results_tiny flapy_input_example_tiny.csv"
+    Example (takes ~30s): ./flapy.sh run --out-dir example_results_tiny flapy_input_example_tiny.csv 1"
 
 
     # -- PARSE ARGUMENT
-    SHORT=n:,r:,p,c:,a:,o:
-    LONG=num-runs:,run-on:,plus-random-runs,constraint:,core-args:,out-dir:
+    SHORT=r:,p,c:,a:,o:
+    LONG=run-on:,plus-random-runs,constraint:,core-args:,out-dir:
     OPTS=$(getopt --name "flapy.sh run" --options $SHORT --longoptions $LONG -- "${@:2}")
     #
     eval set -- "$OPTS"
     while :
     do
         case "$1" in
-            -n | --num-runs )
-                NUM_RUNS="$2"
-                shift 2
-                ;;
             -r | --run-on )
                 RUN_ON="$2"
                 shift 2
@@ -101,6 +99,8 @@ EXAMPLES
             --)
                 INPUT_CSV="$2"
                 shift;
+                NUM_RUNS="$2"
+                shift;
                 break
                 ;;
             *)
@@ -117,7 +117,7 @@ EXAMPLES
         exit 1
     fi
     if [ -z $NUM_RUNS ]; then
-        debug_echo "ERROR: --num-runs not specified -> exiting"
+        debug_echo "ERROR: NUM_RUNS not specified -> exiting"
         debug_echo
         debug_echo "$HELP_MESSAGE"
         exit 1

@@ -18,6 +18,7 @@ OUT_DIR=$7
 
 # -- DEBUG OUTPUT
 debug_echo "-- $0"
+debug_echo "    Num runs:              $NUM_RUNS"
 debug_echo "    Run on:                $RUN_ON"
 debug_echo "    Constraint:            $CONSTRAINT"
 debug_echo "    Input CSV:             $INPUT_CSV"
