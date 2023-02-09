@@ -42,6 +42,7 @@ junitparser = "^1.6.3"
 Jinja2 = "^3.0.3"
 PyYAML = "^6.0"
 tqdm = "^4.64.0"
+bs4 = "^0.0.1"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^3.7"
@@ -54,10 +55,9 @@ ipython = "^8.0.1"
 
 [tool.poetry.scripts]
 flapy_run_tests = "flapy.run_tests:main"
-pytest_trace = "flapy.pytest_trace:main"
-pypidata = "flapy.pypi_data:main"
 results_parser = "flapy.results_parser:main"
-fetch_test_code = "flapy.fetch_test_code:main"
+pytest_trace = "flapy.pytest_trace:main"
+mine_pypi_projects = "flapy.mine_pypi_projects:main"
 
 [tool.black]
 line-length = 100

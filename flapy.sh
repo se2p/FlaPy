@@ -130,7 +130,19 @@ EXAMPLES
     "$SCRIPT_DIR/run_csv.sh" "$RUN_ON" "$CONSTRAINT" "$INPUT_CSV" "$PLUS_RANDOM_RUNS" "$NUM_RUNS" "$CORE_ARGS" "$OUT_DIR"
 
 elif [ "$COMMAND" == "parse" ]; then
-    $SCRIPT_DIR/results_parser.sh $ARGS
+    export DEBUG=0
+    debug_echo "-- Prepare for docker command"
+    source "$SCRIPT_DIR/prepare_for_docker_command.sh" || exit
+    flapy_docker_command run --rm -i --entrypoint=results_parser \
+        -v "$(pwd)":/mounted_cwd --workdir /mounted_cwd \
+        $FLAPY_DOCKER_IMAGE $ARGS
+elif [ "$COMMAND" == "parse" ]; then
+    export DEBUG=0
+    debug_echo "-- Prepare for docker command"
+    source "$SCRIPT_DIR/prepare_for_docker_command.sh" || exit
+    flapy_docker_command run --rm -i --entrypoint=mine_pypi_projects \
+        -v "$(pwd)":/mounted_cwd --workdir /mounted_cwd \
+        $FLAPY_DOCKER_IMAGE "$ARGS"
 else
     debug_echo "Unknown command '$COMMAND'"
     debug_echo "available commands: 'run', 'parse'"

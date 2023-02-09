@@ -33,7 +33,7 @@ function sighdl {
 csv_line=$(sed "${LINE_NUM}q;d" "${FLAPY_INPUT_CSV_FILE}")
 
 # -- PARSE CSV LINE
-IFS=, read -r PROJECT_NAME PROJECT_URL PROJECT_HASH PYPI_TAG FUNCS_TO_TRACE TESTS_TO_BE_RUN <<< "${csv_line}"
+IFS=, read -r PROJECT_NAME PROJECT_URL PROJECT_HASH PYPI_TAG FUNCS_TO_TRACE TESTS_TO_BE_RUN IGNORED <<< "${csv_line}"
 
 # -- DEBUG OUTPUT
 debug_echo "    ----"

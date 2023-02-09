@@ -10,9 +10,9 @@ U = TypeVar("U")
 
 def try_default(
     function: Callable[[], T],
-    exception: Type[BaseException],
-    error_return_val: Union[U, Callable[[Type[BaseException]], U]],
-    log_error_info = None,
+    exception: Type[BaseException] = Exception,
+    error_return_val: Union[U, Callable[[Type[BaseException]], U]] = None,
+    log_error_info=None,
     finally_: Callable[[], Any] = None,
 ) -> Union[T, U]:
     """ Helper function. Try-except is not allowed in lambdas.
@@ -31,7 +31,7 @@ def try_default(
         if log_error_info is not None:
             logging.error(f"{type(e).__name__}: {e} | {log_error_info}")
         if callable(error_return_val):
-            return error_return_value(e)
+            return error_return_val(e)
         elif isinstance(error_return_val, str) and error_return_val == "ERROR_MESSAGE":
             return f"{type(e).__name__}: {e}"
         elif isinstance(error_return_val, str) and error_return_val == "ERROR_MESSAGE_TUPLE":
