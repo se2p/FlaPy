@@ -6,7 +6,7 @@ source "$SCRIPT_DIR/utils.sh"
 
 HELP_MESSAGE="Usage: $0 COMMAND ARGS
 
-available commands: 'run', 'parse'"
+available commands: 'run', 'parse', 'mine', 'fetch-all-pypi-projects'"
 
 # -- CHECK NUMBER OF ARGUMENTS
 if [[ "$#" -lt 1 ]]; then
@@ -130,19 +130,26 @@ EXAMPLES
     "$SCRIPT_DIR/run_csv.sh" "$RUN_ON" "$CONSTRAINT" "$INPUT_CSV" "$PLUS_RANDOM_RUNS" "$NUM_RUNS" "$CORE_ARGS" "$OUT_DIR"
 
 elif [ "$COMMAND" == "parse" ]; then
-    export DEBUG=0
+    export DEBUG=0;
     debug_echo "-- Prepare for docker command"
     source "$SCRIPT_DIR/prepare_for_docker_command.sh" || exit
     flapy_docker_command run --rm -i --entrypoint=results_parser \
         -v "$(pwd)":/mounted_cwd --workdir /mounted_cwd \
         $FLAPY_DOCKER_IMAGE $ARGS
-elif [ "$COMMAND" == "parse" ]; then
+elif [ "$COMMAND" == "mine" ]; then
     export DEBUG=0
     debug_echo "-- Prepare for docker command"
     source "$SCRIPT_DIR/prepare_for_docker_command.sh" || exit
     flapy_docker_command run --rm -i --entrypoint=mine_pypi_projects \
         -v "$(pwd)":/mounted_cwd --workdir /mounted_cwd \
-        $FLAPY_DOCKER_IMAGE "$ARGS"
+        $FLAPY_DOCKER_IMAGE $ARGS
+elif [ "$COMMAND" == "fetch-all-pypi-projects" ]; then
+    export DEBUG=0
+    debug_echo "-- Prepare for docker command"
+    source "$SCRIPT_DIR/prepare_for_docker_command.sh" || exit
+    flapy_docker_command run --rm -i --entrypoint=mine_pypi_projects \
+        -v "$(pwd)":/mounted_cwd --workdir /mounted_cwd \
+        $FLAPY_DOCKER_IMAGE $ARGS
 else
     debug_echo "Unknown command '$COMMAND'"
     debug_echo "available commands: 'run', 'parse'"

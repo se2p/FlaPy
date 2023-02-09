@@ -140,14 +140,14 @@ def mine(
     sample_size: int = None,
     random_seed: int = None,
     project_list_file=None,
-    redirect_github_urls=True,
-    remove_duplicates=True,
-    remove_no_github_url_found=False
-) -> pd.DataFrame:
+    redirect_github_urls: bool = True,
+    remove_duplicates: bool = True,
+    remove_no_github_url_found: bool = True
+) -> str:
     """
 
     :sample_size: randomly sample `sample_size` number of projects
-    :returns: TODO
+    :returns: CSV-like table that can be used as flapy input
 
     """
 
@@ -226,13 +226,23 @@ def mine(
 
     # 9. Remove cases where no Github URL was found
     if remove_no_github_url_found:
+        num_no_github_url_found = sum(project_details["Github_URL"].isna())
+        logging.info(f"Dropped {num_no_github_url_found} projects where no GitHub URL was found")
         project_details = project_details[~project_details["Github_URL"].isna()]
 
-    return project_details
+    return project_details.to_csv(index=False)
+
+
+def fetch_all_pypi_projects_cli():
+    fire.Fire(fetch_all_pypi_projects)
+
+
+def mine_cli():
+    fire.Fire(mine)
 
 
 def main() -> None:
-    fire.Fire()
+    fire.Fire(mine)
 
 
 if __name__ == "__main__":
