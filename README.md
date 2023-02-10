@@ -69,11 +69,11 @@ where `CONSTRAINT` is forwarded to `sbatch --constraint`
 
 ```bash
 ./flapy.sh parse ResultsDirCollection \
-  --dir example_results \
+  --path example_results \
   get_tests_overview _df \
   to_csv --index=False example_results_to.csv
 ```
-Note: the directory specified after `--dir` needs to be accessible from the current working directory since only the current working directory is mounted to the container that is started in the background!!
+Note: the directory specified after `--path` needs to be accessible from the current working directory since only the current working directory is mounted to the container that is started in the background!!
 
 
 ### Tracing

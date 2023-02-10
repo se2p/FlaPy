@@ -677,8 +677,8 @@ class Iteration:
     archive_name = "results.tar.xz"
     meta_file_name = "flapy-iteration-result.yaml"
 
-    def __init__(self, dir: Union[str, Path]):
-        self.p = Path(dir)
+    def __init__(self, path: Union[str, Path]):
+        self.p = Path(path)
         assert Iteration.is_iteration(self.p), "This does not seem like an iteration directory"
         self._archive: Optional[tarfile.TarFile] = None
 
@@ -1189,8 +1189,8 @@ class ResultsDir(IterationCollection):
     Example: flapy-results_20200101_1430
     """
 
-    def __init__(self, dir: Union[str, Path]):
-        self.p = Path(dir)
+    def __init__(self, path: Union[str, Path]):
+        self.p = Path(path)
         assert self.p.is_dir(), f"Directory {self.p} does not exist"
 
         # Setup cache
@@ -1206,12 +1206,12 @@ class ResultsDir(IterationCollection):
         return iterations
 
     def clear_results_cache(self):
-        for dir in self.get_iterations():
-            dir.clear_results_cache()
+        for it in self.get_iterations():
+            it.clear_results_cache()
 
     def clear_junit_data_cache(self):
-        for dir in self.get_iterations():
-            dir.clear_junit_data_cache()
+        for it in self.get_iterations():
+            it.clear_junit_data_cache()
 
     def get_passed_failed(
         self,
@@ -1350,8 +1350,8 @@ class ResultsDirCollection(IterationCollection):
 
     """Directory containing (symlinks to) ResultsDirs. Assumes that it only containes such."""
 
-    def __init__(self, dir):
-        self.p = Path(dir)
+    def __init__(self, path):
+        self.p = Path(path)
         assert self.p.is_dir(), f"Directory {self.p} does not exist"
 
     def get_results_dirs(self) -> List[ResultsDir]:
