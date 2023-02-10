@@ -32,8 +32,8 @@ def test_end_to_end():
     logging.info("RUNNING TESTS")
     cmd = (
         "./flapy.sh run "
-        f"--num-runs 1 --out-dir {out_dir} --plus-random-runs "
-        "flapy_input_example_tiny.csv"
+        f"--out-dir {out_dir} --plus-random-runs "
+        "flapy_input_example_tiny.csv 1"
     )
     process = subprocess.Popen(
         cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, executable="/bin/bash"
@@ -51,7 +51,7 @@ def test_end_to_end():
     logging.info("PARSING")
     cmd = (
         "./flapy.sh parse ResultsDirCollection "
-        f"--dir {out_dir} "
+        f"--path {out_dir} "
         "get_tests_overview _df "
         f"to_csv --index=False {out_tests_overview}"
     )
