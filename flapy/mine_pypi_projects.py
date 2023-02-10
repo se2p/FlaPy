@@ -135,7 +135,7 @@ def resolve_url(url: str, max_retries=6, sleep_time=11) -> Tuple[str, int]:
         return None, None
 
 
-def mine(
+def sample_pypi_projects(
     *,
     sample_size: int = None,
     random_seed: int = None,
@@ -237,13 +237,9 @@ def fetch_all_pypi_projects_cli():
     fire.Fire(fetch_all_pypi_projects)
 
 
-def mine_cli():
-    fire.Fire(mine)
-
-
-def main() -> None:
-    fire.Fire(mine)
+def sample_cli():
+    fire.Fire(sample_pypi_projects)
 
 
 if __name__ == "__main__":
-    main()
+    sample_cli()

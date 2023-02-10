@@ -136,18 +136,18 @@ elif [ "$COMMAND" == "parse" ]; then
     flapy_docker_command run --rm -i --entrypoint=results_parser \
         -v "$(pwd)":/mounted_cwd --workdir /mounted_cwd \
         $FLAPY_DOCKER_IMAGE $ARGS
-elif [ "$COMMAND" == "mine" ]; then
+elif [ "$COMMAND" == "sample" ]; then
     export DEBUG=0
     debug_echo "-- Prepare for docker command"
     source "$SCRIPT_DIR/prepare_for_docker_command.sh" || exit
-    flapy_docker_command run --rm -i --entrypoint=mine_pypi_projects \
+    flapy_docker_command run --rm -i --entrypoint=sample_pypi_projects \
         -v "$(pwd)":/mounted_cwd --workdir /mounted_cwd \
         $FLAPY_DOCKER_IMAGE $ARGS
 elif [ "$COMMAND" == "fetch-all-pypi-projects" ]; then
     export DEBUG=0
     debug_echo "-- Prepare for docker command"
     source "$SCRIPT_DIR/prepare_for_docker_command.sh" || exit
-    flapy_docker_command run --rm -i --entrypoint=mine_pypi_projects \
+    flapy_docker_command run --rm -i --entrypoint=fetch_all_pypi_projects \
         -v "$(pwd)":/mounted_cwd --workdir /mounted_cwd \
         $FLAPY_DOCKER_IMAGE $ARGS
 else

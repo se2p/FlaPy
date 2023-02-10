@@ -58,7 +58,7 @@ flapy_run_tests = "flapy.run_tests:main"
 results_parser = "flapy.results_parser:main"
 pytest_trace = "flapy.pytest_trace:main"
 fetch_all_pypi_projects = "flapy.mine_pypi_projects:fetch_all_pypi_projects_cli"
-mine_pypi_projects = "flapy.mine_pypi_projects:mine_cli"
+sample_pypi_projects = "flapy.mine_pypi_projects:sample_cli"
 
 [tool.black]
 line-length = 100
