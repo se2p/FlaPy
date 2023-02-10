@@ -6,7 +6,7 @@ source "$SCRIPT_DIR/utils.sh"
 
 HELP_MESSAGE="Usage: $0 COMMAND ARGS
 
-available commands: 'run', 'parse', 'mine', 'fetch-all-pypi-projects'"
+available commands: 'sample', 'run', 'parse', 'fetch-all-pypi-projects'"
 
 # -- CHECK NUMBER OF ARGUMENTS
 if [[ "$#" -lt 1 ]]; then
