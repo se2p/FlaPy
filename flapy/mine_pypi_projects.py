@@ -176,7 +176,7 @@ def sample_pypi_projects(
         latest_pypi_tag = try_default(lambda: _get_latest_pypi_tag(pypi_data))
         pypi_project_urls = try_default(lambda: pypi_data["info"]["project_urls"])
 
-        # 5. Search for Github URL (+ to-lower + redirect)
+        # 5. Search for Github URL (+ redirect + to_lower)
         github_url = try_default(
             lambda: [url for _, url in pypi_project_urls.items() if _is_valid_github_url(url)][0]
         )

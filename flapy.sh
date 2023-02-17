@@ -22,7 +22,7 @@ if [ "$COMMAND" == "run" ]; then
     # problem: arguments get expanded, specifically the additional arguments -> I have to escape
     # them again
 
-    HELP_MESSAGE="Usage: ./flapy.sh run [OPTION]... INPUT_CSV NUM_RUNS
+    RUN_HELP_MESSAGE="Usage: ./flapy.sh run [OPTION]... INPUT_CSV NUM_RUNS
 
 INPUT_CSV
 
@@ -113,13 +113,13 @@ EXAMPLES
     if [ -z $INPUT_CSV ]; then
         debug_echo "ERROR: no INPUT_CSV specified -> exiting"
         debug_echo
-        debug_echo "$HELP_MESSAGE"
+        debug_echo "$RUN_HELP_MESSAGE"
         exit 1
     fi
     if [ -z $NUM_RUNS ]; then
         debug_echo "ERROR: NUM_RUNS not specified -> exiting"
         debug_echo
-        debug_echo "$HELP_MESSAGE"
+        debug_echo "$RUN_HELP_MESSAGE"
         exit 1
     fi
     if [ -z $RUN_ON ]; then
@@ -152,7 +152,8 @@ elif [ "$COMMAND" == "fetch-all-pypi-projects" ]; then
         $FLAPY_DOCKER_IMAGE $ARGS
 else
     debug_echo "Unknown command '$COMMAND'"
-    debug_echo "available commands: 'run', 'parse'"
+    debug_echo
+    debug_echo "$HELP_MESSAGE"
     exit 1
 fi
 
