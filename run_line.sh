@@ -23,7 +23,7 @@ debug_echo "-- $0"
 debug_echo "    input csv file:      $FLAPY_INPUT_CSV_FILE"
 debug_echo "    slurm array task id: $SLURM_ARRAY_TASK_ID"
 debug_echo "    input csv line num:  $FLAPY_INPUT_CSV_LINE_NUM"
-debug_echo "    Num runs:            $FLAPY_NUM_RUNS"
+debug_echo "    Num runs:            $FLAPY_INPUT_NUM_RUNS"
 
 function sighdl {
   kill -INT "${srunPid}" || true
@@ -68,7 +68,7 @@ touch "$META_FILE"
     echo "pypi_tag:               \"$PYPI_TAG\""
     echo "func_to_trace:          \"$FUNCS_TO_TRACE\""
     echo "tests_to_be_run:        \"$TESTS_TO_BE_RUN\""
-    echo "num_runs:               $FLAPY_NUM_RUNS"
+    echo "num_runs:               $FLAPY_INPUT_NUM_RUNS"
     echo "plus_random_runs:       $FLAPY_INPUT_PLUS_RANDOM_RUNS"
     echo "flapy args:             \"$FLAPY_INPUT_OTHER_ARGS\""
 } >> "$META_FILE"
@@ -80,11 +80,11 @@ if [[ $FLAPY_INPUT_RUN_ON = "cluster" ]]; then
         --error="$ITERATION_RESULTS_DIR/log.out" \
         -- \
         run_container.sh "" \
-            "${PROJECT_NAME}" "${PROJECT_URL}" "${PROJECT_HASH}" "${PYPI_TAG}" "${FUNCS_TO_TRACE}" "${TESTS_TO_BE_RUN}" "${FLAPY_NUM_RUNS}" "${FLAPY_INPUT_PLUS_RANDOM_RUNS}" "${ITERATION_RESULTS_DIR}" "${FLAPY_INPUT_OTHER_ARGS}" \
+            "${PROJECT_NAME}" "${PROJECT_URL}" "${PROJECT_HASH}" "${PYPI_TAG}" "${FUNCS_TO_TRACE}" "${TESTS_TO_BE_RUN}" "${FLAPY_INPUT_NUM_RUNS}" "${FLAPY_INPUT_PLUS_RANDOM_RUNS}" "${ITERATION_RESULTS_DIR}" "${FLAPY_INPUT_OTHER_ARGS}" \
         & srunPid=$!
 elif [[ $FLAPY_INPUT_RUN_ON = "locally" ]]; then
     ./run_container.sh "-it" \
-        "${PROJECT_NAME}" "${PROJECT_URL}" "${PROJECT_HASH}" "${PYPI_TAG}" "${FUNCS_TO_TRACE}" "${TESTS_TO_BE_RUN}" "${FLAPY_NUM_RUNS}" "${FLAPY_INPUT_PLUS_RANDOM_RUNS}" "${ITERATION_RESULTS_DIR}" "${FLAPY_INPUT_OTHER_ARGS}"
+        "${PROJECT_NAME}" "${PROJECT_URL}" "${PROJECT_HASH}" "${PYPI_TAG}" "${FUNCS_TO_TRACE}" "${TESTS_TO_BE_RUN}" "${FLAPY_INPUT_NUM_RUNS}" "${FLAPY_INPUT_PLUS_RANDOM_RUNS}" "${ITERATION_RESULTS_DIR}" "${FLAPY_INPUT_OTHER_ARGS}"
 else
     debug_echo "Unknown value '$RUN_ON' for RUN_ON. Please use 'cluster' or 'locally'."
     exit
