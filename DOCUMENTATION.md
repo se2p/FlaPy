@@ -30,18 +30,22 @@
 
 # Structure of scripts
 
-`flapy.sh run`
-    `run_csv.sh` (run_on, constraint, input_csv, plus_random_runs, core_args, out_dir)
-    * for line in csv (or via array_job):
-        `run_line.sh`
-            `run_container.sh`
-            * podman run flapy
-                `clone_and_run_tests.sh`
-                * clone repo
-                * log further infos
-                * run `run_tests.py`
+```bash
+flapy.sh run
+    run_csv.sh  # (run_on, constraint, input_csv, plus_random_runs, num_runs, core_args, out_dir)
+    # for line in csv (or via array_job):
+        run_line.sh
+            run_container.sh
+            # podman run flapy
+                clone_and_run_tests.sh
+                    # clone repo
+                    # log further infos
+                    run_tests.py
+```
 
-`flapy.sh parse`
-    `results_parser.sh`
-    * run flapy docker image with mounted CWD
 
+```bash
+flapy.sh parse
+    results_parser.sh
+    # run flapy docker image with mounted CWD
+```
