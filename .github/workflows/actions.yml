@@ -32,6 +32,15 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Install dependencies
+        run: poetry install
+
       - name: Test
         run: poetry run pytest -v --cov=flapy --cov-branch --cov-report html:cov_html --cov-report=term-missing tests/
         working-directory: ${{ github.workspace }}
