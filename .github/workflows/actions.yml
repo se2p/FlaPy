@@ -1,0 +1,46 @@
+name: Build and Test
+
+on:
+  push:
+
+env:
+  PYTHON_VERSION: '3.8.16'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install Python version
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: python --version && pip install poetry && poetry install
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Install Python version
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Test
+        run: poetry run pytest -v --cov=flapy --cov-branch --cov-report html:cov_html --cov-report=term-missing tests/
+        working-directory: ${{ github.workspace }}
