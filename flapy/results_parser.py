@@ -758,7 +758,7 @@ class Iteration:
         """
         try:
             return {
-                "Iteration": self,
+                "Iteration_path": self.p,
                 "Iteration_status": "ok",
                 "Iteration_error": None,
                 "Project_Name": self.get_project_name(),
@@ -767,10 +767,36 @@ class Iteration:
             }
         except Exception as e:
             return {
-                "Iteration": self,
+                "Iteration_path": self.p,
                 "Iteration_status": "error",
                 "Iteration_error": f"{type(e).__name__}: {e}",
             }
+
+    def get_lines_of_code(self, languages=["Python"], metrics=["code"]) -> Dict[str, Optional[int]]:
+        """Read lines-of-code information
+
+        :languages: languages to filter for (Markdown, YAML, Python, ...)
+            Must be specified as one string carrying a list, e.g. "[Python, Markdown]"
+            If the project does not use this language, the respective keys are mapped to None
+        :metrics: type of lines to filter for
+            Must be a subset of [files, blank, comment, code, total]
+            Must be specified as one string carrying a list
+        :returns: Dictionary mapping "language_metric" to the respective number of lines
+
+        """
+        LOC_METRICS = ["files", "blank", "comment", "code", "total"]
+        for metric in metrics:
+            if metric not in LOC_METRICS:
+                raise ValueError(f"Unknown metric {metric}. Must be in {LOC_METRICS}")
+
+        loc_df = pd.read_csv(self.p / "loc.csv").set_index("language")
+        loc_dict = dict()
+
+        for language in languages:
+            for metric in metrics:
+                loc_dict[f"{language}_{metric}"] = loc_df[metric].get(language)
+
+        return loc_dict
 
     def clear_results_cache(self):
         for file_ in self._results_cache.iterdir():
@@ -1181,6 +1207,20 @@ class IterationCollection(ABC):
     def get_meta_overview(self) -> pd.DataFrame:
         result = pd.DataFrame([it.get_meta_overview() for it in self.get_iterations()])
         return result
+
+    def get_lines_of_code_overview(self, *, languages=["Python"], metrics=["code"]) -> pd.DataFrame:
+        """ Collect LoC statistics from all iterations """
+        result = []
+        for it in self.get_iterations():
+            it_result = it.get_status_and_info()
+            try:
+                loc = it.get_lines_of_code(languages, metrics)
+                it_result.update({"LoC_status": "ok"})
+                it_result.update(loc)
+            except Exception:
+                it_result.update({"LoC_status": "error"})
+            result.append(it_result)
+        return pd.DataFrame(result)
 
 
 class ResultsDir(IterationCollection):
