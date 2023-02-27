@@ -9,20 +9,16 @@
     /PROJ                          # REPOSITORY_DIR (cloned repo)
 *   /sameOrder                     # same order execution output
        /execution.log              #   --logfile
-       /output.txt                 #   --output
        /tmp                        #   --temp
            /tmp1234                #   copy of REPOSITORY_DIR, created and deleted by run_tests.py
            /...output.xml          #
            /...coverage.xml        #
-           /...output.log          #    pytest output
 *   /randomOrder                   # random order execution outpout
        /execution.log              #   --logfile
-       /output.txt                 #   --output
        /tmp                        #   --temp
            /tmp1234                #    copy of REPOSITORY_DIR, created and deleted by run_tests.py
            /...output.xml          #
            /...coverage.xml        #
-           /...output.log          #    pytest output
 
 
 # * = packaged in an archive called "results.tar.xz" and copied over to ITERATION_RESULTS_DIR
