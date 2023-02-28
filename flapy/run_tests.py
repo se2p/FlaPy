@@ -63,7 +63,10 @@ class FileUtils:
 
     @classmethod
     def provide_copy(
-        cls, src_dir: Union[str, os.PathLike], tmp_dir_prefix: str = None, tmp_dir_path: str = None,
+        cls,
+        src_dir: Union[str, os.PathLike],
+        tmp_dir_prefix: str = None,
+        tmp_dir_path: str = None,
     ) -> Union[str, os.PathLike]:
         """Provides a copy of the given source directory and returns the path to it.
 
@@ -147,9 +150,7 @@ class VirtualEnvironment:
         self._env_name = env_name
         self._packages: List[str] = []
         self._requirements_files: List[Path] = []
-        self._env_dir = tempfile_seeded.mkdtemp(  # type: ignore
-            suffix=env_name, dir=tmp_dir
-        )
+        self._env_dir = tempfile_seeded.mkdtemp(suffix=env_name, dir=tmp_dir)  # type: ignore
         virtenv.create_environment(self._env_dir)
 
     def cleanup(self) -> None:
@@ -305,12 +306,16 @@ class PyTestRunner:
             # 1. search for dependencies in typical files like 'requirements.txt'
             # 2. install the project itself (requires pypi-tag to be specified)
             if self._config.pypi_tag in [None, ""]:
-                self._logger.info("no pypi tag specified -> falling back to searching for requirements")
+                self._logger.info(
+                    "no pypi tag specified -> falling back to searching for requirements"
+                )
                 # packages = self.find_dependencies()
                 # env.add_packages_for_installation(packages)
 
                 reqs_files = self.find_requirements_files()
-                self._logger.info(f"found the following requirements files: {[str(reqs_file) for reqs_file in reqs_files]}")
+                self._logger.info(
+                    f"found the following requirements files: {[str(reqs_file) for reqs_file in reqs_files]}"
+                )
                 env.add_requirements_files_for_installation(reqs_files)
             else:
                 self._logger.info(f"pypi tag found {self._config.pypi_tag}")
@@ -372,7 +377,7 @@ class PyTestRunner:
             return out, err
 
     def find_requirements_files(self) -> List[Path]:
-        """ Search for *requirements*.txt files in the project path
+        """Search for *requirements*.txt files in the project path
 
         :returns: List of existing requirements files
 
@@ -394,9 +399,7 @@ class PyTestRunner:
             "requirements_test.txt",
         ]
         for file_name in possible_requirements_filenames:
-            packages.extend(
-                self.read_dependencies_from_requirements_file(self._path / file_name)
-            )
+            packages.extend(self.read_dependencies_from_requirements_file(self._path / file_name))
         if (self._path / "Pipfile").is_file():
             packages.extend(self.read_dependencies_from_pipfile())
         return packages
@@ -470,7 +473,10 @@ class FlakyAnalyser:
                 ttbr_id = test_to_be_run.replace("/", ".")
 
                 def get_output_filename(keyword, ending) -> Path:
-                    return self._temp_path / f"{self._config.project_name}_{keyword}{run_num}{ttbr_id}.{ending}"
+                    return (
+                        self._temp_path
+                        / f"{self._config.project_name}_{keyword}{run_num}{ttbr_id}.{ending}"
+                    )
 
                 xml_output_file: Path = get_output_filename("output", "xml")
                 xml_coverage_file: Path = get_output_filename("coverage", "xml")
@@ -492,7 +498,8 @@ class FlakyAnalyser:
 
                 if not xml_output_file.is_file():
                     self._logger.warning(
-                        "Did not create file %s while running the tests.", xml_output_file,
+                        "Did not create file %s while running the tests.",
+                        xml_output_file,
                     )
 
                 FileUtils.delete_copy(copy)
@@ -514,7 +521,11 @@ class FlakyAnalyser:
             required=True,
         )
         parser.add_argument(
-            "-t", "--temp", dest="temp", help="Path to the temp directory", required=True,
+            "-t",
+            "--temp",
+            dest="temp",
+            help="Path to the temp directory",
+            required=True,
         )
         parser.add_argument("--project-name", dest="project_name")
         parser.add_argument(

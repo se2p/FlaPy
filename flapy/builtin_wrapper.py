@@ -40,7 +40,10 @@ def wrap(function):
 def wrap_module(module):
     """Wraps all builtin functions in the given module"""
 
-    for name, func in getmembers(module, lambda o: isinstance(o, types.BuiltinFunctionType),):
+    for name, func in getmembers(
+        module,
+        lambda o: isinstance(o, types.BuiltinFunctionType),
+    ):
         if (module.__name__, name) not in DO_NOT_WRAP:
             # print(f"\t\twrapping {module.__name__}.{name}")
             setattr(module, name, wrap(func))
