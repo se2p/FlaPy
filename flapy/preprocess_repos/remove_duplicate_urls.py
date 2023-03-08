@@ -46,7 +46,9 @@ def main(args: List[str] = None):
 
     # -- Resolve URLs
     print("Resolving URLs", end="", file=sys.stderr)
-    df["Project_URL_redirected"], df["Project_URL_status"] = list(zip(*df["Project_URL"].apply(resolve_url)))
+    df["Project_URL_redirected"], df["Project_URL_status"] = list(
+        zip(*df["Project_URL"].apply(resolve_url))
+    )
     print(file=sys.stderr)
 
     # print(file=sys.stderr)
@@ -58,7 +60,7 @@ def main(args: List[str] = None):
     # df = df[df['status'] == 200]
     # df = df[["Project_Name", "Project_URL"]]
 
-    df["same_redirect"] = (df["Project_URL"] == df["Project_URL_redirected"])
+    df["same_redirect"] = df["Project_URL"] == df["Project_URL_redirected"]
 
     print(file=sys.stderr)
     print(

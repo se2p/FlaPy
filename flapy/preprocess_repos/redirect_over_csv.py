@@ -21,7 +21,10 @@ def resolve_url(url: str) -> Tuple[str, int]:
         response = session.get(url)
         while response.status_code == 429 and num_retries < num_max_retries:
             num_retries += 1
-            print(f"Sleeping {sleep_time}s due to 429 ({num_retries}/{num_max_retries})", file=sys.stderr)
+            print(
+                f"Sleeping {sleep_time}s due to 429 ({num_retries}/{num_max_retries})",
+                file=sys.stderr,
+            )
             sleep(sleep_time)
             response = session.get(url)
         if num_retries == num_max_retries:
@@ -59,7 +62,7 @@ def main(args: List[str] = None):
     # -- Prettify Dataframe
     df[f"{url_column}_redirected"] = df["response"].apply(lambda x: x[0])
     df[f"{url_column}_status"] = df["response"].apply(lambda x: x[1])
-    df["same_redirect"] = (df[url_column] == df[f"{url_column}_redirected"])
+    df["same_redirect"] = df[url_column] == df[f"{url_column}_redirected"]
     df = df.drop(columns="response")
 
     session.close()

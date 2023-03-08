@@ -7,22 +7,18 @@
     /clone_and_run_tests.sh        # copied over by docker
     /FlaPy-0.1.0-py3-none-any.whl  # copied over by docker
     /PROJ                          # REPOSITORY_DIR (cloned repo)
-*   /deterministic                 # same order execution output
+*   /sameOrder                     # same order execution output
        /execution.log              #   --logfile
-       /output.txt                 #   --output
        /tmp                        #   --temp
            /tmp1234                #   copy of REPOSITORY_DIR, created and deleted by run_tests.py
            /...output.xml          #
            /...coverage.xml        #
-           /...output.log          #    pytest output
-*   /non-deterministic             # random order execution outpout
+*   /randomOrder                   # random order execution outpout
        /execution.log              #   --logfile
-       /output.txt                 #   --output
        /tmp                        #   --temp
            /tmp1234                #    copy of REPOSITORY_DIR, created and deleted by run_tests.py
            /...output.xml          #
            /...coverage.xml        #
-           /...output.log          #    pytest output
 
 
 # * = packaged in an archive called "results.tar.xz" and copied over to ITERATION_RESULTS_DIR

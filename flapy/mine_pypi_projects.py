@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 
 
-GITHUB_URL_REGEX = r'https?://(www\.)?github\.com/[^/]+/[^/]+/?$'
+GITHUB_URL_REGEX = r"https?://(www\.)?github\.com/[^/]+/[^/]+/?$"
 
 
 session = requests.Session()
@@ -25,10 +25,7 @@ def fetch_all_pypi_projects() -> List[str]:
     r = requests.get("https://pypi.org/simple/").text
 
     logging.info("parsing pypi projects")
-    proj_names = [
-        a.text
-        for a in BeautifulSoup(r, "html.parser").find_all("a")
-    ]
+    proj_names = [a.text for a in BeautifulSoup(r, "html.parser").find_all("a")]
     # Remove first and last element since they are empty strings (bf4 parsing)
     return proj_names
 
@@ -40,7 +37,8 @@ def _get_pypi_metadata(project_name: str) -> Tuple[str, str, Any]:
     """
     try:
         response = requests.get(
-            url=f"https://pypi.python.org/pypi/{project_name}/json", stream=True,
+            url=f"https://pypi.python.org/pypi/{project_name}/json",
+            stream=True,
         )
         http_response_code = response.status_code
     except Exception as ex:
@@ -53,18 +51,14 @@ def _get_pypi_metadata(project_name: str) -> Tuple[str, str, Any]:
 
 
 def _get_latest_pypi_tag(pypi_json: Dict) -> str:
-    """Given a PyPI metadata json derived from `_get_pypi_metadata`, return the latest release
-    """
+    """Given a PyPI metadata json derived from `_get_pypi_metadata`, return the latest release"""
     try:
         releases = pypi_json["releases"]
     except Exception:
         raise ValueError("data does not contain releases")
 
     releases = [
-        (
-            r_k,
-            try_default(lambda: r_v[0]["upload_time"], Exception, None)
-        )
+        (r_k, try_default(lambda: r_v[0]["upload_time"], Exception, None))
         for r_k, r_v in releases.items()
     ]
     releases = [
@@ -142,7 +136,7 @@ def sample_pypi_projects(
     project_list_file=None,
     redirect_github_urls: bool = True,
     remove_duplicates: bool = True,
-    remove_no_github_url_found: bool = True
+    remove_no_github_url_found: bool = True,
 ) -> str:
     """
 
@@ -195,30 +189,33 @@ def sample_pypi_projects(
             lambda: _match_pypi_git_tag(pypi_version=latest_pypi_tag, git_tags=git_tags)
         )
 
-        project_details.append({
-            # FlaPy Input columns
-            "Project_Name": proj_name,
-            "Github_URL": github_url,
-            "matching_github_tag": matching_github_tag,
-            "PYPI_latest_tag": latest_pypi_tag,
-            "funcs_to_trace": "",
-            "tests_to_run": "",
-
-            # other columns (ignored by FlaPy)
-            "pypi_fetch_status": fetch_status,
-            "pypi_http_response_code": http_response_code,
-            "PYPI_classifiers": pypi_classifiers,
-            "PYPI_project_urls": pypi_project_urls,
-            "github_url_status": github_url_status,
-            "git_tags": git_tags,
-        })
+        project_details.append(
+            {
+                # FlaPy Input columns
+                "Project_Name": proj_name,
+                "Github_URL": github_url,
+                "matching_github_tag": matching_github_tag,
+                "PYPI_latest_tag": latest_pypi_tag,
+                "funcs_to_trace": "",
+                "tests_to_run": "",
+                # other columns (ignored by FlaPy)
+                "pypi_fetch_status": fetch_status,
+                "pypi_http_response_code": http_response_code,
+                "PYPI_classifiers": pypi_classifiers,
+                "PYPI_project_urls": pypi_project_urls,
+                "github_url_status": github_url_status,
+                "git_tags": git_tags,
+            }
+        )
     project_details = pd.DataFrame(project_details)
 
     # 8. Drop duplicates (some PyPI projects point to the same GitHub URL)
     if remove_duplicates:
-        num_duplicates = len(project_details[
-            project_details.duplicated("Github_URL") & (~project_details["Github_URL"].isna())
-        ])
+        num_duplicates = len(
+            project_details[
+                project_details.duplicated("Github_URL") & (~project_details["Github_URL"].isna())
+            ]
+        )
         logging.info(f"Dropped {num_duplicates} duplicated entries (same GitHub URL)")
         project_details = project_details[
             (~project_details.duplicated("Github_URL")) | (project_details["Github_URL"].isna())

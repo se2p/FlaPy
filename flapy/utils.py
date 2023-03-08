@@ -15,7 +15,7 @@ def try_default(
     log_error_info=None,
     finally_: Callable[[], Any] = None,
 ) -> Union[T, U]:
-    """ Helper function. Try-except is not allowed in lambdas.
+    """Helper function. Try-except is not allowed in lambdas.
 
     function: the function that shall be called. It must not have input parameters -> curry them first
     exception: type (class) of exception, that should be caught

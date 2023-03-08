@@ -115,9 +115,9 @@ def read_junit_testcase(test_case: junitparser.TestCase) -> Dict[str, Union[str,
                 r"(.*(?:error|exception).*)", test_case.result._elem.text, flags=re.IGNORECASE
             )
             if (
-                test_case.result is not None and
-                test_case.result._elem is not None and
-                test_case.result._elem.text is not None
+                test_case.result is not None
+                and test_case.result._elem is not None
+                and test_case.result._elem.text is not None
             )
             else None
         ),
@@ -126,9 +126,7 @@ def read_junit_testcase(test_case: junitparser.TestCase) -> Dict[str, Union[str,
             if test_case.system_err is not None
             else None
         ),
-        "type": (
-            test_case.result.type if test_case.result is not None else ""
-        )
+        "type": (test_case.result.type if test_case.result is not None else ""),
     }
 
 
@@ -142,7 +140,7 @@ def is_empty(openvia: Callable[[str], IO], path: str):
 
 
 def junitxml_classname_to_modname_and_actual_classname(classname: str) -> Tuple[List[str], str]:
-    """ The JUnit-XML attribute 'class' contains both the name of the module and the name of the class -> split them by assuming class names start with capital letters.
+    """The JUnit-XML attribute 'class' contains both the name of the module and the name of the class -> split them by assuming class names start with capital letters.
 
     EXAMPLE: "tests.test_camera.TestCamera" -> (['tests', 'test_camera'], 'TestCamera')
     """
@@ -159,7 +157,9 @@ def junitxml_classname_to_modname_and_actual_classname(classname: str) -> Tuple[
             class_ = ""
         return mod, class_
     except IndexError:
-        logging.warning(f"junitxml_classname_to_actual_classname: IndexError with classname={classname}")
+        logging.warning(
+            f"junitxml_classname_to_actual_classname: IndexError with classname={classname}"
+        )
         return [], ""
 
 
@@ -453,7 +453,8 @@ class MyFileWrapper(ABC):
     @classmethod
     def is_(cls, path: Path, project_name: str, openvia: Callable[[str], IO]) -> bool:
         return (
-            (re.match(cls.get_regex(project_name), str(path)) is not None)
+            re.match(cls.get_regex(project_name), str(path))
+            is not None
             # and
             # (not is_empty(openvia, str(path))
         )
@@ -633,7 +634,7 @@ class JunitXmlFileRandomOrder(JunitXmlFile):
 
 
 class TraceFile(MyFileWrapper):
-    """File containing traces """
+    """File containing traces"""
 
     @classmethod
     def get_regex(cls, project_name: str):
@@ -702,12 +703,11 @@ class Iteration:
             path.is_dir()
             and path.name != "run"
             and not path.name.startswith(".")
-            and ( (path / cls.archive_name).is_file() or (path / cls.meta_file_name).is_file() )
+            and ((path / cls.archive_name).is_file() or (path / cls.meta_file_name).is_file())
         )
 
     def has_archive(self):
-        """If the results have not been written back (e.g., due to a timeout), there is no resultar.tar.xz, however, the directory with the meta infos is still counted as a failed attempt and therefore an iteration.
-        """
+        """If the results have not been written back (e.g., due to a timeout), there is no resultar.tar.xz, however, the directory with the meta infos is still counted as a failed attempt and therefore an iteration."""
         return (self.p / self.archive_name).is_file()
 
     @lru_cache()
@@ -754,11 +754,10 @@ class Iteration:
         return "COULD_NOT_GET_FLAKYANALYSIS_GIT_HASH"
 
     def get_status_and_info(self):
-        """Critical information such as the project-name, -url, or -hash might not be present (e.g. due to aborted jobs) and raise exceptions when try to be accessed. This method offers a save way to retrieve these information, returning them in a dictionary with a 'iteration_status' field indicating if something went wrong.
-        """
+        """Critical information such as the project-name, -url, or -hash might not be present (e.g. due to aborted jobs) and raise exceptions when try to be accessed. This method offers a save way to retrieve these information, returning them in a dictionary with a 'iteration_status' field indicating if something went wrong."""
         try:
             return {
-                "Iteration": self,
+                "Iteration_path": self.p,
                 "Iteration_status": "ok",
                 "Iteration_error": None,
                 "Project_Name": self.get_project_name(),
@@ -767,10 +766,36 @@ class Iteration:
             }
         except Exception as e:
             return {
-                "Iteration": self,
+                "Iteration_path": self.p,
                 "Iteration_status": "error",
                 "Iteration_error": f"{type(e).__name__}: {e}",
             }
+
+    def get_lines_of_code(self, languages=["Python"], metrics=["code"]) -> Dict[str, Optional[int]]:
+        """Read lines-of-code information
+
+        :languages: languages to filter for (Markdown, YAML, Python, ...)
+            Must be specified as one string carrying a list, e.g. "[Python, Markdown]"
+            If the project does not use this language, the respective keys are mapped to None
+        :metrics: type of lines to filter for
+            Must be a subset of [files, blank, comment, code, total]
+            Must be specified as one string carrying a list
+        :returns: Dictionary mapping "language_metric" to the respective number of lines
+
+        """
+        LOC_METRICS = ["files", "blank", "comment", "code", "total"]
+        for metric in metrics:
+            if metric not in LOC_METRICS:
+                raise ValueError(f"Unknown metric {metric}. Must be in {LOC_METRICS}")
+
+        loc_df = pd.read_csv(self.p / "loc.csv").set_index("language")
+        loc_dict = dict()
+
+        for language in languages:
+            for metric in metrics:
+                loc_dict[f"{language}_{metric}"] = loc_df[metric].get(language)
+
+        return loc_dict
 
     def clear_results_cache(self):
         for file_ in self._results_cache.iterdir():
@@ -808,7 +833,11 @@ class Iteration:
         if write_cache and not did_read_cache and len(junit_data) > 0:
             junit_data.to_csv(self._junit_cache_file, index=False)
         if include_project_columns:
-            junit_data.insert(0, "Project_Hash", try_default(lambda: self.get_project_git_hash(), Exception, "error"))
+            junit_data.insert(
+                0,
+                "Project_Hash",
+                try_default(lambda: self.get_project_git_hash(), Exception, "error"),
+            )
             junit_data.insert(0, "Project_URL", self.get_project_url())
             junit_data.insert(0, "Project_Name", self.get_project_name())
             junit_data.insert(0, "Iteration", self.p.name)
@@ -818,23 +847,29 @@ class Iteration:
             return None
         return junit_data.fillna("")
 
-    def get_passed_failed(self, *, read_cache=True, write_cache=True, verdict_cols_to_strings=True) -> pd.DataFrame:
+    def get_passed_failed(
+        self, *, read_cache=True, write_cache=True, verdict_cols_to_strings=True
+    ) -> pd.DataFrame:
         try:
             junit_data = self.get_junit_data(
                 include_project_columns=False, read_cache=read_cache, write_cache=write_cache
             )
         except Exception as e:
             logging.error(f"{type(e).__name__}: {e} in {self.p}")
-            return pd.DataFrame({
-                "Iteration": [self.p.name],
-                "Iteration_status": [f"{type(e).__name__}: {e}"],
-            })
+            return pd.DataFrame(
+                {
+                    "Iteration": [self.p.name],
+                    "Iteration_status": [f"{type(e).__name__}: {e}"],
+                }
+            )
 
         if len(junit_data) == 0:
-            return pd.DataFrame({
-                "Iteration": [self.p.name],
-                "Iteration_status": ["EMPTY"],
-            })
+            return pd.DataFrame(
+                {
+                    "Iteration": [self.p.name],
+                    "Iteration_status": ["EMPTY"],
+                }
+            )
         junit_data.insert(0, "Iteration", self.p.name)
         junit_data.insert(1, "Project_Name", self.get_project_name())
         junit_data.insert(2, "Project_URL", self.get_project_url())
@@ -972,7 +1007,8 @@ class Iteration:
         """
         coverage_data = list(
             filter(
-                lambda d: len(d) > 0, map(CoverageXmlFile.to_dict, self.get_files(CoverageXmlFile)),
+                lambda d: len(d) > 0,
+                map(CoverageXmlFile.to_dict, self.get_files(CoverageXmlFile)),
             )
         )
         self.close_archive()
@@ -1109,10 +1145,7 @@ class IterationCollection(ABC):
     @lru_cache()
     def get_iterations_overview(self, filter_out_errors=False) -> pd.DataFrame:
         iterations_overview = (
-            pd.DataFrame([
-                it.get_status_and_info()
-                for it in self.get_iterations()
-            ])
+            pd.DataFrame([it.get_status_and_info() for it in self.get_iterations()])
             .set_index(["Project_Name", "Project_URL", "Project_Hash"])
             .sort_index()
         )
@@ -1125,10 +1158,12 @@ class IterationCollection(ABC):
         """
         Return table with all meta data of each iteration
         """
-        return pd.DataFrame([
-            {"path": self.p, "Iteration.parent": it.p.parent, "Iteration": it.p, **it.meta_info}
-            for it in self.get_iterations()
-        ])
+        return pd.DataFrame(
+            [
+                {"path": self.p, "Iteration.parent": it.p.parent, "Iteration": it.p, **it.meta_info}
+                for it in self.get_iterations()
+            ]
+        )
 
     @abstractmethod
     def get_passed_failed(self) -> pd.DataFrame:
@@ -1181,6 +1216,20 @@ class IterationCollection(ABC):
     def get_meta_overview(self) -> pd.DataFrame:
         result = pd.DataFrame([it.get_meta_overview() for it in self.get_iterations()])
         return result
+
+    def get_lines_of_code_overview(self, *, languages=["Python"], metrics=["code"]) -> pd.DataFrame:
+        """Collect LoC statistics from all iterations"""
+        result = []
+        for it in self.get_iterations():
+            it_result = it.get_status_and_info()
+            try:
+                loc = it.get_lines_of_code(languages, metrics)
+                it_result.update({"LoC_status": "ok"})
+                it_result.update(loc)
+            except Exception:
+                it_result.update({"LoC_status": "error"})
+            result.append(it_result)
+        return pd.DataFrame(result)
 
 
 class ResultsDir(IterationCollection):
@@ -1273,10 +1322,7 @@ class ResultsDir(IterationCollection):
             cache_df: pd.DataFrame = pd.read_csv(self._pf_cache_file)
 
         # Get iterations into the format in which it is saved in passed_failed.csv
-        iterations_in_this_dir = [
-            self.p.name + "/" + it.p.name
-            for it in self.get_iterations()
-        ]
+        iterations_in_this_dir = [self.p.name + "/" + it.p.name for it in self.get_iterations()]
         return set(iterations_in_this_dir) == set(cache_df["Iteration"])
 
     def _compute_passed_failed(self, read_iteration_cache, write_iteration_cache):
@@ -1305,7 +1351,10 @@ class ResultsDir(IterationCollection):
 
     def find_keywords_in_tracefiles(self, *, keywords=default_flaky_keywords) -> pd.DataFrame:
         pool = multiprocessing.Pool()
-        result = pool.map(Iteration.find_keywords_in_tracefiles, self.get_iterations(),)
+        result = pool.map(
+            Iteration.find_keywords_in_tracefiles,
+            self.get_iterations(),
+        )
 
         if len(result) > 0:
             return (
@@ -1417,7 +1466,10 @@ class FlakinessType:
 
     @classmethod
     def decide_flakiness_type(
-        cls, flaky_sameOrder_withinIteration: bool, order_dependent: bool, infrastructure: bool,
+        cls,
+        flaky_sameOrder_withinIteration: bool,
+        order_dependent: bool,
+        infrastructure: bool,
     ) -> str:
         assert flaky_sameOrder_withinIteration + order_dependent + infrastructure < 2
         if flaky_sameOrder_withinIteration:
@@ -1535,7 +1587,9 @@ def to_nodeid(filename: str, classname: str, funcname: str, parametrization: str
             file[-1] = file[-1] + ".py"
             return f"{os.path.join(*file)}::{funcname}{parametrization}"
     except IndexError:
-        logging.error(f"classname_to_nodeid: IndexError with classname={classname}, funcname={funcname}")
+        logging.error(
+            f"classname_to_nodeid: IndexError with classname={classname}, funcname={funcname}"
+        )
         return funcname
 
 

@@ -164,7 +164,11 @@ def frame_to_func(frame):
 
 
 def to_hash(
-    obj: object, hash_timeout: int, mod_name: str, class_name: Optional[str], func_name: str,
+    obj: object,
+    hash_timeout: int,
+    mod_name: str,
+    class_name: Optional[str],
+    func_name: str,
 ) -> str:
     """
     Return a hash value of a given object
