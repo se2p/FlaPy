@@ -355,6 +355,8 @@ class PassedFailed:
         test_overview["Verdicts_sameOrder"] = test_overview["Verdicts_sameOrder"].apply(tuple)
         test_overview["Verdicts_randomOrder"] = test_overview["Verdicts_randomOrder"].apply(tuple)
         test_overview.sort_values(["Verdicts_sameOrder", "Verdicts_randomOrder"], ascending=[True, True], inplace=True, key=tuple)
+        test_overview["Verdicts_sameOrder"] = test_overview["Verdicts_sameOrder"].apply(set)
+        test_overview["Verdicts_randomOrder"] = test_overview["Verdicts_randomOrder"].apply(set)
 
         return test_overview
 
