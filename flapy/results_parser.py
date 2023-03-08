@@ -350,6 +350,12 @@ class PassedFailed:
         test_overview["Test_nodeid_inclPara"] = (
             test_overview["Test_nodeid"] + test_overview["Test_parametrization"]
         )
+
+        # Sort to ensure deterministic behaviour. Needs to use tuple in order to sort
+        test_overview["Verdicts_sameOrder"] = test_overview["Verdicts_sameOrder"].apply(tuple)
+        test_overview["Verdicts_randomOrder"] = test_overview["Verdicts_randomOrder"].apply(tuple)
+        test_overview.sort_values(["Verdicts_sameOrder", "Verdicts_randomOrder"], ascending=[True, True], inplace=True, key=tuple)
+
         return test_overview
 
     def __repr__(self):
@@ -385,6 +391,8 @@ class TestsOverview:
         classification_template["Category"] = ""
         classification_template["Category sure? 1=yes 4=no"] = ""
         classification_template["Category comment"] = ""
+
+        classification_template.sort_values(["Project_Name", "Project_URL", "Project_Hash", "Test_name"], ascending=[True, True, True, True], inplace=True)
         return classification_template
 
     def to_flapy_input(
@@ -964,6 +972,9 @@ class Iteration:
         )
 
         passed_failed.insert(1, "Iteration_status", "ok")
+
+        # Sort to ensure deterministic behaviour
+        passed_failed.sort_values(["Passed_sameOrder", "Failed_sameOrder"], ascending=[True, True], inplace=True)
 
         return passed_failed[
             [
