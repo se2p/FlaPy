@@ -150,7 +150,10 @@ class VirtualEnvironment:
         self._env_name = env_name
         self._packages: List[str] = []
         self._requirements_files: List[Path] = []
-        self._env_dir = tempfile_seeded.mkdtemp(suffix=env_name, dir=tmp_dir)  # type: ignore
+        if tmp_dir:
+            self._env_dir = f"{tmp_dir}/flapy_virtual_env"
+        else:
+            raise ValueError(f"{tmp_dir} is no valid value for tmp_dir.")
         virtenv.create_environment(self._env_dir)
 
     def cleanup(self) -> None:
@@ -297,7 +300,7 @@ class PyTestRunner:
     def run(self) -> Optional[Tuple[str, str]]:
         """Install dependencies and execute pytest"""
 
-        with virtualenv(self._project_name, None) as env:
+        with virtualenv(self._project_name, self._config.temp) as env:
             old_cwd = Path(os.getcwd())
             os.chdir(self._path)
 
