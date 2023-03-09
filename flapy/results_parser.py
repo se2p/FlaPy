@@ -746,29 +746,19 @@ class Iteration:
             raise ValueError("Could not retrieve project hash")
 
     def get_flapy_git_hash(self) -> str:
-        """Flapy used to be called 'flakyanalysis'"""
+        # Flapy used to be called 'flakyanalysis'
         if (self.p / "flakyanalysis-git-hash.txt").is_file():
             with open(self.p / "flakyanalysis-git-hash.txt") as file:
                 return file.read().replace("\n", "")
         return "COULD_NOT_GET_FLAKYANALYSIS_GIT_HASH"
 
-    def get_status_and_info(self):
-        """Critical information such as the project-name, -url, or -hash might not be present (e.g. due to aborted jobs) and raise exceptions when try to be accessed. This method offers a save way to retrieve these information, returning them in a dictionary with a 'iteration_status' field indicating if something went wrong."""
-        try:
-            return {
-                "Iteration_path": self.p,
-                "Iteration_status": "ok",
-                "Iteration_error": None,
-                "Project_Name": self.get_project_name(),
-                "Project_URL": self.get_project_url(),
-                "Project_Hash": self.get_project_git_hash(),
-            }
-        except Exception as e:
-            return {
-                "Iteration_path": self.p,
-                "Iteration_status": "error",
-                "Iteration_error": f"{type(e).__name__}: {e}",
-            }
+    def get_iterations_info(self) -> Dict[str, Any]:
+        return {
+            "Iteration": self,
+            "Project_Name": self.get_project_name(),
+            "Project_URL": self.get_project_url(),
+            "Project_Hash": self.get_project_git_hash(),
+        }
 
     def get_lines_of_code(self, languages=["Python"], metrics=["code"]) -> Dict[str, Optional[int]]:
         """Read lines-of-code information
@@ -1144,7 +1134,7 @@ class IterationCollection(ABC):
     @lru_cache()
     def get_iterations_overview(self, filter_out_errors=False) -> pd.DataFrame:
         iterations_overview = (
-            pd.DataFrame([it.get_status_and_info() for it in self.get_iterations()])
+            pd.DataFrame([it.get_iterations_info() for it in self.get_iterations()])
             .set_index(["Project_Name", "Project_URL", "Project_Hash"])
             .sort_index()
         )
@@ -1220,7 +1210,7 @@ class IterationCollection(ABC):
         """Collect LoC statistics from all iterations"""
         result = []
         for it in self.get_iterations():
-            it_result = it.get_status_and_info()
+            it_result = it.get_iterations_info()
             try:
                 loc = it.get_lines_of_code(languages, metrics)
                 it_result.update({"LoC_status": "ok"})
