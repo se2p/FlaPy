@@ -680,14 +680,19 @@ class Iteration:
 
     def __init__(self, path: Union[str, Path]):
         self.p = Path(path)
-        assert Iteration.is_iteration(self.p), "This does not seem like an iteration directory"
         self._archive: Optional[tarfile.TarFile] = None
 
-        # Setup cache
-        self._results_cache = self.p / "flapy.cache"
-        if not self._results_cache.is_dir():
-            self._results_cache.mkdir()
-        self._junit_cache_file = self._results_cache / "junit_data.csv"
+        # Check if this is a valid iteration
+        if not path.is_dir():
+            raise ValueError(f"{self.p} is not a directory")
+        if path.name == "run":
+            raise ValueError(f"Folders named 'run' are not considered iterations (legacy)")
+        if path.name.startswith("."):
+            raise ValueError(f"Folders whose names start with '.' are not considered iterations")
+        if not (path / self.archive_name).is_file():
+            # TODO: maybe raise this exception later (like inside get_junit_data, or just set
+            # status). The meta file might still be present and its information might be interesting
+            raise ValueError(f"{self.p} contains no results archive ({self.archive_name})")
 
         # Read meta info if available (only in newer versions, older versions use separate files)
         self.meta_file = self.p / self.meta_file_name
@@ -697,14 +702,16 @@ class Iteration:
         else:
             self.meta_info = None
 
-    @classmethod
-    def is_iteration(cls, path: Path) -> bool:
-        return (
-            path.is_dir()
-            and path.name != "run"
-            and not path.name.startswith(".")
-            and ((path / cls.archive_name).is_file() or (path / cls.meta_file_name).is_file())
-        )
+        # Retrieve basic information to raise heat cache and raise possible errors now
+        self.get_project_name()
+        self.get_project_url()
+        self.get_project_git_hash()
+
+        # Setup cache
+        self._results_cache = self.p / "flapy.cache"
+        if not self._results_cache.is_dir():
+            self._results_cache.mkdir()
+        self._junit_cache_file = self._results_cache / "junit_data.csv"
 
     def has_archive(self):
         """If the results have not been written back (e.g., due to a timeout), there is no resultar.tar.xz, however, the directory with the meta infos is still counted as a failed attempt and therefore an iteration."""
@@ -718,33 +725,25 @@ class Iteration:
             with open(self.p / "project-name.txt") as file:
                 return file.read().replace("\n", "")
         else:
-            if (len(self.get_archive_names()) == 0) and self.has_archive():
-                return self.p.name + "_EMPTY"
-            else:
-                # local/hdd/user/project_name
-                try:
-                    return self.get_archive_names()[0].split("/")[3]
-                except Exception:
-                    logging.error(
-                        f"Could not get project name for iteration results {self.p}. This is needed for identifying junit-xml, coverage, and other files, as their name contains the project name."
-                    )
-                    return "COULD_NOT_GET_PROJECT_NAME"
+            raise ValueError("Could not retrieve project name")
 
     def get_project_url(self) -> str:
         if self.meta_info is not None:
             return self.meta_info["project_url"]
-        if (self.p / "project-url.txt").is_file():
+        elif (self.p / "project-url.txt").is_file():
             with open(self.p / "project-url.txt") as file:
                 return file.read().replace("\n", "")
-        return "COULD_NOT_GET_PROJECT_URL"
+        else:
+            raise ValueError("Could not retrieve project URL")
 
     def get_project_git_hash(self) -> str:
         if self.meta_info is not None:
             return self.meta_info["project_git_hash"]
-        if (self.p / "project-git-hash.txt").is_file():
+        elif (self.p / "project-git-hash.txt").is_file():
             with open(self.p / "project-git-hash.txt") as file:
                 return file.read().replace("\n", "")
-        return "COULD_NOT_GET_PROJECT_GIT_HASH"
+        else:
+            raise ValueError("Could not retrieve project hash")
 
     def get_flapy_git_hash(self) -> str:
         """Flapy used to be called 'flakyanalysis'"""
@@ -1251,7 +1250,13 @@ class ResultsDir(IterationCollection):
         self._pf_cache_file = self._results_cache / "passed_failed.csv"
 
     def get_iterations(self) -> List[Iteration]:
-        iterations = [Iteration(path) for path in self.p.glob("*") if Iteration.is_iteration(path)]
+        """
+        Return all valid iterations contained in this ResultsDir
+        """
+        iterations = [
+            try_default(lambda: Iteration(path), log_error_info=path) for path in self.p.glob("*")
+        ]
+        iterations = [it for it in iterations if it is not None]
         return iterations
 
     def clear_results_cache(self):
