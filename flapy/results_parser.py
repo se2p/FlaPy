@@ -1132,16 +1132,13 @@ class IterationCollection(ABC):
         pass
 
     @lru_cache()
-    def get_iterations_overview(self, filter_out_errors=False) -> pd.DataFrame:
+    def get_iterations_overview(self) -> pd.DataFrame:
         iterations_overview = (
             pd.DataFrame([it.get_iterations_info() for it in self.get_iterations()])
             .set_index(["Project_Name", "Project_URL", "Project_Hash"])
             .sort_index()
         )
-        if filter_out_errors:
-            return iterations_overview[iterations_overview["Iteration_status"] == "ok"]
-        else:
-            return iterations_overview
+        return iterations_overview
 
     def get_iterations_meta_overview(self):
         """
