@@ -211,6 +211,9 @@ class PassedFailed:
             #     'Verdicts_randomOrder': eval_string_to_set,
             # }
         )
+
+        # Project_Hash is allowed to be empty, for example for local copies instead of remote repos
+        _df["Project_Hash"] = _df[["Project_Hash"]].fillna("")
         return cls(_df)
 
     def add_rerun_column(self) -> pd.DataFrame:
