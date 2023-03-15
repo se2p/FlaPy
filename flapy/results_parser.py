@@ -427,6 +427,37 @@ class TestsOverview:
         ]
 
 
+class CoverageOverview(object):
+
+    """Output of ResultsDirCollection.get_coverage_overview"""
+
+    def __init__(self, df):
+        self._df = df
+
+    @classmethod
+    def load(cls, path: str):
+        _df = pd.read_csv(path)
+        _df["Project_Hash"] = _df["Project_Hash"].fillna("")
+        return cls(_df)
+
+    def group_by_project(self) -> pd.DataFrame:
+        """
+        Compute the average coverage per project,
+        taking into account that different iterations
+        have different numbers of runs (weighted average).
+        """
+        df = self._df.copy()
+        num_iteration_with_zero_entries = len(df[df["number_of_entries"] < 1])
+        logging.warning(f"Dropped {num_iteration_with_zero_entries} iteration with zero coverage entries")
+        df = df[df["number_of_entries"] > 0]
+
+        return df.groupby(proj_cols).apply(lambda x: pd.Series({
+            "number_of_runs": sum(x["number_of_entries"]),
+            "BranchCoverage": np.average(x["BranchCoverage"], weights=x["number_of_entries"]),
+            "LineCoverage": np.average(x["LineCoverage"], weights=x["number_of_entries"])
+        }))
+
+
 class MyFileWrapper(ABC):
     def __init__(
         self,
@@ -1202,6 +1233,11 @@ class IterationCollection(ABC):
                 )
             )
 
+    def get_coverage_overview(self) -> pd.DataFrame:
+        pool = multiprocessing.Pool()
+        co = pd.concat(pool.map(Iteration.get_coverage_overview, self.get_iterations()))
+        return co
+
     def get_meta_overview(self) -> pd.DataFrame:
         result = pd.DataFrame([it.get_meta_overview() for it in self.get_iterations()])
         return result
@@ -1379,12 +1415,6 @@ class ResultsDir(IterationCollection):
                     "Test_name",
                 ]
             )
-
-    def get_coverage_overview(self) -> pd.DataFrame:
-        pool = multiprocessing.Pool()
-        co = pd.concat(pool.map(Iteration.get_coverage_overview, self.get_iterations()))
-        co["Iteration"] = str(self.p) + "/" + co["Iteration"]
-        return co
 
     def __repr__(self) -> str:
         return f"ResultsDir('{self.p}')"
