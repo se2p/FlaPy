@@ -177,6 +177,9 @@ class PassedFailed:
     def __init__(self, df: pd.DataFrame):
         self._df = df
 
+        # Project_Hash is allowed to be empty, for example for local copies instead of remote repos
+        self._df["Project_Hash"] = self._df["Project_Hash"].fillna("")
+
         # Some junit-xml files actually had name="" in them
         #   -> replace by NaN so they get ignored in the groupby
         self._df["Test_name"] = self._df["Test_name"].replace("", np.NaN)
@@ -187,7 +190,7 @@ class PassedFailed:
         self._df["Test_parametrization"] = self._df["Test_parametrization"].fillna("")
 
     @classmethod
-    def load(cls, file_name: str):
+    def load(cls, path: str):
         """Load PassedFailed from CSV file
 
         :file_name: TODO
@@ -195,7 +198,7 @@ class PassedFailed:
 
         """
         _df = pd.read_csv(
-            file_name,
+            path,
             # These converters are disabled, because they cause a lot of memory usage.
             # Instead use `eval_string_to_set` on a filtered version.
             # converters={
@@ -211,9 +214,6 @@ class PassedFailed:
             #     'Verdicts_randomOrder': eval_string_to_set,
             # }
         )
-
-        # Project_Hash is allowed to be empty, for example for local copies instead of remote repos
-        _df["Project_Hash"] = _df[["Project_Hash"]].fillna("")
         return cls(_df)
 
     def add_rerun_column(self) -> pd.DataFrame:
@@ -433,12 +433,11 @@ class CoverageOverview(object):
 
     def __init__(self, df):
         self._df = df
+        self._df["Project_Hash"] = self._df["Project_Hash"].fillna("")
 
     @classmethod
     def load(cls, path: str):
-        _df = pd.read_csv(path)
-        _df["Project_Hash"] = _df["Project_Hash"].fillna("")
-        return cls(_df)
+        return cls(pd.read_csv(path))
 
     def group_by_project(self) -> pd.DataFrame:
         """
