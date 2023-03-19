@@ -70,7 +70,7 @@ EXAMPLES
     # -- PARSE ARGUMENT
     SHORT=r:,p,c:,a:,o:
     LONG=run-on:,plus-random-runs,constraint:,core-args:,out-dir:
-    OPTS=$(getopt --name "flapy.sh run" --options $SHORT --longoptions $LONG -- "${@:2}")
+    OPTS=$(getopt --name "flapy.sh run" --options $SHORT --longoptions $LONG -- "${@:2}") || exit
     #
     eval set -- "$OPTS"
     while :
