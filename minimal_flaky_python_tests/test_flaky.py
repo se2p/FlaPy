@@ -7,6 +7,19 @@ import requests
 import numpy as np
 
 
+# HELPER FUNCTIONS
+
+
+def setx(v):
+    global x
+    x = v
+
+
+def repeat(f, num_repetitions: int):
+    for _ in range(num_repetitions):
+        f()
+
+
 # Luo 2014 Categories:
 # * Async Wait
 # * Concurrency
@@ -22,6 +35,9 @@ import numpy as np
 
 def test_not_flaky():
     assert True
+
+
+# NON ORDER DEPENDENT FLAKY TESTS
 
 
 def test_concurrency():
@@ -98,14 +114,16 @@ def test_numeric_operation_64bit():
 def test_memory_usage():
     assert sys.getsizeof("hello") == 30  # Windows: passed, Linux: failed (54)
 
+
 # ORDER DEPENDENCIES
 
-x = 0
+state = 0
 
 
 def test_victim():
-    assert x == 0
+    assert state == 0
+
 
 def test_polluter():
-    global x
-    x = 5
+    global state
+    state = 5

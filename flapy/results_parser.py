@@ -177,6 +177,9 @@ class PassedFailed:
     def __init__(self, df: pd.DataFrame):
         self._df = df
 
+        # Project_Hash is allowed to be empty, for example for local copies instead of remote repos
+        self._df["Project_Hash"] = self._df["Project_Hash"].fillna("")
+
         # Some junit-xml files actually had name="" in them
         #   -> replace by NaN so they get ignored in the groupby
         self._df["Test_name"] = self._df["Test_name"].replace("", np.NaN)
@@ -187,7 +190,7 @@ class PassedFailed:
         self._df["Test_parametrization"] = self._df["Test_parametrization"].fillna("")
 
     @classmethod
-    def load(cls, file_name: str):
+    def load(cls, path: str):
         """Load PassedFailed from CSV file
 
         :file_name: TODO
@@ -195,7 +198,7 @@ class PassedFailed:
 
         """
         _df = pd.read_csv(
-            file_name,
+            path,
             # These converters are disabled, because they cause a lot of memory usage.
             # Instead use `eval_string_to_set` on a filtered version.
             # converters={
@@ -422,6 +425,36 @@ class TestsOverview:
                 "Num_runs",
             ]
         ]
+
+
+class CoverageOverview(object):
+
+    """Output of ResultsDirCollection.get_coverage_overview"""
+
+    def __init__(self, df):
+        self._df = df
+        self._df["Project_Hash"] = self._df["Project_Hash"].fillna("")
+
+    @classmethod
+    def load(cls, path: str):
+        return cls(pd.read_csv(path))
+
+    def group_by_project(self) -> pd.DataFrame:
+        """
+        Compute the average coverage per project,
+        taking into account that different iterations
+        have different numbers of runs (weighted average).
+        """
+        df = self._df.copy()
+        num_iteration_with_zero_entries = len(df[df["number_of_entries"] < 1])
+        logging.warning(f"Dropped {num_iteration_with_zero_entries} iteration with zero coverage entries")
+        df = df[df["number_of_entries"] > 0]
+
+        return df.groupby(proj_cols).apply(lambda x: pd.Series({
+            "number_of_runs": sum(x["number_of_entries"]),
+            "BranchCoverage": np.average(x["BranchCoverage"], weights=x["number_of_entries"]),
+            "LineCoverage": np.average(x["LineCoverage"], weights=x["number_of_entries"])
+        }))
 
 
 class MyFileWrapper(ABC):
@@ -680,14 +713,19 @@ class Iteration:
 
     def __init__(self, path: Union[str, Path]):
         self.p = Path(path)
-        assert Iteration.is_iteration(self.p), "This does not seem like an iteration directory"
         self._archive: Optional[tarfile.TarFile] = None
 
-        # Setup cache
-        self._results_cache = self.p / "flapy.cache"
-        if not self._results_cache.is_dir():
-            self._results_cache.mkdir()
-        self._junit_cache_file = self._results_cache / "junit_data.csv"
+        # Check if this is a valid iteration
+        if not path.is_dir():
+            raise ValueError(f"{self.p} is not a directory")
+        if path.name == "run":
+            raise ValueError(f"Folders named 'run' are not considered iterations (legacy)")
+        if path.name.startswith("."):
+            raise ValueError(f"Folders whose names start with '.' are not considered iterations")
+        if not (path / self.archive_name).is_file():
+            # TODO: maybe raise this exception later (like inside get_junit_data, or just set
+            # status). The meta file might still be present and its information might be interesting
+            raise ValueError(f"{self.p} contains no results archive ({self.archive_name})")
 
         # Read meta info if available (only in newer versions, older versions use separate files)
         self.meta_file = self.p / self.meta_file_name
@@ -697,14 +735,16 @@ class Iteration:
         else:
             self.meta_info = None
 
-    @classmethod
-    def is_iteration(cls, path: Path) -> bool:
-        return (
-            path.is_dir()
-            and path.name != "run"
-            and not path.name.startswith(".")
-            and ((path / cls.archive_name).is_file() or (path / cls.meta_file_name).is_file())
-        )
+        # Retrieve basic information to raise heat cache and raise possible errors now
+        self.get_project_name()
+        self.get_project_url()
+        self.get_project_git_hash()
+
+        # Setup cache
+        self._results_cache = self.p / "flapy.cache"
+        if not self._results_cache.is_dir():
+            self._results_cache.mkdir()
+        self._junit_cache_file = self._results_cache / "junit_data.csv"
 
     def has_archive(self):
         """If the results have not been written back (e.g., due to a timeout), there is no resultar.tar.xz, however, the directory with the meta infos is still counted as a failed attempt and therefore an iteration."""
@@ -718,58 +758,40 @@ class Iteration:
             with open(self.p / "project-name.txt") as file:
                 return file.read().replace("\n", "")
         else:
-            if (len(self.get_archive_names()) == 0) and self.has_archive():
-                return self.p.name + "_EMPTY"
-            else:
-                # local/hdd/user/project_name
-                try:
-                    return self.get_archive_names()[0].split("/")[3]
-                except Exception:
-                    logging.error(
-                        f"Could not get project name for iteration results {self.p}. This is needed for identifying junit-xml, coverage, and other files, as their name contains the project name."
-                    )
-                    return "COULD_NOT_GET_PROJECT_NAME"
+            raise ValueError("Could not retrieve project name")
 
     def get_project_url(self) -> str:
         if self.meta_info is not None:
             return self.meta_info["project_url"]
-        if (self.p / "project-url.txt").is_file():
+        elif (self.p / "project-url.txt").is_file():
             with open(self.p / "project-url.txt") as file:
                 return file.read().replace("\n", "")
-        return "COULD_NOT_GET_PROJECT_URL"
+        else:
+            raise ValueError("Could not retrieve project URL")
 
     def get_project_git_hash(self) -> str:
         if self.meta_info is not None:
             return self.meta_info["project_git_hash"]
-        if (self.p / "project-git-hash.txt").is_file():
+        elif (self.p / "project-git-hash.txt").is_file():
             with open(self.p / "project-git-hash.txt") as file:
                 return file.read().replace("\n", "")
-        return "COULD_NOT_GET_PROJECT_GIT_HASH"
+        else:
+            raise ValueError("Could not retrieve project hash")
 
     def get_flapy_git_hash(self) -> str:
-        """Flapy used to be called 'flakyanalysis'"""
+        # Flapy used to be called 'flakyanalysis'
         if (self.p / "flakyanalysis-git-hash.txt").is_file():
             with open(self.p / "flakyanalysis-git-hash.txt") as file:
                 return file.read().replace("\n", "")
         return "COULD_NOT_GET_FLAKYANALYSIS_GIT_HASH"
 
-    def get_status_and_info(self):
-        """Critical information such as the project-name, -url, or -hash might not be present (e.g. due to aborted jobs) and raise exceptions when try to be accessed. This method offers a save way to retrieve these information, returning them in a dictionary with a 'iteration_status' field indicating if something went wrong."""
-        try:
-            return {
-                "Iteration_path": self.p,
-                "Iteration_status": "ok",
-                "Iteration_error": None,
-                "Project_Name": self.get_project_name(),
-                "Project_URL": self.get_project_url(),
-                "Project_Hash": self.get_project_git_hash(),
-            }
-        except Exception as e:
-            return {
-                "Iteration_path": self.p,
-                "Iteration_status": "error",
-                "Iteration_error": f"{type(e).__name__}: {e}",
-            }
+    def get_iterations_info(self) -> Dict[str, Any]:
+        return {
+            "Iteration": self,
+            "Project_Name": self.get_project_name(),
+            "Project_URL": self.get_project_url(),
+            "Project_Hash": self.get_project_git_hash(),
+        }
 
     def get_lines_of_code(self, languages=["Python"], metrics=["code"]) -> Dict[str, Optional[int]]:
         """Read lines-of-code information
@@ -1143,16 +1165,13 @@ class IterationCollection(ABC):
         pass
 
     @lru_cache()
-    def get_iterations_overview(self, filter_out_errors=False) -> pd.DataFrame:
+    def get_iterations_overview(self) -> pd.DataFrame:
         iterations_overview = (
-            pd.DataFrame([it.get_status_and_info() for it in self.get_iterations()])
+            pd.DataFrame([it.get_iterations_info() for it in self.get_iterations()])
             .set_index(["Project_Name", "Project_URL", "Project_Hash"])
             .sort_index()
         )
-        if filter_out_errors:
-            return iterations_overview[iterations_overview["Iteration_status"] == "ok"]
-        else:
-            return iterations_overview
+        return iterations_overview
 
     def get_iterations_meta_overview(self):
         """
@@ -1213,6 +1232,11 @@ class IterationCollection(ABC):
                 )
             )
 
+    def get_coverage_overview(self) -> pd.DataFrame:
+        pool = multiprocessing.Pool()
+        co = pd.concat(pool.map(Iteration.get_coverage_overview, self.get_iterations()))
+        return co
+
     def get_meta_overview(self) -> pd.DataFrame:
         result = pd.DataFrame([it.get_meta_overview() for it in self.get_iterations()])
         return result
@@ -1221,7 +1245,7 @@ class IterationCollection(ABC):
         """Collect LoC statistics from all iterations"""
         result = []
         for it in self.get_iterations():
-            it_result = it.get_status_and_info()
+            it_result = it.get_iterations_info()
             try:
                 loc = it.get_lines_of_code(languages, metrics)
                 it_result.update({"LoC_status": "ok"})
@@ -1251,7 +1275,13 @@ class ResultsDir(IterationCollection):
         self._pf_cache_file = self._results_cache / "passed_failed.csv"
 
     def get_iterations(self) -> List[Iteration]:
-        iterations = [Iteration(path) for path in self.p.glob("*") if Iteration.is_iteration(path)]
+        """
+        Return all valid iterations contained in this ResultsDir
+        """
+        iterations = [
+            try_default(lambda: Iteration(path), log_error_info=path) for path in self.p.glob("*")
+        ]
+        iterations = [it for it in iterations if it is not None]
         return iterations
 
     def clear_results_cache(self):
@@ -1384,12 +1414,6 @@ class ResultsDir(IterationCollection):
                     "Test_name",
                 ]
             )
-
-    def get_coverage_overview(self) -> pd.DataFrame:
-        pool = multiprocessing.Pool()
-        co = pd.concat(pool.map(Iteration.get_coverage_overview, self.get_iterations()))
-        co["Iteration"] = str(self.p) + "/" + co["Iteration"]
-        return co
 
     def __repr__(self) -> str:
         return f"ResultsDir('{self.p}')"
