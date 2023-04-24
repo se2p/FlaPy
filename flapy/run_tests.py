@@ -41,7 +41,7 @@ from setuptools import find_packages  # type: ignore
 import pipfile  # type: ignore
 import virtualenv as virtenv  # type: ignore
 
-from flapy import tempfile_seeded
+from flapy import tempfile_hardcoded
 
 
 class FileUtils:
@@ -57,7 +57,7 @@ class FileUtils:
         :param tmp_dir_prefix: Prefix for the temporary directory, e.g. "/tmp"
         :return:
         """
-        tmp_dir = tempfile_seeded.mkdtemp(dir=tmp_dir_prefix)  # typing: ignore
+        tmp_dir = tempfile_hardcoded.mkdtemp(dir=tmp_dir_prefix)  # typing: ignore
         shutil.rmtree(tmp_dir)
         return tmp_dir
 
@@ -81,7 +81,7 @@ class FileUtils:
             os.mkdir(tmp_dir_path)
             tmp_dir = tmp_dir_path
         else:
-            tmp_dir = tempfile_seeded.mkdtemp(dir=tmp_dir_prefix)  # type: ignore
+            tmp_dir = tempfile_hardcoded.mkdtemp(dir=tmp_dir_prefix)  # type: ignore
         cls.copy_tree(src_dir, tmp_dir)
         cls._copies.append(tmp_dir)
         return tmp_dir
