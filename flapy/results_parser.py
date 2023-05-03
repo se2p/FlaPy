@@ -5,6 +5,7 @@ import sys
 import tarfile
 import tempfile
 import sqlite3
+import warnings
 
 import string
 import keyword
@@ -44,8 +45,10 @@ from pathlib import Path
 from abc import ABC, abstractmethod
 from functools import lru_cache, reduce
 import junitparser
+from coverage.numbits import register_sqlite_functions
 
 from flapy.utils import try_default
+from flapy.sfl_scoring import tarantula, ochiai, dStar, barinel, op2
 
 # Initialize pandas progress bar methods
 tqdm.pandas()
@@ -568,6 +571,78 @@ class CoverageXmlFileRandomOrder(CoverageXmlFile):
     def get_regex(cls, project_name: str):
         # 'non-deterministic' was the legacy name randomOrder
         return rf".*/(?:non-deterministic|randomOrder)/tmp/{project_name}_coverage(\d+)(.*)\.xml"
+
+
+class CoverageSqliteFile(MyFileWrapper):
+    @classmethod
+    def get_regex(cls, project_name: str):
+        return rf".*/{project_name}_coverage(\d+)(.*)\.sqlite$"
+
+    def get_order(self) -> str:
+        if CoverageSqliteFileSameOrder.is_(self.p, self.project_name, self.openvia):
+            return "same"
+        if CoverageSqliteFileRandomOrder.is_(self.p, self.project_name, self.openvia):
+            return "random"
+        return "COULD_NOT_GET_ORDER"
+
+    def get_linebits(self) -> pd.DataFrame:
+        # -- sqlite cannot open a file handle, but needs a file name -> extract db file first
+        with tempfile.TemporaryDirectory() as tmpdir:
+            self.archive.extract(str(self.p), tmpdir)
+
+            # -- Querrying database
+            conn = sqlite3.connect(Path(tmpdir) / self.p)
+            register_sqlite_functions(conn)
+            df = pd.read_sql_query(
+                # "select file_id, context_id, numbits_to_nums(numbits) from line_bits"
+                "select path, context, numbits_to_nums(numbits) as lines "
+                "from line_bits "
+                "join context on context.id=context_id "
+                "join file on file.id=file_id",
+                conn,
+            )
+            df["lines"] = df["lines"].apply(literal_eval)
+            df = df.replace("", np.NaN)
+            return df
+
+    def to_table(self, *, drop_empty_context=False, drop_execution_stages=False) -> pd.DataFrame:
+        """
+        drop_execution_stages: e.g. 'test_foo|run' -> 'test_foo'; 'test_bar|setup' -> 'test_bar'
+            In this case, we also need to group the columns together
+            that address the same test via an any operator
+        """
+        df = self.get_linebits()
+        df["context"] = df["context"].fillna("EMPTY_CONTEXT")
+        df = df.explode("lines")
+        df = df.dropna(subset="lines")
+        df["covered"] = True
+        df = df.pivot(index=["path", "lines"], columns="context", values="covered")
+        df = df.fillna(False)
+        if drop_empty_context:
+            df.drop(columns="EMPTY_CONTEXT", inplace=True, errors="ignore")
+        if drop_execution_stages:
+            if not df.empty:
+                df.rename(columns=lambda col: re.sub("\|.*", "", col), inplace=True)
+                df = df.groupby(level=0, axis=1).any()
+                # Groupby somehow removes the index names
+                df.index.set_names(["path", "lines"], inplace=True)
+        return df
+
+
+class CoverageSqliteFileSameOrder(CoverageSqliteFile):
+    @classmethod
+    def get_regex(cls, project_name: str):
+        # 'deterministic' was the legacy name sameOrder
+        return rf".*/(?:deterministic|sameOrder)/tmp/{project_name}_coverage(\d+)(.*)\.sqlite$"
+
+
+class CoverageSqliteFileRandomOrder(CoverageSqliteFile):
+    @classmethod
+    def get_regex(cls, project_name: str):
+        # 'non-deterministic' was the legacy name randomOrder
+        return (
+            rf".*/(?:non-deterministic|randomOrder)/tmp/{project_name}_coverage(\d+)(.*)\.sqlite$"
+        )
 
 
 class JunitXmlFile(MyFileWrapper):
@@ -1094,6 +1169,9 @@ class Iteration:
     def get_trace_files(self) -> List[TraceFile]:
         return self.get_files(TraceFile)
 
+    def get_coverage_sqlite_files(self) -> List[CoverageSqliteFile]:
+        return self.get_files(CoverageSqliteFile)
+
     def get_archive(self) -> tarfile.TarFile:
         if self._archive is None:
             self._archive = tarfile.open(self.p / self.archive_name)
@@ -1138,6 +1216,64 @@ class Iteration:
             "Test_name": test_funcdescr[2],
             **search,
         }
+
+    def yield_coverage_table(
+        self, drop_execution_stages=False, order=None
+    ) -> Iterable[Tuple[pd.DataFrame, pd.DataFrame]]:
+        """Each testsuite execution creates one coverage-sqlite database.
+        This method gradually processes the coverage-sqlite database of each testsuite execution to
+        the respective coverage table.
+
+        drop_execution_stages: 'test|run' -> 'test'; 'test|setup' -> 'test'
+            In this case, we also need to group the columns together
+            that address the same test via an any operator
+
+        :returns: generator producing tuples: (coverage-table, test-outcomes)
+        """
+
+        junit_data = self.get_junit_data()
+
+        coverage_files = self.get_files(CoverageSqliteFile)
+        if order is not None:
+            assert order in ["same", "random"], f"unknown order {order}"
+            coverage_files = [cf for cf in coverage_files if cf.get_order() == order]
+            junit_data = junit_data[junit_data["order"] == order]
+        coverage_files = sorted(coverage_files, key=lambda x: x.get_num())
+
+        for f in coverage_files:
+            try:
+                ct: pd.DataFrame = f.to_table(
+                    drop_empty_context=True, drop_execution_stages=drop_execution_stages
+                )
+                test_outcomes = junit_data[junit_data["num"] == f.get_num()]
+                yield (ct, test_outcomes)
+            except Exception as e:
+                logging.error(f"{type(e).__name__}: {e} | Iteration=({self.p}), File=({f.p})")
+        self.close_archive()
+
+    def get_coverage_table(self, *, include_iteration_path=True, order=None) -> pd.DataFrame:
+        """ Retrieve table showing which test case executed which line of source code
+        (rows = source code lines, columns = test executions).
+        Considering only same order executions.
+        """
+
+        # cov_tables = [
+        #     f.to_table().rename(
+        #         columns=lambda c: (self.p.name, f.get_num(), c)
+        #         if include_iteration_path
+        #         else (f.get_num(), c)
+        #     )
+        #     for f in sorted(self.get_files(CoverageSqliteFileSameOrder), key=lambda x: x.get_num())
+        # ]
+        # self.close_archive()
+
+        cov_tables, _ = list(zip(*list(self.yield_coverage_table())))
+
+        if len(cov_tables) > 0:
+            cov_table = pd.concat(cov_tables, axis="columns")
+            return cov_table
+        else:
+            return pd.DataFrame()
 
     def close_archive(self) -> None:
         if self._archive is not None:
@@ -1254,6 +1390,174 @@ class IterationCollection(ABC):
                 it_result.update({"LoC_status": "error"})
             result.append(it_result)
         return pd.DataFrame(result)
+
+    def get_accum_coverage_table_for_project(
+        self, proj_name: str, proj_url: str, proj_hash: str, order: str
+    ) -> Tuple[pd.Series, pd.DataFrame]:
+        """
+        Generating the entire coverage table, which contains all runs of all iterations,
+        is often memory-wise not feasible. This functions accumulates the coverage table to
+        ct_accum, adding all test executions up and showing for each test case (columns),
+        how often it executed each line of source code (rows). To infer, if the test case covered
+        a certain line in all its executions, this function also returns the table
+        tests_num_executions (tne), that shows how many times each test has been executed.
+        """
+        # Filter for iterations that executed the specified project
+        #   I don't use .loc here, because it has some weird behavior:
+        #   sometimes it return a DataFrame, sometimes a Series
+        proj_dirs = self.get_iterations_overview().reset_index()
+        match = proj_dirs[
+            (proj_dirs["Project_Name"] == proj_name)
+            & (proj_dirs["Project_URL"] == proj_url)
+            & (proj_dirs["Project_Hash"] == proj_hash)
+        ]
+        proj_iterations = match["Iteration"]
+
+        ct_accum = None
+        tests_num_executions = pd.Series()
+        for it in proj_iterations:
+            logging.debug(it.p.name)
+            for ct, _ in it.yield_coverage_table(drop_execution_stages=True, order=order):
+                ct = ct.astype(int)
+
+                executed_tests = pd.Series(1, index=ct.columns)
+                tests_num_executions = tests_num_executions.add(executed_tests, fill_value=0)
+
+                if ct_accum is None:
+                    ct_accum = ct
+                else:
+                    ct_accum = ct_accum.add(ct, fill_value=0)
+        if ct_accum is None:
+            logging.warning(f"ct_accum was None in project {proj_name}, {proj_url}, {proj_hash}")
+            ct_accum = pd.DataFrame()
+        ct_accum = ct_accum.fillna(0).astype(int)
+        tests_num_executions.index.name = "Test_nodeid_inclPara"
+        tests_num_executions.name = "execution_count"
+        return tests_num_executions, ct_accum
+
+    def get_first_coverage_table_for_project(
+        self, proj_name: str, proj_url: str, proj_hash: str, order: str
+    ):
+        proj_dirs = self.get_iterations_overview().reset_index()
+        match = proj_dirs[
+            (proj_dirs["Project_Name"] == proj_name)
+            & (proj_dirs["Project_URL"] == proj_url)
+            & (proj_dirs["Project_Hash"] == proj_hash)
+        ]
+        proj_iterations = match["Iteration"]
+
+        ct_accum = None
+        tests_num_executions = pd.Series()
+
+        it = sorted(proj_iterations, key=lambda x: x.p)[0]
+        logging.debug(it.p.name)
+        ct, _ = next(it.yield_coverage_table(drop_execution_stages=True, order=order))
+
+        ct = ct.astype(int)
+
+        executed_tests = pd.Series(1, index=ct.columns)
+        tests_num_executions = tests_num_executions.add(executed_tests, fill_value=0)
+
+        if ct_accum is None:
+            ct_accum = ct
+        else:
+            ct_accum = ct_accum.add(ct, fill_value=0)
+
+        if ct_accum is None:
+            logging.warning(f"ct_accum was None in project {proj_name}, {proj_url}, {proj_hash}")
+            ct_accum = pd.DataFrame()
+        ct_accum = ct_accum.fillna(0).astype(int)
+        tests_num_executions.index.name = "Test_nodeid_inclPara"
+        tests_num_executions.name = "execution_count"
+        return tests_num_executions, ct_accum
+
+    def save_cta_for_project(
+        self,
+        proj_name: str,
+        proj_url: str,
+        proj_hash: str,
+        cta_save_dir: str,
+        flaky_col: str,
+        method: str,
+    ):
+        # Verify inputs
+        if flaky_col == "Flaky_sameOrder_withinIteration":
+            order = "same"
+        elif flaky_col == "Order-dependent":
+            order = "random"
+        else:
+            raise ValueError(
+                "Unknown flakiness column, "
+                "select 'Flaky_sameOrder_withinIteration' or 'Order-dependent'"
+            )
+
+        if method == "accum":
+            get_cov_table_method = self.get_accum_coverage_table_for_project
+        elif method == "first":
+            get_cov_table_method = self.get_first_coverage_table_for_project
+        else:
+            raise ValueError(f"Unknown method '{method}'. Use 'accum' or 'first'")
+
+        # Calculate coverage table
+        try:
+            tne, cta = get_cov_table_method(proj_name, proj_url, proj_hash, order)
+
+            to = self.get_tests_overview()._df
+            matching_to = to[
+                (to["Project_Name"] == proj_name)
+                & (to["Project_URL"] == proj_url)
+                & (to["Project_Hash"] == proj_hash)
+            ]
+            flakiness_status = matching_to.set_index("Test_nodeid_inclPara", verify_integrity=True)[
+                flaky_col
+            ]
+        except Exception as e:
+            logging.error(
+                f"{type(e).__name__}: '{e}' in project {proj_name}, {proj_url}, {proj_hash}"
+            )
+            logging.error(traceback.format_exc())
+            return None
+
+        # Export
+        url_without_slash = proj_url.replace("/", " ")
+        cta_save_dir = Path(cta_save_dir)
+        cta_save_dir.mkdir(exist_ok=True)
+        cta.to_csv(cta_save_dir / f"{url_without_slash}@{proj_hash}_cta.csv")
+        tne.reset_index().merge(
+            flakiness_status.reset_index(), on="Test_nodeid_inclPara", how="outer"
+        ).to_csv(cta_save_dir / f"{url_without_slash}@{proj_hash}_TneFs.csv", index=False)
+
+    def save_cta_tables(self, flaky_col: str, method: str, cta_save_dir: str):
+        """Save accumulated coverage tables (cta) to directory
+
+        :flaky_col: "Flaky_sameOrder_withinIteration" / "Order-dependent" / "Flaky_Infrastructure"
+            You have to provide a this, because it determines which runs are going to be use:
+            NOD flaky (Flaky_sameOrder_withinIteration) -> same order runs
+            OD flaky (Order-dependent) -> random order runs
+        :method: "accum" or "first"
+
+        """
+        # Always calculate the tests_overview, even if you don't use it.
+        #   Reason: it refreshes the PassedFailed-cache, which the calculation of the
+        #   suspiciousness tables needs, however, this should not be done by multiple
+        #   threads.
+        to = self.get_tests_overview()._df
+
+        projs = to[to[flaky_col]][proj_cols].drop_duplicates().values.tolist()
+        logging.info(f"Saving suspiciousness tables for {len(projs)} projects")
+
+        pool = multiprocessing.Pool()
+        list(tqdm(
+            pool.starmap(
+                partial(
+                    self.save_cta_for_project,
+                    cta_save_dir=cta_save_dir,
+                    flaky_col=flaky_col,
+                    method=method,
+                ),
+                projs,
+            )
+        ))
 
 
 class ResultsDir(IterationCollection):
@@ -1660,6 +1964,546 @@ def parse_trace_line(
     tags = tags.strip()
 
     return call_return, depth, func, tags, arg_hash
+
+
+def calculate_suspiciousness_scores_accum(
+    cta: pd.DataFrame, tne: pd.Series, test_flakiness_status: pd.Series, sfl_method: str
+) -> pd.DataFrame:
+    """
+    :cta: covered table accumulated
+    :tne: tests number executions
+        pd.Series mapping a test to the number of times it has been executed
+    :test_flakiness_status:
+        pd.Series mapping each test to its flakiness status (true / false)
+    :sfl_method: how to treat different coverage behaviors
+        sffl       -> intersection for flaky tests, union for stable tests
+        union      -> union for flaky tests, union for stable tests
+        individual -> treat each test execution as a separate test case
+    """
+
+    # The following operations cause performance warning, however, avoid these causes longer
+    # runtimes -> we suppress them
+    warnings.simplefilter(action="ignore", category=pd.errors.PerformanceWarning)
+
+    score_df = pd.DataFrame()
+
+    flaky_tests = test_flakiness_status[test_flakiness_status].keys()
+    nonFlaky_tests = test_flakiness_status[~test_flakiness_status].keys()
+
+    flaky_total = 0
+    nonFlaky_total = 0
+
+    if sfl_method == "sffl":
+        score_df[flaky_tests] = cta[flaky_tests].apply(lambda s: s == tne[s.name])
+        score_df[nonFlaky_tests] = cta[nonFlaky_tests] > 0
+        flaky_total = len(flaky_tests)
+        nonFlaky_total = len(nonFlaky_tests)
+    elif sfl_method == "union":
+        score_df[flaky_tests] = cta[flaky_tests] > 0
+        score_df[nonFlaky_tests] = cta[nonFlaky_tests] > 0
+        flaky_total = len(flaky_tests)
+        nonFlaky_total = len(nonFlaky_tests)
+    elif sfl_method == "individual":
+        score_df[flaky_tests] = cta[flaky_tests]
+        score_df[nonFlaky_tests] = cta[nonFlaky_tests]
+        flaky_total = sum(tne[flaky_tests])
+        nonFlaky_total = sum(tne[nonFlaky_tests])
+    else:
+        raise ValueError(f"Unknown sfl_method {sfl_method}, use 'sffl', 'union', or 'individual'")
+
+    # Per line: how my (non)flaky Tests cover it?
+    score_df["flaky_covered"] = score_df[flaky_tests].apply(sum, axis="columns")
+    score_df["nonFlaky_covered"] = score_df[nonFlaky_tests].apply(sum, axis="columns")
+
+    score_df["flaky_total"] = flaky_total
+    score_df["nonFlaky_total"] = nonFlaky_total
+
+    # Calculate suspiciousness scores
+    if not score_df.empty:  # the following steps crash on empty dataframes
+        score_df["tarantula"] = score_df.apply(
+            lambda s: tarantula(
+                s["flaky_covered"], s["nonFlaky_covered"], flaky_total, nonFlaky_total
+            ),
+            axis="columns",
+        )
+        score_df["ochiai"] = score_df.apply(
+            lambda s: ochiai(s["flaky_covered"], s["nonFlaky_covered"], flaky_total),
+            axis="columns",
+        )
+        score_df["dStar"] = score_df.apply(
+            lambda s: dStar(s["flaky_covered"], s["nonFlaky_covered"], flaky_total, 2),
+            axis="columns",
+        )
+        score_df["barinel"] = score_df.apply(
+            lambda s: barinel(s["flaky_covered"], s["nonFlaky_covered"], flaky_total),
+            axis="columns",
+        )
+        score_df["op2"] = score_df.apply(
+            lambda s: op2(s["flaky_covered"], s["nonFlaky_covered"], nonFlaky_total),
+            axis="columns",
+        )
+    else:
+        score_df["tarantula"] = []
+        score_df["ochiai"] = []
+        score_df["dStar"] = []
+        score_df["barinel"] = []
+        score_df["op2"] = []
+
+    # Encode flakiness status in column name
+    score_df.rename(
+        columns=lambda x: ("flaky" if test_flakiness_status[x] else "non_flaky", x)
+        if x in test_flakiness_status
+        else x,
+        inplace=True,
+    )
+
+    return score_df
+
+
+class SuspiciousnessTable(object):
+
+    """Output of save_susiciousness_tables_for_project"""
+
+    line_columns = ["path", "lines", "flaky_covered", "nonFlaky_covered", "flaky_total", "nonFlaky_total"]
+    sfl_columns = ["tarantula", "ochiai", "dStar", "barinel", "op2"]
+
+    def __init__(self, df: pd.DataFrame, url=None, git_hash=None):
+        self._df = df
+        self.url = url
+        self.git_hash = git_hash
+
+        non_test_columns = self.line_columns + self.sfl_columns + ["Unnamed: 0"]
+
+        # Test columns are tuples `(flaky/non_flaky, TEST_NODEID)` -> evaluate from string
+        self.test_columns = set(self._df.columns).difference(non_test_columns)
+        self._df.columns = self._df.columns.map(
+            lambda c: literal_eval(c) if c in self.test_columns else c
+        )
+        self.test_columns = set(self._df.columns).difference(non_test_columns)
+        self.flaky_tests = [t for fs, t in self.test_columns if fs == "flaky"]
+        self.non_flaky_tests = [t for fs, t in self.test_columns if fs == "non_flaky"]
+
+        # path has prefix "workdir/..." -> remove that
+        if "path" in self._df.columns:
+            self._df["path"] = self._df["path"].apply(
+                lambda x: re.sub(
+                    "/workdir/(non-deterministic|deterministic|sameOrder|randomOrder)/tmp/tmp.*?/",
+                    "",
+                    x,
+                )
+            )
+
+        # calc ranks
+        for col in self.sfl_columns:
+            self._df[f"{col}_bc_rank"] = self._df[col].rank(method="min", ascending=False)
+            self._df[f"{col}_wc_rank"] = self._df[col].rank(method="max", ascending=False)
+
+        # set index
+        if not self._df.empty:
+            self._df.set_index(["path", "lines"], inplace=True)
+
+    @classmethod
+    def load(cls, path_: str):
+        """Load SuspiciousnessTable from CSV file"""
+        path_ = Path(path_)
+        _df = pd.read_csv(path_)
+        url, git_hash = re.match("(.*)@(.*).csv", path_.name).groups()
+        url = url.replace(" ", "/")
+        obj = cls(_df, url, git_hash)
+        obj.p = path_
+        return obj
+
+
+class SuspiciousnessDir(object):
+
+    """Output of IterationCollectionL.save_suspiciousness_tables"""
+
+    def __init__(self, path):
+        self.p = Path(path)
+        assert self.p.is_dir()
+        self.suspiciousness_tables = [SuspiciousnessTable.load(path) for path in self.p.glob("*")]
+        self.proj_to_st = {(st.url, st.git_hash): st for st in self.suspiciousness_tables}
+
+    def statistic(self):
+        statistic_table = pd.DataFrame(
+            [
+                (
+                    st.url,
+                    st.git_hash,
+                    st._df.empty,
+                    len(st.flaky_tests),
+                    len(st.non_flaky_tests),
+                    # min(st._df["tarantula"]) if not st._df.empty else None,
+                    # max(st._df["tarantula"]) if not st._df.empty else None,
+                )
+                for st in self.suspiciousness_tables
+            ],
+            columns=[
+                "Project_URL",
+                "Project_Hash",
+                "empty",
+                "num_flaky_tests",
+                "num_non_flaky_tests",
+                # "tarantula_min", "tarantual_max"
+            ],
+        )
+        return statistic_table
+
+    def get_suspiciousness_rank_of_source_code_line(
+        self,
+        proj_url: str,
+        proj_hash: str,
+        test_nodeid: str,
+        location_file: str,
+        location_line,
+        drop_not_covered_lines=True
+    ) -> Tuple[pd.Series, pd.Series, str]:
+        """
+        Search for suspiciousness rank of a given source code line
+        in a given file of a given project.
+
+        The numbers in the error messages are arbitrary, only their ordering is important for
+        `min` in the groupby in `merge_location_info`.
+
+        :drop_not_covered_lines: some lines were not covered by any test case, but just the general
+            program execution. Drop these from the suspiciousness table?
+
+        :return: (num_tests, ranks)
+
+            num_tests: how many flaky and non-flaky tests were executed, e.g.
+
+                num_flaky_tests         1
+                num_non_flaky_tests    11
+
+            ranks: ranks given to the specivied lines by different approaches, e.g.
+
+                flaky_covered          0
+                nonFlaky_covered       0
+                tarantula              0
+                ochiai                 0
+                dStar                  0
+                tarantula_bc_rank     11
+                tarantula_wc_rank    606
+                ochiai_bc_rank        11
+                ochiai_wc_rank       606
+                dStar_bc_rank         11
+                dStar_wc_rank        606
+
+        """
+
+        # Search, if we have a suspiciousness table for the specified project
+        st: SuspiciousnessTable = self.proj_to_st.get((proj_url, proj_hash))
+
+        if st is None:
+            raise ValueError("8. NO SuspiciousnessTable FOUND")
+
+        st_df = st._df.copy()
+        if st_df.empty:
+            raise ValueError("6. EMPTY SuspiciousnessTable")
+        else:
+            if drop_not_covered_lines:
+                st_df = st_df[(st_df["flaky_covered"] > 0) | (st_df["nonFlaky_covered"] > 0)]
+
+            # Search for the specified source code file and line in the suspiciousness table
+            if (location_file, location_line) not in st_df.index:
+                if test_nodeid not in st.flaky_tests:
+                    if test_nodeid not in st.non_flaky_tests:
+                        error_message = "42. FILE:LINE NOT FOUND + test was not executed"
+                    else:
+                        error_message = "41. FILE:LINE NOT FOUND + test did not show flaky behavior"
+                error_message = "44. FILE:LINE NOT FOUND"
+                raise ValueError(error_message)
+            else:
+
+                if test_nodeid not in st.flaky_tests:
+                    if test_nodeid not in st.non_flaky_tests:
+                        status = "2. test was not executed"
+                    else:
+                        status = "1. test did not show flaky behavior"
+                else:
+                    status = "0. successfully matched and test showed flaky behavior"
+
+                num_tests = pd.Series({
+                    "num_flaky_tests": len(st.flaky_tests),
+                    "num_non_flaky_tests": len(st.non_flaky_tests),
+                })
+
+                # calc ranks
+                for col in SuspiciousnessTable.sfl_columns:
+                    st_df[f"{col}_bc_rank"] = st_df[col].rank(method="min", ascending=False)
+                    st_df[f"{col}_wc_rank"] = st_df[col].rank(method="max", ascending=False)
+
+                ranks = st_df.loc[(location_file, location_line)][
+                    st_df.columns.drop(st.test_columns)
+                ]
+                return num_tests, ranks, status
+
+    def merge_location_info(
+        self, location_file_name: str, loc_file_name: str, *, drop_not_covered_lines=True
+    ):
+        """
+
+        location_file_name: path to CSV file containing the true fault locations.
+
+        loc_file_name: path to CSV file containing lines-of-code information for the projects.
+            This information is necessary to calculate the EXAM score. We cannot just use the
+            number of all covered lines, because the test suite might not cover the entire source
+            code.
+        """
+        # Load locations file and explode its location column
+        lt = LocationTable.load(location_file_name)
+        lt_splitted = lt.split_locations()
+
+        # For each location, determine its rank according to different approaches
+        result = []
+        for _, row in lt_splitted.iterrows():
+            try:
+                num_tests, ranks, status = self.get_suspiciousness_rank_of_source_code_line(
+                    proj_url=row["Project_URL"],
+                    proj_hash=row["Project_Hash"],
+                    test_nodeid=row["Test_nodeid_inclPara"],
+                    location_file=row["Location_file"],
+                    location_line=row["Location_line"],
+                    drop_not_covered_lines=drop_not_covered_lines,
+                )
+                status_info = pd.Series({"status": status})
+                result.append(pd.concat([row, num_tests, ranks, status_info]))
+            except ValueError as e:
+                status_info = pd.Series({"status": str(e)})
+                result.append(pd.concat([row, status_info]))
+        result_df = pd.DataFrame(result)
+
+        # Group by test
+        #   one project/test can have multiple locations -> take the earliest one found
+        result_df = (
+            result_df.groupby(proj_cols + test_cols_without_filename + ["Test_nodeid_inclPara"])
+            .agg(
+                {
+                    "num_flaky_tests": "first",
+                    "num_non_flaky_tests": "first",
+                    "status": "min",
+                    **{
+                        f"{col}_{case}_rank": "min"
+                        for col in SuspiciousnessTable.sfl_columns
+                        for case in ["bc", "wc"]
+                    },
+                }
+            )
+            .reset_index()
+        )
+
+        result_df = result_df.merge(lt._df)
+
+        # Compare to total lines of code
+        loc = pd.read_csv(loc_file_name)
+        loc["Project_Hash"] = loc["Project_Hash"].fillna("")
+        loc.rename(columns={"code": "LOC"}, inplace=True)
+        loc = loc[loc["language"] == "Python"][["Project_URL", "Project_Hash", "LOC"]]
+        result_df = result_df.merge(loc, how="left")
+
+        # Calcualte EXAM scores
+        for col in SuspiciousnessTable.sfl_columns:
+            result_df[f"EXAM_{col}_bc"] = result_df[f"{col}_bc_rank"] / result_df["LOC"]
+            result_df[f"EXAM_{col}_wc"] = result_df[f"{col}_wc_rank"] / result_df["LOC"]
+
+        return result_df
+
+
+class CtaDir(object):
+
+    """ Output of ResultsDir(Collection).save_cta_tables """
+
+    def __init__(self, path):
+        """ """
+        self.p = Path(path)
+        assert self.p.is_dir()
+        self.ctas = [
+            try_default(
+                lambda: CoverageTableAccumulated.load(path),
+                log_error_info=f"path=({path})"
+            )
+            for path in self.p.glob("*_cta.csv")
+        ]
+        self.ctas = [x for x in self.ctas if x is not None]
+
+    def calc_and_save_suspiciousness_tables(self, save_dir: str, sfl_method: str):
+        """
+
+        :save_dir: path to the directory where the resulting suspiciousness tables shall be saved
+
+        :sfl_method: how to treat different coverage behaviors
+            sffl       -> intersection for flaky tests, union for stable tests
+            union      -> union for flaky tests, union for stable tests
+            individual -> treat each test execution as a separate test case
+
+        """
+        save_dir = Path(save_dir)
+        save_dir.mkdir(exist_ok=True)
+        for cta in tqdm(self.ctas):
+            try:
+                scores = cta.calc_suspiciousness_scores(sfl_method)
+                url_without_slash = cta.url.replace("/", " ")
+                scores.to_csv(save_dir / f"{url_without_slash}@{cta.git_hash}.csv")
+            except Exception as e:
+                logging.error(f"{type(e).__name__}: {e} | cta_file=({cta.p})")
+                logging.error(traceback.format_exc())
+
+    def coverage_statistic(self):
+        result = []
+        for cta in tqdm(self.ctas):
+            df = cta.coverage_statistic()
+            df["Project_URL"] = cta.url
+            df["Project_Hash"] = cta.git_hash
+            result.append(df)
+        return pd.concat(result)
+
+
+class CoverageTableAccumulated(object):
+
+    """ """
+
+    def __init__(self, df: pd.DataFrame, tnefs_df: pd.DataFrame, url=None, git_hash=None):
+        """ """
+        self._df = df
+        self.url = url
+        self.git_hash = git_hash
+        self.tnefs_df = tnefs_df
+
+    @classmethod
+    def load(cls, path_: str):
+        """ """
+        path_ = Path(path_)
+        url, git_hash = re.match("(.*)@(.*)_cta.csv", path_.name).groups()
+        url = url.replace(" ", "/")
+        # load related file containing total-number-of-executions (tne) and flakiness status (fs)
+        tnefs_path = Path(str(path_)[:-8] + "_TneFs.csv")
+        tnefs_df = pd.read_csv(tnefs_path)
+        tnefs_df = tnefs_df.set_index("Test_nodeid_inclPara")
+
+        _df = pd.read_csv(path_)
+        _df = _df.set_index(["path", "lines"])
+
+        obj = cls(_df, tnefs_df, url, git_hash)
+        obj.p = path_
+        return obj
+
+    def calc_suspiciousness_scores(self, sfl_method: str) -> pd.DataFrame:
+        """For each statement (= row in this CTA), calculate its suspiciousness
+
+        :sfl_method:
+            sffl       -> intersection for flaky tests, union for stable tests
+            union      -> union for flaky tests, union for stable tests
+            individual -> treat each test execution as a separate test case
+        """
+
+        # Get flakiness status column / series
+        #   Assume that the TNE has exactly two columns:
+        #   "execution_count" and the flakiness status column
+        assert len(self.tnefs_df.columns) == 2
+        assert "execution_count" in self.tnefs_df.columns
+        flaky_col = self.tnefs_df.columns.drop("execution_count")[0]
+        flakiness_status = self.tnefs_df[flaky_col].dropna().astype(bool)
+
+        # Log warnings (this was taken calc_suspiciousness_for_proj, probably there's a more elegant
+        # way, maybe just self.tnefs_df.dropna() )
+        executed_tests_with_cov = list(self.tnefs_df["execution_count"].dropna().index)
+        if len(executed_tests_with_cov) == 0:
+            logging.warning(f"Project {self.url} has no coverage data")
+        else:
+            no_coverage_data = set(flakiness_status.index).difference(executed_tests_with_cov)
+            no_flakiness_status = set(executed_tests_with_cov).difference(
+                set(flakiness_status.index)
+            )
+            if len(no_coverage_data) > 0:
+                logging.warning(
+                    f"No coverage data found for project {self.url} in tests {no_coverage_data}"
+                )
+            if len(no_flakiness_status) > 0:
+                logging.warning(
+                    f"No flakiness status found for project {self.url} "
+                    f"in tests {no_flakiness_status}"
+                )
+
+        flakiness_status_and_coverage_available = sorted(
+            set(flakiness_status.index).intersection(executed_tests_with_cov)
+        )
+        scores = calculate_suspiciousness_scores_accum(
+            self._df,
+            self.tnefs_df["execution_count"],
+            flakiness_status[flakiness_status_and_coverage_available],
+            sfl_method
+        )
+        return scores
+
+    def coverage_statistic(self) -> pd.DataFrame:
+        """How many lines were covered by not all executions?"""
+        result = []
+        for test in self._df.columns:
+            tne = self.tnefs_df["execution_count"][test]
+            cov = self._df[test]
+            cov = cov[cov > 0]
+            cov = cov.apply(lambda x: "always" if x == tne else "sometimes" if x < tne else "ERROR")
+            cov = cov.value_counts()
+            result.append(cov)
+        cov_df = pd.DataFrame(result)
+        cov_df.index.name = "Test_nodeid_inclPara"
+        cov_df = cov_df.reset_index()
+        cov_df = cov_df.merge(self.tnefs_df.reset_index())
+        return cov_df
+
+
+class LocationTable(object):
+
+    """
+    Mapping a flaky tests to the lines in the source code causing the flakiness
+    (manually labeled)
+
+    Columns:
+        Project_(Name,URL,Hash),
+        Test_(filename,classname,funcname,parametrization),
+        Location
+
+    Location = file_name:line_range;file_name2:line_range2;...
+
+    line_range is for example `1-3,5,7`
+
+    """
+
+    def __init__(self, df: pd.DataFrame):
+        self._df = df
+        self._df["Project_Hash"] = self._df["Project_Hash"].fillna("")
+        self._df["Test_filename"] = self._df["Test_filename"].fillna("")
+        self._df["Test_parametrization"] = self._df["Test_parametrization"].fillna("")
+
+        # compute test nodeid
+        self._df["Test_nodeid_inclPara"] = self._df[test_cols].apply(
+            lambda s: to_nodeid(*s), axis=1
+        )
+
+    def split_locations(self) -> pd.DataFrame:
+        """Explode dataframe. Example: Transform foo.py:1,2,3 into three separate rows
+        :returns: new dataframe
+
+        """
+        _df = self._df.copy()
+        # split multiple different files
+        _df["Location_split"] = _df["Location"].apply(lambda x: x.split(";"))
+        _df = _df.explode("Location_split")
+
+        # split multiple lines in the same files
+        _df[["Location_file", "Location_line"]] = _df["Location_split"].str.split(
+            ":", expand=True
+        )
+        _df["Location_line"] = _df["Location_line"].apply(parse_string_range)
+        _df = _df.explode("Location_line")
+        return _df
+
+    @classmethod
+    def load(cls, file_name: str):
+        """Load LocationTable from CSV file"""
+        path = Path(file_name)
+        _df = pd.read_csv(path)
+        return cls(_df)
 
 
 def main() -> None:
