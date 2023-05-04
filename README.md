@@ -106,7 +106,9 @@ containing the traces:
 ```
 
 
-## SFFL (Spectrum-based Flaky Fault Localization)
+## SFFL
+
+(Spectrum-based Flaky Fault Localization)
 
 ### 1. Run tests multiple times while collecting line coverage
 
