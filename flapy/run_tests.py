@@ -435,7 +435,7 @@ class FlakyAnalyser:
         """
         self._logger.info(f"Config: {self._config}")
         naming_offset = 0 if self._config.random_order_bucket is None else self._config.num_runs
-        tmp_dir_path = self._temp_path / "flapy_repo_copy"
+        repo_copy_dir = self._temp_path / "flapy_repo_copy"
 
         # TODO add option to run tests_to_be_run one at a time or all togehter
         for test_to_be_run in self._tests_to_be_run.split() or [""]:
@@ -445,7 +445,7 @@ class FlakyAnalyser:
                 )
 
                 copy: str = FileUtils.provide_copy(
-                    self._config.project_name, tmp_dir_path=tmp_dir_path
+                    src_dir=self._config.project_name, dest_dir=repo_copy_dir
                 )
 
                 run_num = i + naming_offset
