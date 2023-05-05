@@ -33,13 +33,14 @@ def generic_test_tracing(flaky_analyser: FlakyAnalyser):
     out_dir = Path(os.path.dirname(test_output.__file__)) / "run_tests" / "test_tracing"
     out_dir.mkdir(parents=True, exist_ok=True)
     log_file = out_dir / "execution.log"
+    tmp_dir = out_dir / "tmp"
+    tmp_dir.mkdir()
 
     # Clean out_dir
     for path in out_dir.glob("*"):
         if ".gitignore" not in path.name and "__pycache__" not in path.name:
             rm_recursively(path)
 
-    tmp_dir = FileUtils.mkdtemp()
     print(f"Using temporary directory {tmp_dir}")
 
     # fmt: off
@@ -83,13 +84,14 @@ def generic_test_isolation(flaky_analyser: FlakyAnalyser):
     out_dir = Path(os.path.dirname(test_output.__file__)) / "run_tests" / "test_isolation"
     out_dir.mkdir(parents=True, exist_ok=True)
     log_file = out_dir / "execution.log"
+    tmp_dir = out_dir / "tmp"
+    tmp_dir.mkdir()
 
     # Clean up out_dir
     for path in out_dir.glob("*"):
         if ".gitignore" not in path.name and "__pycache__" not in path.name:
             rm_recursively(path)
 
-    tmp_dir = FileUtils.mkdtemp()
     print(f"Using temporary directory {tmp_dir}")
 
     # fmt: off
