@@ -10,13 +10,15 @@
 *   /sameOrder                     # same order execution output
        /execution.log              #   --logfile
        /tmp                        #   --temp
-           /flapy_repo_copy        #   copy of REPOSITORY_DIR, created and deleted by run_tests.py
+           /flapy_repo_copy        # copy of REPOSITORY_DIR, created and deleted by run_tests.py
+           /flapy_virtual_env      # virtual environment, created and deleted by run_tests.py
            /...output.xml          #
            /...coverage.xml        #
-*   /randomOrder                   # random order execution outpout
+*   /randomOrder                   # random order execution output
        /execution.log              #   --logfile
        /tmp                        #   --temp
-           /flapy_repo_copy        #    copy of REPOSITORY_DIR, created and deleted by run_tests.py
+           /flapy_repo_copy        # copy of REPOSITORY_DIR, created and deleted by run_tests.py
+           /flapy_virtual_env      # virtual environment, created and deleted by run_tests.py
            /...output.xml          #
            /...coverage.xml        #
 
