@@ -59,10 +59,10 @@ class FileUtils:
 
     @classmethod
     def provide_copy(
-            cls,
-            src_dir: Union[str, os.PathLike],
-            tmp_dir_prefix: str = None,
-            tmp_dir_path: str = None,
+        cls,
+        src_dir: Union[str, os.PathLike],
+        tmp_dir_prefix: str = None,
+        tmp_dir_path: str = None,
     ) -> Union[str, os.PathLike]:
         """Provides a copy of the given source directory and returns the path to it.
 
@@ -84,15 +84,15 @@ class FileUtils:
 
     @classmethod
     def copy_tree(
-            cls,
-            src: Union[str, os.PathLike],
-            dst: Union[str, os.PathLike],
-            symlinks: bool = False,
-            ignore: Union[
-                None,
-                Callable[[str, List[str]], Iterable[str]],
-                Callable[[Union[str, os.PathLike], List[str]], Iterable[str]],
-            ] = None,
+        cls,
+        src: Union[str, os.PathLike],
+        dst: Union[str, os.PathLike],
+        symlinks: bool = False,
+        ignore: Union[
+            None,
+            Callable[[str, List[str]], Iterable[str]],
+            Callable[[Union[str, os.PathLike], List[str]], Iterable[str]],
+        ] = None,
     ) -> None:
         """Copies a tree in the filesystem from src to dst.
 
@@ -283,15 +283,15 @@ class PyTestRunner:
 
     # pylint: disable=too-many-arguments
     def __init__(
-            self,
-            project_name: str,
-            path: Path,
-            config: argparse.Namespace,
-            logger,
-            xml_output_file: Path = None,
-            xml_coverage_file: Path = None,
-            trace_output_file: Path = None,
-            tests_to_be_run: str = "",
+        self,
+        project_name: str,
+        path: Path,
+        config: argparse.Namespace,
+        logger,
+        xml_output_file: Path = None,
+        xml_coverage_file: Path = None,
+        trace_output_file: Path = None,
+        tests_to_be_run: str = "",
     ) -> None:
         self._project_name = project_name
         self._path = Path(path)
@@ -483,8 +483,8 @@ class FlakyAnalyser:
 
                 def get_output_filename(keyword, ending) -> Path:
                     return (
-                            self._temp_path
-                            / f"{self._config.project_name}_{keyword}{run_num}{ttbr_id}.{ending}"
+                        self._temp_path
+                        / f"{self._config.project_name}_{keyword}{run_num}{ttbr_id}.{ending}"
                     )
 
                 xml_output_file: Path = get_output_filename("output", "xml")
