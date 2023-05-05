@@ -15,16 +15,13 @@
 import argparse
 import contextlib
 import logging
+import ntpath
 import os
-import re
 import shutil
 import subprocess
 import sys
-import xml.etree.ElementTree as ET
-from abc import ABCMeta, abstractmethod
-from pathlib import Path
-from dataclasses import dataclass
 from enum import Enum
+from pathlib import Path
 from typing import (
     Union,
     Callable,
@@ -37,11 +34,10 @@ from typing import (
     Set,
     Dict,
 )
-from setuptools import find_packages  # type: ignore
+
 import pipfile  # type: ignore
 import virtualenv as virtenv  # type: ignore
-
-from flapy import tempfile_hardcoded
+from setuptools import find_packages  # type: ignore
 
 
 class FileUtils:
@@ -57,16 +53,16 @@ class FileUtils:
         :param tmp_dir_prefix: Prefix for the temporary directory, e.g. "/tmp"
         :return:
         """
-        tmp_dir = tempfile_hardcoded.mkdtemp(dir=tmp_dir_prefix)  # typing: ignore
+        tmp_dir = FileUtils.mkdtemp(dir=tmp_dir_prefix)  # typing: ignore
         shutil.rmtree(tmp_dir)
         return tmp_dir
 
     @classmethod
     def provide_copy(
-        cls,
-        src_dir: Union[str, os.PathLike],
-        tmp_dir_prefix: str = None,
-        tmp_dir_path: str = None,
+            cls,
+            src_dir: Union[str, os.PathLike],
+            tmp_dir_prefix: str = None,
+            tmp_dir_path: str = None,
     ) -> Union[str, os.PathLike]:
         """Provides a copy of the given source directory and returns the path to it.
 
@@ -81,22 +77,22 @@ class FileUtils:
             os.mkdir(tmp_dir_path)
             tmp_dir = tmp_dir_path
         else:
-            tmp_dir = tempfile_hardcoded.mkdtemp(dir=tmp_dir_prefix)  # type: ignore
+            tmp_dir = FileUtils.mkdtemp(dir=tmp_dir_prefix)  # type: ignore
         cls.copy_tree(src_dir, tmp_dir)
         cls._copies.append(tmp_dir)
         return tmp_dir
 
     @classmethod
     def copy_tree(
-        cls,
-        src: Union[str, os.PathLike],
-        dst: Union[str, os.PathLike],
-        symlinks: bool = False,
-        ignore: Union[
-            None,
-            Callable[[str, List[str]], Iterable[str]],
-            Callable[[Union[str, os.PathLike], List[str]], Iterable[str]],
-        ] = None,
+            cls,
+            src: Union[str, os.PathLike],
+            dst: Union[str, os.PathLike],
+            symlinks: bool = False,
+            ignore: Union[
+                None,
+                Callable[[str, List[str]], Iterable[str]],
+                Callable[[Union[str, os.PathLike], List[str]], Iterable[str]],
+            ] = None,
     ) -> None:
         """Copies a tree in the filesystem from src to dst.
 
@@ -136,6 +132,15 @@ class FileUtils:
                 cls.delete_copy(copy)
             except FileNotFoundError:
                 pass
+
+    @classmethod
+    def mkdtemp(cls) -> str:
+        default_dir: str = "/tmp/folders/flapy_run/"
+
+        full_path: ntpath = os.path.join(default_dir)
+        os.makedirs(name=full_path, mode=511, exist_ok=False)
+
+        return full_path
 
 
 class VirtualEnvironment:
@@ -278,15 +283,15 @@ class PyTestRunner:
 
     # pylint: disable=too-many-arguments
     def __init__(
-        self,
-        project_name: str,
-        path: Path,
-        config: argparse.Namespace,
-        logger,
-        xml_output_file: Path = None,
-        xml_coverage_file: Path = None,
-        trace_output_file: Path = None,
-        tests_to_be_run: str = "",
+            self,
+            project_name: str,
+            path: Path,
+            config: argparse.Namespace,
+            logger,
+            xml_output_file: Path = None,
+            xml_coverage_file: Path = None,
+            trace_output_file: Path = None,
+            tests_to_be_run: str = "",
     ) -> None:
         self._project_name = project_name
         self._path = Path(path)
@@ -459,8 +464,8 @@ class FlakyAnalyser:
         """
         self._logger.info(f"Config: {self._config}")
         naming_offset = 0 if self._config.random_order_bucket is None else self._config.num_runs
-        tmp_dir_path = self._temp_path/"flapy_repo_copy"
-        #tmp_dir_path = FileUtils.get_available_tempdir_path(self._temp_path)
+        tmp_dir_path = self._temp_path / "flapy_repo_copy"
+        # tmp_dir_path = FileUtils.get_available_tempdir_path(self._temp_path)
 
         # TODO add option to run tests_to_be_run one at a time or all togehter
         for test_to_be_run in self._tests_to_be_run.split() or [""]:
@@ -478,8 +483,8 @@ class FlakyAnalyser:
 
                 def get_output_filename(keyword, ending) -> Path:
                     return (
-                        self._temp_path
-                        / f"{self._config.project_name}_{keyword}{run_num}{ttbr_id}.{ending}"
+                            self._temp_path
+                            / f"{self._config.project_name}_{keyword}{run_num}{ttbr_id}.{ending}"
                     )
 
                 xml_output_file: Path = get_output_filename("output", "xml")
@@ -556,8 +561,8 @@ class FlakyAnalyser:
             type=RandomOrderBucket,
             choices=list(RandomOrderBucket),
             help="Select the strategy for buckets on random-order test execution.  "
-            "The default value is `module'.  See the documentation of the "
-            "`pytest-random-order' plugin for details on these values.",
+                 "The default value is `module'.  See the documentation of the "
+                 "`pytest-random-order' plugin for details on these values.",
         )
         parser.add_argument(
             "-s",
@@ -574,9 +579,9 @@ class FlakyAnalyser:
             required=False,
             type=str,
             help="NodeIDs of the functions that shall be traced. "
-            'Example: "tests/test_file.py::test_func1 test_file.py::TestClass::test_func2 '
-            "Note: Only the name of the file (test_file.py) will be used, "
-            "the rest of the path (tests/) is discarded",
+                 'Example: "tests/test_file.py::test_func1 test_file.py::TestClass::test_func2 '
+                 "Note: Only the name of the file (test_file.py) will be used, "
+                 "the rest of the path (tests/) is discarded",
         )
         parser.add_argument(
             "--tests-to-be-run",
@@ -585,9 +590,9 @@ class FlakyAnalyser:
             type=str,
             default="",
             help="NodeIDs of the functions that shall be executed. "
-            "Multiple names must be separated by spaces and "
-            "will be executed each individually in a new pytest run. "
-            'Example: "tests/test_file.py::test_func1 tests/test_file.py::TestClass::test_func2',
+                 "Multiple names must be separated by spaces and "
+                 "will be executed each individually in a new pytest run. "
+                 'Example: "tests/test_file.py::test_func1 tests/test_file.py::TestClass::test_func2',
         )
 
         return parser

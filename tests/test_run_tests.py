@@ -1,7 +1,6 @@
 import shutil
 import os
-from flapy import tempfile_hardcoded
-from flapy.run_tests import FlakyAnalyser
+from flapy.run_tests import FlakyAnalyser, FileUtils
 import test_resources
 import test_output
 from pathlib import Path
@@ -40,7 +39,7 @@ def generic_test_tracing(flaky_analyser: FlakyAnalyser):
         if ".gitignore" not in path.name and "__pycache__" not in path.name:
             rm_recursively(path)
 
-    tmp_dir = tempfile_hardcoded.mkdtemp()
+    tmp_dir = FileUtils.mkdtemp()
     print(f"Using temporary directory {tmp_dir}")
 
     # fmt: off
@@ -90,7 +89,7 @@ def generic_test_isolation(flaky_analyser: FlakyAnalyser):
         if ".gitignore" not in path.name and "__pycache__" not in path.name:
             rm_recursively(path)
 
-    tmp_dir = tempfile_hardcoded.mkdtemp()
+    tmp_dir = FileUtils.mkdtemp()
     print(f"Using temporary directory {tmp_dir}")
 
     # fmt: off
