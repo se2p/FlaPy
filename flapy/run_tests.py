@@ -37,7 +37,6 @@ from typing import (
 
 import pipfile  # type: ignore
 import virtualenv as virtenv  # type: ignore
-from setuptools import find_packages  # type: ignore
 
 
 class FileUtils:
