@@ -45,41 +45,22 @@ class FileUtils:
     _copies: List[Any] = []
 
     @classmethod
-    def get_available_tempdir_path(cls, tmp_dir_prefix):
-        """
-        Return an unused name for a directory inside tmp_dir_prefix without creating
-        this directory
-        :param tmp_dir_prefix: Prefix for the temporary directory, e.g. "/tmp"
-        :return:
-        """
-        tmp_dir = FileUtils.mkdtemp(dir=tmp_dir_prefix)  # typing: ignore
-        shutil.rmtree(tmp_dir)
-        return tmp_dir
-
-    @classmethod
     def provide_copy(
         cls,
         src_dir: Union[str, os.PathLike],
-        tmp_dir_prefix: str = None,
-        tmp_dir_path: str = None,
+        dest_dir: str = None,
     ) -> Union[str, os.PathLike]:
         """Provides a copy of the given source directory and returns the path to it.
 
         :param src_dir: Path to the source directory
-        :param tmp_dir_prefix: Optional prefix for temporary directories
-        :param tmp_dir_path: Path to the temporary directory.
+        :param dest_dir: Path to the temporary directory.
             If this option is specified, not a random directory will be created but this one.
-            In this case tmp_dir_prefix will be ignore.
         :return: Path to the copied version
         """
-        if tmp_dir_path:
-            os.mkdir(tmp_dir_path)
-            tmp_dir = tmp_dir_path
-        else:
-            tmp_dir = FileUtils.mkdtemp(dir=tmp_dir_prefix)  # type: ignore
-        cls.copy_tree(src_dir, tmp_dir)
-        cls._copies.append(tmp_dir)
-        return tmp_dir
+        os.mkdir(dest_dir)
+        cls.copy_tree(src_dir, dest_dir)
+        cls._copies.append(dest_dir)
+        return dest_dir
 
     @classmethod
     def copy_tree(
@@ -131,15 +112,6 @@ class FileUtils:
                 cls.delete_copy(copy)
             except FileNotFoundError:
                 pass
-
-    @classmethod
-    def mkdtemp(cls) -> str:
-        default_dir: str = "/tmp/folders/flapy_run/"
-
-        full_path: ntpath = os.path.join(default_dir)
-        os.makedirs(name=full_path, mode=511, exist_ok=False)
-
-        return full_path
 
 
 class VirtualEnvironment:
@@ -464,7 +436,6 @@ class FlakyAnalyser:
         self._logger.info(f"Config: {self._config}")
         naming_offset = 0 if self._config.random_order_bucket is None else self._config.num_runs
         tmp_dir_path = self._temp_path / "flapy_repo_copy"
-        # tmp_dir_path = FileUtils.get_available_tempdir_path(self._temp_path)
 
         # TODO add option to run tests_to_be_run one at a time or all togehter
         for test_to_be_run in self._tests_to_be_run.split() or [""]:
