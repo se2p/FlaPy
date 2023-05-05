@@ -45,12 +45,12 @@ If PYPI_TAG is empty, FlaPy will fall back to searching for requirements in comm
 Example (takes ~ 1h):
 ```bash
 #              [OPTIONS...]                                 INPUT_CSV
-./flapy.sh run --out-dir example_results --plus-random-runs flapy_input_example.csv
+./flapy.sh run --out-dir example_results --plus-random-runs flapy_input_example.csv 5
 ```
 
 Example (takes ~30s):
 ```bash
-./flapy.sh run --out-dir example_results flapy_input_example_tiny.csv
+./flapy.sh run --out-dir example_results flapy_input_example_tiny.csv 1
 ```
 
 
