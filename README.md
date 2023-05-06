@@ -157,6 +157,7 @@ Merge with locations (-> EXAM scores & ranks)
         minimal_sffl_example/loc.csv \
     to_csv --index=False | vd --filetype=csv
 ```
+(assumes visidata (vd) to be installed)
 
 
 ## Contributing

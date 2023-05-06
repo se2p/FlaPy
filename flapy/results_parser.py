@@ -2087,7 +2087,7 @@ class SuspiciousnessTable(object):
         if "path" in self._df.columns:
             self._df["path"] = self._df["path"].apply(
                 lambda x: re.sub(
-                    "/workdir/(non-deterministic|deterministic|sameOrder|randomOrder)/tmp/tmp.*?/",
+                    "/workdir/(non-deterministic|deterministic|sameOrder|randomOrder)/tmp/(tmp.*?|flapy_repo_copy)/",
                     "",
                     x,
                 )
