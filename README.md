@@ -45,12 +45,12 @@ If PYPI_TAG is empty, FlaPy will fall back to searching for requirements in comm
 Example (takes ~ 1h):
 ```bash
 #              [OPTIONS...]                                 INPUT_CSV
-./flapy.sh run --out-dir example_results --plus-random-runs flapy_input_example.csv
+./flapy.sh run --out-dir example_results --plus-random-runs flapy_input_example.csv 5
 ```
 
 Example (takes ~30s):
 ```bash
-./flapy.sh run --out-dir example_results flapy_input_example_tiny.csv
+./flapy.sh run --out-dir example_results flapy_input_example_tiny.csv 1
 ```
 
 
@@ -103,6 +103,59 @@ containing the traces:
 <------------ ('requests.utils', '', 'default_user_agent')
 ------------> ('requests.structures', 'CaseInsensitiveDict', '__init__')
 ...
+```
+
+
+## SFFL
+
+(Spectrum-based Flaky Fault Localization)
+
+### 1. Run tests multiple times while collecting line coverage
+
+Execute `flapy.sh run` with core arguments `--collect-sqlite-coverage-database`
+
+```
+./flapy.sh run \
+    --out-dir example_results_sffl \
+    --core-args "--collect-sqlite-coverage-database" \
+    flapy_input_example_sffl.csv 10
+```
+
+
+### 2. Perform fault localization
+
+Execute `flapy.sh parse` to generate the CTA (coverage table accumulated)
+
+```
+./flapy.sh parse \
+    ResultsDirCollection --path example_results_sffl \
+    save_cta_tables \
+        --cta_save_dir example_results_sffl_cta \
+        --flaky_col "Flaky_sameOrder_withinIteration" \
+        --method="accum"
+```
+
+Calculate Suspiciousness scores
+
+```
+./flapy.sh parse \
+    CtaDir --path example_results_sffl_cta \
+    calc_and_save_suspiciousness_tables \
+        --save_dir example_results_sffl_cta_sus \
+        --sfl_method sffl
+```
+
+### 3. Evaluate results
+
+Merge with locations (-> EXAM scores & ranks)
+
+```
+./flapy.sh parse \
+    SuspiciousnessDir --path example_results_sffl_cta_sus \
+    merge_location_info \
+        minimal_sffl_example/locations.csv \
+        minimal_sffl_example/loc.csv \
+    to_csv --index=False | vd --filetype=csv
 ```
 
 

@@ -117,13 +117,14 @@ class FileUtils:
 class VirtualEnvironment:
     """Wraps a virtual environment."""
 
-    def __init__(self, env_name: str, root_dir) -> None:
+    def __init__(self, env_name: str, logger, root_dir) -> None:
         """Creates a new virtual environment in a temporary folder.
 
         :param env_name: Name of the virtual environment.
         :param root_dir: Directory where the virtual environment will be created.
         """
         self._env_name = env_name
+        self._logger = logger
         self._packages: List[str] = []
         self._requirements_files: List[Path] = []
         self._env_dir = f"{root_dir}/flapy_virtual_env"
@@ -200,7 +201,10 @@ class VirtualEnvironment:
             command_list.append(f"pip install {package}")
         # Append other commands
         command_list.extend(commands)
+        # Log commands
+        self._logger.info(f"executing commands {command_list}")
         cmd = ";".join(command_list)
+        # Execute commands
         process = subprocess.Popen(
             cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, executable="/bin/bash"
         )
@@ -215,7 +219,7 @@ class VirtualEnvironment:
 
 
 @contextlib.contextmanager
-def virtualenv(env_name: str, root_dir) -> Generator[VirtualEnvironment, Any, None]:
+def virtualenv(env_name: str, logger, root_dir) -> Generator[VirtualEnvironment, Any, None]:
     """Creates a context around a new virtual environment.
 
     It creates a virtual environment in a temporary folder and yields and object  of
@@ -225,7 +229,7 @@ def virtualenv(env_name: str, root_dir) -> Generator[VirtualEnvironment, Any, No
     :param root_dir: root folder of the virtual environment
     :return: A VirtualEnvironment object wrapping the virtual environment
     """
-    venv = VirtualEnvironment(env_name, root_dir)
+    venv = VirtualEnvironment(env_name, logger, root_dir)
     try:
         yield venv
     finally:
@@ -261,6 +265,7 @@ class PyTestRunner:
         xml_output_file: Path = None,
         xml_coverage_file: Path = None,
         trace_output_file: Path = None,
+        sqlite_coverage_file: Union[str, os.PathLike] = None,
         tests_to_be_run: str = "",
     ) -> None:
         self._project_name = project_name
@@ -269,13 +274,14 @@ class PyTestRunner:
         self._xml_output_file = xml_output_file
         self._xml_coverage_file = xml_coverage_file
         self._trace_output_file = trace_output_file
+        self._sqlite_coverage_file = sqlite_coverage_file
         self._tests_to_be_run = tests_to_be_run
         self._logger = logger
 
     def run(self) -> Optional[Tuple[str, str]]:
         """Install dependencies and execute pytest"""
 
-        with virtualenv(env_name=self._project_name, root_dir=self._config.temp) as env:
+        with virtualenv(env_name=self._project_name, logger=self._logger, root_dir=self._config.temp) as env:
             old_cwd = Path(os.getcwd())
             os.chdir(self._path)
             try:
@@ -329,9 +335,17 @@ class PyTestRunner:
                     command += f"--random-order-seed={self._config.random_order_seed} "
 
                 # COVERAGE
+                env.add_package_for_installation("pytest-cov==2.8.1")
+                command += "--cov=. "
+                if self._config.collect_sqlite_coverage_database:
+                    # Collect separate coverage for each test
+                    command += "--cov-context=test "
+                else:
+                    # This somehow leads to no line_bits being written to the sqlite database
+                    command += "--cov-branch "
+
                 if self._xml_coverage_file is not None:
-                    env.add_package_for_installation("pytest-cov==2.8.1")
-                    command += f"--cov=. --cov-branch --cov-report xml:{self._xml_coverage_file} "
+                    command += f"--cov-report xml:{self._xml_coverage_file} "
 
                 # TESTS TO BE RUN
                 command += f"{self._tests_to_be_run} "
@@ -349,7 +363,10 @@ class PyTestRunner:
                     command,
                 ]
 
-                self._logger.info(f"executing commands {commands}")
+                # copy sqlite coverage database
+                if self._config.collect_sqlite_coverage_database:
+                    commands.append(f"mv .coverage {self._sqlite_coverage_file}")
+
                 out, err = env.run_commands(commands)
                 return out, err
             finally:
@@ -461,6 +478,7 @@ class FlakyAnalyser:
                     xml_output_file: Path = get_output_filename("output", "xml")
                     xml_coverage_file: Path = get_output_filename("coverage", "xml")
                     trace_file: Path = get_output_filename("trace", "")
+                    sqlite_coverage_file: Path = get_output_filename("coverage", "sqlite")
 
                     runner = PyTestRunner(
                         project_name=self._config.project_name,
@@ -468,6 +486,7 @@ class FlakyAnalyser:
                         config=self._config,
                         xml_output_file=xml_output_file,
                         xml_coverage_file=xml_coverage_file,
+                        sqlite_coverage_file=sqlite_coverage_file,
                         trace_output_file=trace_file,
                         tests_to_be_run=test_to_be_run,
                         logger=self._logger,
@@ -564,6 +583,12 @@ class FlakyAnalyser:
                  "Multiple names must be separated by spaces and "
                  "will be executed each individually in a new pytest run. "
                  'Example: "tests/test_file.py::test_func1 tests/test_file.py::TestClass::test_func2',
+        )
+        parser.add_argument(
+            "--collect-sqlite-coverage-database",
+            dest="collect_sqlite_coverage_database",
+            action="store_true",
+            help="Store the .coverage file created by pytest/coveragepy",
         )
 
         return parser
