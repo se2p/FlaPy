@@ -117,19 +117,16 @@ class FileUtils:
 class VirtualEnvironment:
     """Wraps a virtual environment."""
 
-    def __init__(self, env_name: str, tmp_dir: Any = None) -> None:
+    def __init__(self, env_name: str, root_dir) -> None:
         """Creates a new virtual environment in a temporary folder.
 
         :param env_name: Name of the virtual environment.
-        :param tmp_dir: Directory where the temporary folder should be created
+        :param root_dir: Directory where the virtual environment will be created.
         """
         self._env_name = env_name
         self._packages: List[str] = []
         self._requirements_files: List[Path] = []
-        if tmp_dir:
-            self._env_dir = f"{tmp_dir}/flapy_virtual_env"
-        else:
-            raise ValueError(f"{tmp_dir} is no valid value for tmp_dir.")
+        self._env_dir = f"{root_dir}/flapy_virtual_env"
         virtenv.create_environment(self._env_dir)
 
     def cleanup(self) -> None:
@@ -218,17 +215,17 @@ class VirtualEnvironment:
 
 
 @contextlib.contextmanager
-def virtualenv(env_name: str, tmp_dir: Any = None) -> Generator[VirtualEnvironment, Any, None]:
+def virtualenv(env_name: str, root_dir) -> Generator[VirtualEnvironment, Any, None]:
     """Creates a context around a new virtual environment.
 
     It creates a virtual environment in a temporary folder and yields and object  of
     the VirtualEnvironment class.
 
     :param env_name: The name for the virtual environment
-    :param tmp_dir: An optional root path for the temporary directory
+    :param root_dir: root folder of the virtual environment
     :return: A VirtualEnvironment object wrapping the virtual environment
     """
-    venv = VirtualEnvironment(env_name, tmp_dir)
+    venv = VirtualEnvironment(env_name, root_dir)
     yield venv
     venv.cleanup()
 
