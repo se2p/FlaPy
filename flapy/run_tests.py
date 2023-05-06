@@ -15,16 +15,13 @@
 import argparse
 import contextlib
 import logging
+import ntpath
 import os
-import re
 import shutil
 import subprocess
 import sys
-import xml.etree.ElementTree as ET
-from abc import ABCMeta, abstractmethod
-from pathlib import Path
-from dataclasses import dataclass
 from enum import Enum
+from pathlib import Path
 from typing import (
     Union,
     Callable,
@@ -37,11 +34,9 @@ from typing import (
     Set,
     Dict,
 )
-from setuptools import find_packages  # type: ignore
+
 import pipfile  # type: ignore
 import virtualenv as virtenv  # type: ignore
-
-from flapy import tempfile_seeded
 
 
 class FileUtils:
@@ -50,41 +45,22 @@ class FileUtils:
     _copies: List[Any] = []
 
     @classmethod
-    def get_available_tempdir_path(cls, tmp_dir_prefix):
-        """
-        Return an unused name for a directory inside tmp_dir_prefix without creating
-        this directory
-        :param tmp_dir_prefix: Prefix for the temporary directory, e.g. "/tmp"
-        :return:
-        """
-        tmp_dir = tempfile_seeded.mkdtemp(dir=tmp_dir_prefix)  # typing: ignore
-        shutil.rmtree(tmp_dir)
-        return tmp_dir
-
-    @classmethod
     def provide_copy(
         cls,
         src_dir: Union[str, os.PathLike],
-        tmp_dir_prefix: str = None,
-        tmp_dir_path: str = None,
+        dest_dir: str = None,
     ) -> Union[str, os.PathLike]:
         """Provides a copy of the given source directory and returns the path to it.
 
         :param src_dir: Path to the source directory
-        :param tmp_dir_prefix: Optional prefix for temporary directories
-        :param tmp_dir_path: Path to the temporary directory.
+        :param dest_dir: Path to the temporary directory.
             If this option is specified, not a random directory will be created but this one.
-            In this case tmp_dir_prefix will be ignore.
         :return: Path to the copied version
         """
-        if tmp_dir_path:
-            os.mkdir(tmp_dir_path)
-            tmp_dir = tmp_dir_path
-        else:
-            tmp_dir = tempfile_seeded.mkdtemp(dir=tmp_dir_prefix)  # type: ignore
-        cls.copy_tree(src_dir, tmp_dir)
-        cls._copies.append(tmp_dir)
-        return tmp_dir
+        os.mkdir(dest_dir)
+        cls.copy_tree(src_dir, dest_dir)
+        cls._copies.append(dest_dir)
+        return dest_dir
 
     @classmethod
     def copy_tree(
@@ -141,19 +117,17 @@ class FileUtils:
 class VirtualEnvironment:
     """Wraps a virtual environment."""
 
-    def __init__(
-        self, env_name: str, logger, tmp_dir: Any = None
-    ) -> None:
+    def __init__(self, env_name: str, logger, root_dir) -> None:
         """Creates a new virtual environment in a temporary folder.
 
         :param env_name: Name of the virtual environment.
-        :param tmp_dir: Directory where the temporary folder should be created
+        :param root_dir: Directory where the virtual environment will be created.
         """
         self._env_name = env_name
         self._logger = logger
         self._packages: List[str] = []
         self._requirements_files: List[Path] = []
-        self._env_dir = tempfile_seeded.mkdtemp(suffix=env_name, dir=tmp_dir)  # type: ignore
+        self._env_dir = f"{root_dir}/flapy_virtual_env"
         virtenv.create_environment(self._env_dir)
 
     def cleanup(self) -> None:
@@ -245,19 +219,21 @@ class VirtualEnvironment:
 
 
 @contextlib.contextmanager
-def virtualenv(env_name: str, logger, tmp_dir: Any = None) -> Generator[VirtualEnvironment, Any, None]:
+def virtualenv(env_name: str, logger, root_dir) -> Generator[VirtualEnvironment, Any, None]:
     """Creates a context around a new virtual environment.
 
     It creates a virtual environment in a temporary folder and yields and object  of
     the VirtualEnvironment class.
 
     :param env_name: The name for the virtual environment
-    :param tmp_dir: An optional root path for the temporary directory
+    :param root_dir: root folder of the virtual environment
     :return: A VirtualEnvironment object wrapping the virtual environment
     """
-    venv = VirtualEnvironment(env_name, logger, tmp_dir)
-    yield venv
-    venv.cleanup()
+    venv = VirtualEnvironment(env_name, logger, root_dir)
+    try:
+        yield venv
+    finally:
+        venv.cleanup()
 
 
 class RandomOrderBucket(Enum):
@@ -305,95 +281,96 @@ class PyTestRunner:
     def run(self) -> Optional[Tuple[str, str]]:
         """Install dependencies and execute pytest"""
 
-        with virtualenv(self._project_name, self._logger, None) as env:
+        with virtualenv(env_name=self._project_name, logger=self._logger, root_dir=self._config.temp) as env:
             old_cwd = Path(os.getcwd())
             os.chdir(self._path)
+            try:
+                # INSTALL PROJECT DEPENDENCIES
+                # There are two different methods for dependency installation
+                # 1. search for dependencies in typical files like 'requirements.txt'
+                # 2. install the project itself (requires pypi-tag to be specified)
+                if self._config.pypi_tag in [None, ""]:
+                    self._logger.info(
+                        "no pypi tag specified -> falling back to searching for requirements"
+                    )
+                    # packages = self.find_dependencies()
+                    # env.add_packages_for_installation(packages)
 
-            # INSTALL PROJECT DEPENDENCIES
-            # There are two different methods for dependency installation
-            # 1. search for dependencies in typical files like 'requirements.txt'
-            # 2. install the project itself (requires pypi-tag to be specified)
-            if self._config.pypi_tag in [None, ""]:
-                self._logger.info(
-                    "no pypi tag specified -> falling back to searching for requirements"
-                )
-                # packages = self.find_dependencies()
-                # env.add_packages_for_installation(packages)
+                    reqs_files = self.find_requirements_files()
+                    self._logger.info(
+                        f"found the following requirements files: {[str(reqs_file) for reqs_file in reqs_files]}"
+                    )
+                    env.add_requirements_files_for_installation(reqs_files)
+                else:
+                    self._logger.info(f"pypi tag found {self._config.pypi_tag}")
+                    env.add_package_for_installation(f"{self._project_name}=={self._config.pypi_tag}")
 
-                reqs_files = self.find_requirements_files()
-                self._logger.info(
-                    f"found the following requirements files: {[str(reqs_file) for reqs_file in reqs_files]}"
-                )
-                env.add_requirements_files_for_installation(reqs_files)
-            else:
-                self._logger.info(f"pypi tag found {self._config.pypi_tag}")
-                env.add_package_for_installation(f"{self._project_name}=={self._config.pypi_tag}")
+                # INSTALL TEST EXECUTION DEPENDENCIES
+                env.add_package_for_installation("pytest==6.2.5")
+                if self._config.random_order_bucket is not None:
+                    env.add_package_for_installation("pytest-random-order==1.0.4")
 
-            # INSTALL TEST EXECUTION DEPENDENCIES
-            env.add_package_for_installation("pytest==6.2.5")
-            if self._config.random_order_bucket is not None:
-                env.add_package_for_installation("pytest-random-order==1.0.4")
+                # START BUILDING COMMAND
+                command = ""
 
-            # START BUILDING COMMAND
-            command = ""
+                # USE TRACING?
+                if self._config.trace not in [None, ""]:
+                    command += f'pytest_trace "{self._config.trace}" {self._trace_output_file} '
+                else:
+                    command += "pytest "
 
-            # USE TRACING?
-            if self._config.trace not in [None, ""]:
-                command += f'pytest_trace "{self._config.trace}" {self._trace_output_file} '
-            else:
-                command += "pytest "
+                # GENERAL PYTEST FLAGS
+                command += "-v --rootdir=. "
 
-            # GENERAL PYTEST FLAGS
-            command += "-v --rootdir=. "
+                # JUNIT XML OUTPUT
+                if self._xml_output_file is not None:
+                    command += f"--junitxml={self._xml_output_file} "
 
-            # JUNIT XML OUTPUT
-            if self._xml_output_file is not None:
-                command += f"--junitxml={self._xml_output_file} "
+                # RANDOM TEST ORDER?
+                if self._config.random_order_bucket is not None:
+                    command += f"--random-order-bucket={self._config.random_order_bucket} "
 
-            # RANDOM TEST ORDER?
-            if self._config.random_order_bucket is not None:
-                command += f"--random-order-bucket={self._config.random_order_bucket} "
+                # RANDOM ORDER SEED?
+                if self._config.random_order_seed is not None:
+                    command += f"--random-order-seed={self._config.random_order_seed} "
 
-            # RANDOM ORDER SEED?
-            if self._config.random_order_seed is not None:
-                command += f"--random-order-seed={self._config.random_order_seed} "
+                # COVERAGE
+                env.add_package_for_installation("pytest-cov==2.8.1")
+                command += "--cov=. "
+                if self._config.collect_sqlite_coverage_database:
+                    # Collect separate coverage for each test
+                    command += "--cov-context=test "
+                else:
+                    # This somehow leads to no line_bits being written to the sqlite database
+                    command += "--cov-branch "
 
-            # COVERAGE
-            env.add_package_for_installation("pytest-cov==2.8.1")
-            command += "--cov=. "
-            if self._config.collect_sqlite_coverage_database:
-                # Collect separate coverage for each test
-                command += "--cov-context=test "
-            else:
-                # This somehow leads to no line_bits being written to the sqlite database
-                command += "--cov-branch "
+                if self._xml_coverage_file is not None:
+                    command += f"--cov-report xml:{self._xml_coverage_file} "
 
-            if self._xml_coverage_file is not None:
-                command += f"--cov-report xml:{self._xml_coverage_file} "
+                # TESTS TO BE RUN
+                command += f"{self._tests_to_be_run} "
 
-            # TESTS TO BE RUN
-            command += f"{self._tests_to_be_run} "
+                # PYTHONPATH=. is necessary to execute tests which are not contained in a module
+                command = "PYTHONPATH=. " + command
 
-            # PYTHONPATH=. is necessary to execute tests which are not contained in a module
-            command = "PYTHONPATH=. " + command
+                # add debug output
+                commands = [
+                    'echo "which python: $(which python)"',
+                    'echo "which pip:    $(which pip)"',
+                    'echo "which pytest: $(which pytest)"',
+                    'echo "python path: "',
+                    'python -c "import sys; print(sys.path)"',
+                    command,
+                ]
 
-            # add debug output
-            commands = [
-                'echo "which python: $(which python)"',
-                'echo "which pip:    $(which pip)"',
-                'echo "which pytest: $(which pytest)"',
-                'echo "python path: "',
-                'python -c "import sys; print(sys.path)"',
-                command,
-            ]
+                # copy sqlite coverage database
+                if self._config.collect_sqlite_coverage_database:
+                    commands.append(f"mv .coverage {self._sqlite_coverage_file}")
 
-            # copy sqlite coverage database
-            if self._config.collect_sqlite_coverage_database:
-                commands.append(f"mv .coverage {self._sqlite_coverage_file}")
-
-            out, err = env.run_commands(commands)
-            os.chdir(old_cwd)
-            return out, err
+                out, err = env.run_commands(commands)
+                return out, err
+            finally:
+                os.chdir(old_cwd)
 
     def find_requirements_files(self) -> List[Path]:
         """Search for *requirements*.txt files in the project path
@@ -475,7 +452,7 @@ class FlakyAnalyser:
         """
         self._logger.info(f"Config: {self._config}")
         naming_offset = 0 if self._config.random_order_bucket is None else self._config.num_runs
-        tmp_dir_path = FileUtils.get_available_tempdir_path(self._temp_path)
+        repo_copy_dir = self._temp_path / "flapy_repo_copy"
 
         # TODO add option to run tests_to_be_run one at a time or all togehter
         for test_to_be_run in self._tests_to_be_run.split() or [""]:
@@ -485,45 +462,46 @@ class FlakyAnalyser:
                 )
 
                 copy: str = FileUtils.provide_copy(
-                    self._config.project_name, tmp_dir_path=tmp_dir_path
+                    src_dir=self._config.project_name, dest_dir=repo_copy_dir
                 )
 
-                run_num = i + naming_offset
-                ttbr_id = test_to_be_run.replace("/", ".")
+                try:
+                    run_num = i + naming_offset
+                    ttbr_id = test_to_be_run.replace("/", ".")
 
-                def get_output_filename(keyword, ending) -> Path:
-                    return (
-                        self._temp_path
-                        / f"{self._config.project_name}_{keyword}{run_num}{ttbr_id}.{ending}"
+                    def get_output_filename(keyword, ending) -> Path:
+                        return (
+                            self._temp_path
+                            / f"{self._config.project_name}_{keyword}{run_num}{ttbr_id}.{ending}"
+                        )
+
+                    xml_output_file: Path = get_output_filename("output", "xml")
+                    xml_coverage_file: Path = get_output_filename("coverage", "xml")
+                    trace_file: Path = get_output_filename("trace", "")
+                    sqlite_coverage_file: Path = get_output_filename("coverage", "sqlite")
+
+                    runner = PyTestRunner(
+                        project_name=self._config.project_name,
+                        path=Path(copy),
+                        config=self._config,
+                        xml_output_file=xml_output_file,
+                        xml_coverage_file=xml_coverage_file,
+                        sqlite_coverage_file=sqlite_coverage_file,
+                        trace_output_file=trace_file,
+                        tests_to_be_run=test_to_be_run,
+                        logger=self._logger,
                     )
+                    out, err = runner.run()
+                    self._logger.debug("OUT: %s", out)
+                    self._logger.debug("ERR: %s", err)
 
-                xml_output_file: Path = get_output_filename("output", "xml")
-                xml_coverage_file: Path = get_output_filename("coverage", "xml")
-                trace_file: Path = get_output_filename("trace", "")
-                sqlite_coverage_file: Path = get_output_filename("coverage", "sqlite")
-
-                runner = PyTestRunner(
-                    project_name=self._config.project_name,
-                    path=Path(copy),
-                    config=self._config,
-                    xml_output_file=xml_output_file,
-                    xml_coverage_file=xml_coverage_file,
-                    sqlite_coverage_file=sqlite_coverage_file,
-                    trace_output_file=trace_file,
-                    tests_to_be_run=test_to_be_run,
-                    logger=self._logger,
-                )
-                out, err = runner.run()
-                self._logger.debug("OUT: %s", out)
-                self._logger.debug("ERR: %s", err)
-
-                if not xml_output_file.is_file():
-                    self._logger.warning(
-                        "Did not create file %s while running the tests.",
-                        xml_output_file,
-                    )
-
-                FileUtils.delete_copy(copy)
+                    if not xml_output_file.is_file():
+                        self._logger.warning(
+                            "Did not create file %s while running the tests.",
+                            xml_output_file,
+                        )
+                finally:
+                    FileUtils.delete_copy(copy)
 
     def _create_parser(self) -> argparse.ArgumentParser:
         parser = argparse.ArgumentParser(
@@ -573,8 +551,8 @@ class FlakyAnalyser:
             type=RandomOrderBucket,
             choices=list(RandomOrderBucket),
             help="Select the strategy for buckets on random-order test execution.  "
-            "The default value is `module'.  See the documentation of the "
-            "`pytest-random-order' plugin for details on these values.",
+                 "The default value is `module'.  See the documentation of the "
+                 "`pytest-random-order' plugin for details on these values.",
         )
         parser.add_argument(
             "-s",
@@ -591,9 +569,9 @@ class FlakyAnalyser:
             required=False,
             type=str,
             help="NodeIDs of the functions that shall be traced. "
-            'Example: "tests/test_file.py::test_func1 test_file.py::TestClass::test_func2 '
-            "Note: Only the name of the file (test_file.py) will be used, "
-            "the rest of the path (tests/) is discarded",
+                 'Example: "tests/test_file.py::test_func1 test_file.py::TestClass::test_func2 '
+                 "Note: Only the name of the file (test_file.py) will be used, "
+                 "the rest of the path (tests/) is discarded",
         )
         parser.add_argument(
             "--tests-to-be-run",
@@ -602,9 +580,9 @@ class FlakyAnalyser:
             type=str,
             default="",
             help="NodeIDs of the functions that shall be executed. "
-            "Multiple names must be separated by spaces and "
-            "will be executed each individually in a new pytest run. "
-            'Example: "tests/test_file.py::test_func1 tests/test_file.py::TestClass::test_func2',
+                 "Multiple names must be separated by spaces and "
+                 "will be executed each individually in a new pytest run. "
+                 'Example: "tests/test_file.py::test_func1 tests/test_file.py::TestClass::test_func2',
         )
         parser.add_argument(
             "--collect-sqlite-coverage-database",

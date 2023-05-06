@@ -1,7 +1,5 @@
 import shutil
 import os
-from flapy import tempfile_seeded
-from flapy import __version__
 from flapy.run_tests import FlakyAnalyser
 import test_resources
 import test_output
@@ -34,15 +32,15 @@ def generic_test_tracing(flaky_analyser: FlakyAnalyser):
 
     out_dir = Path(os.path.dirname(test_output.__file__)) / "run_tests" / "test_tracing"
     out_dir.mkdir(parents=True, exist_ok=True)
-    log_file = out_dir / "execution.log"
 
     # Clean out_dir
     for path in out_dir.glob("*"):
         if ".gitignore" not in path.name and "__pycache__" not in path.name:
             rm_recursively(path)
 
-    tmp_dir = tempfile_seeded.mkdtemp()
-    print(f"Using temporary directory {tmp_dir}")
+    log_file = out_dir / "execution.log"
+    tmp_dir = out_dir / "tmp"
+    tmp_dir.mkdir()
 
     # fmt: off
     args = [
@@ -50,7 +48,7 @@ def generic_test_tracing(flaky_analyser: FlakyAnalyser):
         "--logfile", str(log_file.absolute()),
         "--repository", os.path.dirname(test_resources.__file__),
         "--project-name", project_name,
-        "--temp", tmp_dir,
+        "--temp", str(tmp_dir.absolute()),
         "--number-test-runs", "1",
         "--tests-to-be-run", "test_trace_me.py",
         "--trace",
@@ -84,15 +82,15 @@ def generic_test_isolation(flaky_analyser: FlakyAnalyser):
 
     out_dir = Path(os.path.dirname(test_output.__file__)) / "run_tests" / "test_isolation"
     out_dir.mkdir(parents=True, exist_ok=True)
-    log_file = out_dir / "execution.log"
 
     # Clean up out_dir
     for path in out_dir.glob("*"):
         if ".gitignore" not in path.name and "__pycache__" not in path.name:
             rm_recursively(path)
 
-    tmp_dir = tempfile_seeded.mkdtemp()
-    print(f"Using temporary directory {tmp_dir}")
+    log_file = out_dir / "execution.log"
+    tmp_dir = out_dir / "tmp"
+    tmp_dir.mkdir()
 
     # fmt: off
     args = [
@@ -100,7 +98,7 @@ def generic_test_isolation(flaky_analyser: FlakyAnalyser):
         "--logfile", str(log_file.absolute()),
         "--repository", os.path.dirname(test_resources.__file__),
         "--project-name", project_name,
-        "--temp", tmp_dir,
+        "--temp", str(tmp_dir.absolute()),
         "--number-test-runs", "1",
         "--tests-to-be-run", "test_trace_me.py::test_quick_math"
     ]
