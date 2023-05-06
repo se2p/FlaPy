@@ -226,8 +226,10 @@ def virtualenv(env_name: str, root_dir) -> Generator[VirtualEnvironment, Any, No
     :return: A VirtualEnvironment object wrapping the virtual environment
     """
     venv = VirtualEnvironment(env_name, root_dir)
-    yield venv
-    venv.cleanup()
+    try:
+        yield venv
+    finally:
+        venv.cleanup()
 
 
 class RandomOrderBucket(Enum):
@@ -273,84 +275,85 @@ class PyTestRunner:
     def run(self) -> Optional[Tuple[str, str]]:
         """Install dependencies and execute pytest"""
 
-        with virtualenv(self._project_name, self._config.temp) as env:
+        with virtualenv(env_name=self._project_name, root_dir=self._config.temp) as env:
             old_cwd = Path(os.getcwd())
             os.chdir(self._path)
+            try:
+                # INSTALL PROJECT DEPENDENCIES
+                # There are two different methods for dependency installation
+                # 1. search for dependencies in typical files like 'requirements.txt'
+                # 2. install the project itself (requires pypi-tag to be specified)
+                if self._config.pypi_tag in [None, ""]:
+                    self._logger.info(
+                        "no pypi tag specified -> falling back to searching for requirements"
+                    )
+                    # packages = self.find_dependencies()
+                    # env.add_packages_for_installation(packages)
 
-            # INSTALL PROJECT DEPENDENCIES
-            # There are two different methods for dependency installation
-            # 1. search for dependencies in typical files like 'requirements.txt'
-            # 2. install the project itself (requires pypi-tag to be specified)
-            if self._config.pypi_tag in [None, ""]:
-                self._logger.info(
-                    "no pypi tag specified -> falling back to searching for requirements"
-                )
-                # packages = self.find_dependencies()
-                # env.add_packages_for_installation(packages)
+                    reqs_files = self.find_requirements_files()
+                    self._logger.info(
+                        f"found the following requirements files: {[str(reqs_file) for reqs_file in reqs_files]}"
+                    )
+                    env.add_requirements_files_for_installation(reqs_files)
+                else:
+                    self._logger.info(f"pypi tag found {self._config.pypi_tag}")
+                    env.add_package_for_installation(f"{self._project_name}=={self._config.pypi_tag}")
 
-                reqs_files = self.find_requirements_files()
-                self._logger.info(
-                    f"found the following requirements files: {[str(reqs_file) for reqs_file in reqs_files]}"
-                )
-                env.add_requirements_files_for_installation(reqs_files)
-            else:
-                self._logger.info(f"pypi tag found {self._config.pypi_tag}")
-                env.add_package_for_installation(f"{self._project_name}=={self._config.pypi_tag}")
+                # INSTALL TEST EXECUTION DEPENDENCIES
+                env.add_package_for_installation("pytest==6.2.5")
+                if self._config.random_order_bucket is not None:
+                    env.add_package_for_installation("pytest-random-order==1.0.4")
 
-            # INSTALL TEST EXECUTION DEPENDENCIES
-            env.add_package_for_installation("pytest==6.2.5")
-            if self._config.random_order_bucket is not None:
-                env.add_package_for_installation("pytest-random-order==1.0.4")
+                # START BUILDING COMMAND
+                command = ""
 
-            # START BUILDING COMMAND
-            command = ""
+                # USE TRACING?
+                if self._config.trace not in [None, ""]:
+                    command += f'pytest_trace "{self._config.trace}" {self._trace_output_file} '
+                else:
+                    command += "pytest "
 
-            # USE TRACING?
-            if self._config.trace not in [None, ""]:
-                command += f'pytest_trace "{self._config.trace}" {self._trace_output_file} '
-            else:
-                command += "pytest "
+                # GENERAL PYTEST FLAGS
+                command += "-v --rootdir=. "
 
-            # GENERAL PYTEST FLAGS
-            command += "-v --rootdir=. "
+                # JUNIT XML OUTPUT
+                if self._xml_output_file is not None:
+                    command += f"--junitxml={self._xml_output_file} "
 
-            # JUNIT XML OUTPUT
-            if self._xml_output_file is not None:
-                command += f"--junitxml={self._xml_output_file} "
+                # RANDOM TEST ORDER?
+                if self._config.random_order_bucket is not None:
+                    command += f"--random-order-bucket={self._config.random_order_bucket} "
 
-            # RANDOM TEST ORDER?
-            if self._config.random_order_bucket is not None:
-                command += f"--random-order-bucket={self._config.random_order_bucket} "
+                # RANDOM ORDER SEED?
+                if self._config.random_order_seed is not None:
+                    command += f"--random-order-seed={self._config.random_order_seed} "
 
-            # RANDOM ORDER SEED?
-            if self._config.random_order_seed is not None:
-                command += f"--random-order-seed={self._config.random_order_seed} "
+                # COVERAGE
+                if self._xml_coverage_file is not None:
+                    env.add_package_for_installation("pytest-cov==2.8.1")
+                    command += f"--cov=. --cov-branch --cov-report xml:{self._xml_coverage_file} "
 
-            # COVERAGE
-            if self._xml_coverage_file is not None:
-                env.add_package_for_installation("pytest-cov==2.8.1")
-                command += f"--cov=. --cov-branch --cov-report xml:{self._xml_coverage_file} "
+                # TESTS TO BE RUN
+                command += f"{self._tests_to_be_run} "
 
-            # TESTS TO BE RUN
-            command += f"{self._tests_to_be_run} "
+                # PYTHONPATH=. is necessary to execute tests which are not contained in a module
+                command = "PYTHONPATH=. " + command
 
-            # PYTHONPATH=. is necessary to execute tests which are not contained in a module
-            command = "PYTHONPATH=. " + command
+                # add debug output
+                commands = [
+                    'echo "which python: $(which python)"',
+                    'echo "which pip:    $(which pip)"',
+                    'echo "which pytest: $(which pytest)"',
+                    'echo "python path: "',
+                    'python -c "import sys; print(sys.path)"',
+                    command,
+                ]
 
-            # add debug output
-            commands = [
-                'echo "which python: $(which python)"',
-                'echo "which pip:    $(which pip)"',
-                'echo "which pytest: $(which pytest)"',
-                'echo "python path: "',
-                'python -c "import sys; print(sys.path)"',
-                command,
-            ]
-
-            self._logger.info(f"executing commands {commands}")
-            out, err = env.run_commands(commands)
-            os.chdir(old_cwd)
-            return out, err
+                self._logger.info(f"executing commands {commands}")
+                out, err = env.run_commands(commands)
+                return out, err
+            finally:
+                os.chdir(old_cwd)
 
     def find_requirements_files(self) -> List[Path]:
         """Search for *requirements*.txt files in the project path
@@ -445,40 +448,41 @@ class FlakyAnalyser:
                     src_dir=self._config.project_name, dest_dir=repo_copy_dir
                 )
 
-                run_num = i + naming_offset
-                ttbr_id = test_to_be_run.replace("/", ".")
+                try:
+                    run_num = i + naming_offset
+                    ttbr_id = test_to_be_run.replace("/", ".")
 
-                def get_output_filename(keyword, ending) -> Path:
-                    return (
-                        self._temp_path
-                        / f"{self._config.project_name}_{keyword}{run_num}{ttbr_id}.{ending}"
+                    def get_output_filename(keyword, ending) -> Path:
+                        return (
+                            self._temp_path
+                            / f"{self._config.project_name}_{keyword}{run_num}{ttbr_id}.{ending}"
+                        )
+
+                    xml_output_file: Path = get_output_filename("output", "xml")
+                    xml_coverage_file: Path = get_output_filename("coverage", "xml")
+                    trace_file: Path = get_output_filename("trace", "")
+
+                    runner = PyTestRunner(
+                        project_name=self._config.project_name,
+                        path=Path(copy),
+                        config=self._config,
+                        xml_output_file=xml_output_file,
+                        xml_coverage_file=xml_coverage_file,
+                        trace_output_file=trace_file,
+                        tests_to_be_run=test_to_be_run,
+                        logger=self._logger,
                     )
+                    out, err = runner.run()
+                    self._logger.debug("OUT: %s", out)
+                    self._logger.debug("ERR: %s", err)
 
-                xml_output_file: Path = get_output_filename("output", "xml")
-                xml_coverage_file: Path = get_output_filename("coverage", "xml")
-                trace_file: Path = get_output_filename("trace", "")
-
-                runner = PyTestRunner(
-                    project_name=self._config.project_name,
-                    path=Path(copy),
-                    config=self._config,
-                    xml_output_file=xml_output_file,
-                    xml_coverage_file=xml_coverage_file,
-                    trace_output_file=trace_file,
-                    tests_to_be_run=test_to_be_run,
-                    logger=self._logger,
-                )
-                out, err = runner.run()
-                self._logger.debug("OUT: %s", out)
-                self._logger.debug("ERR: %s", err)
-
-                if not xml_output_file.is_file():
-                    self._logger.warning(
-                        "Did not create file %s while running the tests.",
-                        xml_output_file,
-                    )
-
-                FileUtils.delete_copy(copy)
+                    if not xml_output_file.is_file():
+                        self._logger.warning(
+                            "Did not create file %s while running the tests.",
+                            xml_output_file,
+                        )
+                finally:
+                    FileUtils.delete_copy(copy)
 
     def _create_parser(self) -> argparse.ArgumentParser:
         parser = argparse.ArgumentParser(
