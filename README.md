@@ -126,6 +126,7 @@ Execute `flapy.sh run` with core arguments `--collect-sqlite-coverage-database`
 
 Execute `flapy.sh parse` to generate the CTA (coverage table accumulated)
 
+(this step only produces an output, if the test actual showed flaky behavior -> if needed, rerun the previous step)
 ```
 ./flapy.sh parse \
     ResultsDirCollection --path example_results_sffl \
