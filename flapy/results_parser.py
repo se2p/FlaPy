@@ -791,13 +791,13 @@ class Iteration:
         self._archive: Optional[tarfile.TarFile] = None
 
         # Check if this is a valid iteration
-        if not path.is_dir():
+        if not self.p.is_dir():
             raise ValueError(f"{self.p} is not a directory")
-        if path.name == "run":
+        if self.p.name == "run":
             raise ValueError(f"Folders named 'run' are not considered iterations (legacy)")
-        if path.name.startswith("."):
+        if self.p.name.startswith("."):
             raise ValueError(f"Folders whose names start with '.' are not considered iterations")
-        if not (path / self.archive_name).is_file():
+        if not (self.p / self.archive_name).is_file():
             # TODO: maybe raise this exception later (like inside get_junit_data, or just set
             # status). The meta file might still be present and its information might be interesting
             raise ValueError(f"{self.p} contains no results archive ({self.archive_name})")
