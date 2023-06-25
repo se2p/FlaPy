@@ -177,6 +177,36 @@ def eval_string_to_set(obj):
 
 
 class PassedFailed:
+
+    columns = [
+        "Iteration",
+        "Iteration_status",
+        #
+        "Project_Name",
+        "Project_URL",
+        "Project_Hash",
+        "Test_filename",
+        "Test_classname",
+        "Test_name",
+        "Test_parametrization",
+        #
+        "Passed_sameOrder",
+        "Failed_sameOrder",
+        "Error_sameOrder",
+        "Skipped_sameOrder",
+        "Verdict_sameOrder",
+        "Verdicts_sameOrder",
+        "numRuns_sameOrder",
+        #
+        "Passed_randomOrder",
+        "Failed_randomOrder",
+        "Error_randomOrder",
+        "Skipped_randomOrder",
+        "Verdict_randomOrder",
+        "Verdicts_randomOrder",
+        "numRuns_randomOrder",
+    ]
+
     def __init__(self, df: pd.DataFrame):
         self._df = df
 
@@ -955,12 +985,7 @@ class Iteration:
             )
         except Exception as e:
             logging.error(f"{type(e).__name__}: {e} in {self.p}")
-            return pd.DataFrame(
-                {
-                    "Iteration": [self.p.name],
-                    "Iteration_status": [f"{type(e).__name__}: {e}"],
-                }
-            )
+            return pd.DataFrame(columns=PassedFailed.columns)
 
         junit_data.insert(0, "Iteration", self.p.name)
         junit_data.insert(1, "Project_Name", self.get_project_name())
@@ -1057,36 +1082,7 @@ class Iteration:
 
         passed_failed.insert(1, "Iteration_status", "ok")
 
-        return passed_failed[
-            [
-                "Iteration",
-                "Iteration_status",
-                #
-                "Project_Name",
-                "Project_URL",
-                "Project_Hash",
-                "Test_filename",
-                "Test_classname",
-                "Test_name",
-                "Test_parametrization",
-                #
-                "Passed_sameOrder",
-                "Failed_sameOrder",
-                "Error_sameOrder",
-                "Skipped_sameOrder",
-                "Verdict_sameOrder",
-                "Verdicts_sameOrder",
-                "numRuns_sameOrder",
-                #
-                "Passed_randomOrder",
-                "Failed_randomOrder",
-                "Error_randomOrder",
-                "Skipped_randomOrder",
-                "Verdict_randomOrder",
-                "Verdicts_randomOrder",
-                "numRuns_randomOrder",
-            ]
-        ]
+        return passed_failed[PassedFailed.columns]
 
     def get_coverage_raw_data(self) -> List[Dict]:
         """Read branch- and line-coverage from coverage-xml
@@ -1660,7 +1656,7 @@ class ResultsDir(IterationCollection):
         """
         if len(self.get_iterations()) == 0:
             logging.warning(f"ResultsDir {self} contains no iterations")
-            return pd.DataFrame()
+            return pd.DataFrame(columns=PassedFailed.columns)
         with multiprocessing.Pool() as pool:
             passed_failed = pd.concat(
                 pool.map(
