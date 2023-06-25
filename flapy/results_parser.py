@@ -339,6 +339,7 @@ class PassedFailed:
                     s["Flaky_Infrastructure"],
                 ),
                 axis="columns",
+                result_type="reduce",
             ),
         )
 
@@ -352,6 +353,7 @@ class PassedFailed:
         test_overview["Test_nodeid"] = test_overview.apply(
             lambda s: to_nodeid(s["Test_filename"], s["Test_classname"], s["Test_name"]),
             axis=1,
+            result_type="reduce",
         )
         test_overview["Test_nodeid_inclPara"] = (
             test_overview["Test_nodeid"] + test_overview["Test_parametrization"]
