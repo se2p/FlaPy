@@ -962,13 +962,6 @@ class Iteration:
                 }
             )
 
-        if len(junit_data) == 0:
-            return pd.DataFrame(
-                {
-                    "Iteration": [self.p.name],
-                    "Iteration_status": ["EMPTY"],
-                }
-            )
         junit_data.insert(0, "Iteration", self.p.name)
         junit_data.insert(1, "Project_Name", self.get_project_name())
         junit_data.insert(2, "Project_URL", self.get_project_url())
