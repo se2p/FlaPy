@@ -7,6 +7,16 @@ It is the result of research carried out at the
 at the [University of Passau](https://www.uni-passau.de), Germany.
 
 
+### Video tutorial
+
+[![Conference presentation @ ICSE'23 DEMO](https://github.com/se2p/FlaPy/blob/master/images/flapy_demo_video_screenshot.png)](https://youtu.be/ejy-be-FvDY)
+
+
+### Conference presentation (ICSE'23 DEMO)
+
+[![Conference presentation @ ICSE'23 DEMO](https://github.com/se2p/FlaPy/blob/master/images/flapy_icse_2023_demo_screenshot.png)](https://youtu.be/JUMCW6zZpxc?feature=shared&t=2774)
+
+
 ## Using FlaPy
 
 
@@ -109,6 +119,8 @@ containing the traces:
 ## SFFL
 
 (Spectrum-based Flaky Fault Localization)
+
+From our paper [Debugging Flaky Tests using Spectrum-based Fault Localization](https://arxiv.org/abs/2305.04735)
 
 ### 1. Run tests multiple times while collecting line coverage
 
