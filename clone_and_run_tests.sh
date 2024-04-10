@@ -83,6 +83,10 @@ START_DATE=$(date)
     echo "start_time:             $START_DATE"
 } >> $META_FILE
 
+# -- EXPLORE MODULES
+python3 ./findpackages.py "$REPOSITORY_DIR" > "${RESULT_DIR}/found_modules.txt"
+python3 ./find_all_modules.py "$REPOSITORY_DIR" > "${RESULT_DIR}/found_modules_all.txt"
+
 # -- EXECUTE TESTS
 debug_echo "Run tests in same order mode"
 mkdir -p "${CWD}/sameOrder"
