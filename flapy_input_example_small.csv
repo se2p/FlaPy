@@ -1,13 +1,4 @@
 PROJECT_NAME,PROJECT_URL,PROJECT_HASH,PYPI_TAG,FUNCS_TO_TRACE,TESTS_TO_RUN
 avwx-engine,https://github.com/avwx-rest/avwx-engine,ed1d3e,,,
-avwx-engine,https://github.com/avwx-rest/avwx-engine,ed1d3e,,,
-avwx-engine,https://github.com/avwx-rest/avwx-engine,ed1d3e,,,
-avwx-engine,https://github.com/avwx-rest/avwx-engine,ed1d3e,,,
 jgutils,https://github.com/jerodg/jgutils,6c8ed6,,,
-jgutils,https://github.com/jerodg/jgutils,6c8ed6,,,
-jgutils,https://github.com/jerodg/jgutils,6c8ed6,,,
-jgutils,https://github.com/jerodg/jgutils,6c8ed6,,,
-flapy_example,./minimal_flaky_python_tests,,,,test_flaky.py
-flapy_example,./minimal_flaky_python_tests,,,,test_flaky.py
-flapy_example,./minimal_flaky_python_tests,,,,test_flaky.py
 flapy_example,./minimal_flaky_python_tests,,,,test_flaky.py
