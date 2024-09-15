@@ -8,7 +8,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Install Python version
@@ -23,7 +23,7 @@ jobs:
         run: python --version && pip install poetry && poetry install
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: build
 
     steps:
