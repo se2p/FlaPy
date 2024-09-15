@@ -42,7 +42,9 @@ REPOSITORY_DIR="${CWD}/${PROJECT_NAME}"
 debug_echo "Clone Repository into ${REPOSITORY_DIR}"
 if [[ $PROJECT_URL == http* ]]
 then
-    git clone "${PROJECT_URL}" "${REPOSITORY_DIR}"
+    # Add pseudo credentials to avoid git asking for username and password
+    PROJECT_URL_AUTH=$(echo $PROJECT_URL | sed "s/:\/\//:\/\/foo:foo@/g")
+    git clone "${PROJECT_URL_AUTH}" "${REPOSITORY_DIR}"
     if [[ -n "$PROJECT_HASH" ]]; then
         cd "${REPOSITORY_DIR}" || exit 1
         git reset --hard "${PROJECT_HASH}" || exit 1
