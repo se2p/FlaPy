@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build
-        run: python --version && pip install poetry && poetry install
+        run: python --version && pip install pipx && pipx install poetry && poetry install
 
   test:
     runs-on: ubuntu-latest
@@ -36,7 +36,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install Poetry
-        run: pip install poetry
+        run: pip install pipx && pipx install poetry
 
       - name: Install dependencies
         run: poetry install
