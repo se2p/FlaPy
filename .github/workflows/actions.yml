@@ -4,7 +4,7 @@ on:
   push:
 
 env:
-  PYTHON_VERSION: '3.8.16'
+  PYTHON_VERSION: '3.10.12'
 
 jobs:
   build:

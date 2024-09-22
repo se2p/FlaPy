@@ -22,6 +22,11 @@ unit-tests:python-3.8:
   variables:
     PYTHON_VERSION: '3.8-buster'
 
+unit-tests:python-3.10:
+  <<: *unit-tests
+  variables:
+    PYTHON_VERSION: '3.10'
+
 .nightly-tests:
   only:
     - schedules
