@@ -8,6 +8,7 @@ before_script:
   - python --version
   - pip install poetry
   - poetry install
+  - poetry run pip list
 
 .unit-tests: &unit-tests
   stage: test

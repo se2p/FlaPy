@@ -41,6 +41,9 @@ jobs:
       - name: Install dependencies
         run: poetry install
 
+      - name: Debug output installed dependencies
+        run: poetry run pip list
+
       - name: Test
         run: poetry run python3 -m pytest -v --cov=flapy --cov-branch --cov-report html:cov_html --cov-report=term-missing tests/
         working-directory: ${{ github.workspace }}
