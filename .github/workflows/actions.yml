@@ -42,5 +42,5 @@ jobs:
         run: poetry install
 
       - name: Test
-        run: poetry run pytest -v --cov=flapy --cov-branch --cov-report html:cov_html --cov-report=term-missing tests/
+        run: poetry run python3 -m pytest -v --cov=flapy --cov-branch --cov-report html:cov_html --cov-report=term-missing tests/
         working-directory: ${{ github.workspace }}

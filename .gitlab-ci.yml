@@ -12,7 +12,7 @@ before_script:
 .unit-tests: &unit-tests
   stage: test
   script:
-    - poetry run pytest -v --cov=flapy --cov-branch --cov-report html:cov_html --cov-report=term-missing tests/
+    - poetry run python3 -m pytest -v --cov=flapy --cov-branch --cov-report html:cov_html --cov-report=term-missing tests/
   artifacts:
     paths:
       - cov_html
@@ -37,7 +37,7 @@ unit-tests:python-3.10:
     - poetry install
     - poetry add --dev pytest-random-order
   script:
-    - for ((i=1; i<=10; i++)); do echo "test run ${i}\n"; poetry run pytest -q --cov=flaky_analysis --cov-branch --random-order --random-order-bucket=global ; done
+    - for ((i=1; i<=10; i++)); do echo "test run ${i}\n"; poetry run python3 -m pytest -q --cov=flaky_analysis --cov-branch --random-order --random-order-bucket=global ; done
 
 nightly-tests:python-3.8:
   extends: .nightly-tests
