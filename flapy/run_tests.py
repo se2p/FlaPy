@@ -313,7 +313,8 @@ class PyTestRunner:
                 # START BUILDING COMMAND
                 command = ""
 
-                # USE TRACING?
+                # USE TRACING? (known bug: `pytest_trace` is not installed to the virtualenv created
+                # earlier, but to the outer poetry environment)
                 if self._config.trace not in [None, ""]:
                     command += f'pytest_trace "{self._config.trace}" {self._trace_output_file} '
                 else:
