@@ -38,7 +38,7 @@ The FlaPy docker image will be pulled automatically on first usage.
 
 Prepare a CSV file with the following columns (example: `flapy_input_example.csv`):
 ```
-PROJECT_NAME,PROJECT_URL,PROJECT_HASH,PYPI_TAG,FUNCS_TO_TRACE,TESTS_TO_BE_RUN,NUM_RUNS
+PROJECT_NAME,PROJECT_URL,PROJECT_HASH,PYPI_TAG,FUNCS_TO_TRACE,TESTS_TO_BE_RUN
 ```
 
 Every line in the input file will result in one execution of the container. We call this an *iteration*.
