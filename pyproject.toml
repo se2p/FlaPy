@@ -47,7 +47,7 @@ numpy = "^1.20"
 setuptools = "^75.1.0"
 typing-extensions = "^4.12.2"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 flake8 = "^3.7"
 mypy = "^0.761"
 pylint = "^2.4"
