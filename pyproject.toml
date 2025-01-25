@@ -49,10 +49,10 @@ typing-extensions = "^4.12.2"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^3.7"
-mypy = "^0.761"
+mypy = "^1"
 pylint = "^2.4"
 codecov = "^2.0"
-black = "=19.10b0"
+black = "^24"
 ipython = "^8.0.1"
 
 [tool.poetry.scripts]
