@@ -49,13 +49,13 @@ echo "flapy_image_id:         ${FLAPY_IMAGE_ID}"    >> "$META_FILE"
 debug_echo "-- Running container"
 if [[ $PROJECT_URL == http* ]]
 then
-    flapy_docker_command run --rm $DOCKER_FLAGS \
+    flapy_docker_command run --log-driver=none --rm $DOCKER_FLAGS \
         -v "$ITERATION_RESULTS_DIR:/results" \
         $FLAPY_DOCKER_IMAGE \
         "${PROJECT_NAME}" "${PROJECT_URL}" "${PROJECT_HASH}" "${PYPI_TAG}" "${FUNCS_TO_TRACE}" "${TESTS_TO_BE_RUN}" "${NUM_RUNS}" "${PLUS_RANDOM_RUNS}" "${FLAPY_ARGS}"
 else
     PROJECT_URL_ABS_PATH=$(realpath "$PROJECT_URL")
-    flapy_docker_command run --rm $DOCKER_FLAGS \
+    flapy_docker_command run --log-driver=none --rm $DOCKER_FLAGS \
         -v "$ITERATION_RESULTS_DIR:/results" \
         -v "$PROJECT_URL_ABS_PATH":/project_sources \
         $FLAPY_DOCKER_IMAGE \
