@@ -1577,7 +1577,6 @@ class IterationCollection(ABC):
                     file_.tarinfo.name = Path(iteration.p.name) / os.path.basename(
                         file_.tarinfo.name
                     )
-                    print(f"extracting {file_=} to {proj_savedir}")
                     iteration.get_archive().extract(file_.tarinfo, proj_savedir)
 
             iteration.close_archive()
@@ -1619,7 +1618,7 @@ class IterationCollection(ABC):
         passed_failed = PassedFailed(self.get_passed_failed())
         to = passed_failed.to_tests_overview()
 
-        logging.info("Start export")
+        logging.info("Starting export")
         # Filter for specified projects
         if proj_csv is not None:
             proj_df = pd.read_csv(proj_csv)[proj_cols]
@@ -1656,9 +1655,7 @@ class IterationCollection(ABC):
         for f_type in flaky_types:
             # Filter for flaky tests
             flaky_tests = to[to["flaky?"] == f_type][proj_cols + test_cols]
-            print(f"{flaky_tests=}")
             pf_flaky = passed_failed._df.merge(flaky_tests)
-            print(f"{pf_flaky=}")
 
             pool = multiprocessing.Pool()
             pool.map(
