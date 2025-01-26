@@ -1550,6 +1550,126 @@ class IterationCollection(ABC):
             )
         ))
 
+    def _save_flaky_failures_iteration(self, row: pd.Series, outcomes: List[str], save_dir: str) -> None:
+        """Helper function to parallelize save_flaky_failures
+
+        :row: row from PassedFailed CSV of a flaky iteration
+        :outcomes: which outcomes are you interested in? e.g. ["Failed_sameOrder"]
+        :save_dir: directory to save the junit files to
+        :returns: None
+        """
+        try:
+            iteration = Iteration(row["Iteration"])
+
+            for outcome in outcomes:
+                files = [
+                    x
+                    for x in iteration.get_files(JunitXmlFile)
+                    if x.get_num() in eval_string_to_set(row[outcome])
+                ]
+                url_without_slash = row["Project_URL"].replace("/", " ")
+                git_hash = row["Project_Hash"]
+                test_id = to_nodeid(*row[test_cols]).replace("/", " ")
+                proj_savedir = (
+                    Path(save_dir) / f"{url_without_slash}@{git_hash[:6]}" / test_id / outcome
+                )
+                for file_ in files:
+                    file_.tarinfo.name = Path(iteration.p.name) / os.path.basename(
+                        file_.tarinfo.name
+                    )
+                    print(f"extracting {file_=} to {proj_savedir}")
+                    iteration.get_archive().extract(file_.tarinfo, proj_savedir)
+
+            iteration.close_archive()
+        except Exception as e:
+            logging.error(f"{type(e).__name__}: '{e}' in iteration {row['Iteration']}")
+
+    def save_flaky_failures(
+        self, save_dir: str, outcome: str, flaky_types: List[str], proj_csv: str = None
+    ) -> None:
+        """Extract all junit files in which a flaky test failed.
+
+        This can be useful to find the root cause of the flaky failure.
+
+        :save_dir: directory to save the junit files to
+            They will be saved in the following format:
+
+                save_dir/FLAKY_TYPE/PROJ_URL@PROJ_HASH/TEST_NODEID/OUTCOME/ITERATION/JUNIT_FILE
+
+            Slashes in PROJ_URL are being replaced with spaces
+            NOTE: if the project-url starts with ".", e.g. a local path ("./minimal_example"), the folder will be hidden
+
+        :outcome: which outcomes do you want to filter for (same, random, any)
+
+        :flaky_type: what kind of flaky tests do you want to consider?
+            values: (order-dependent, non-order-dependent, infrastructure flaky, not flaky)
+            KNOWN ISSUE: you cannot properly pass a list as an argument, because fire interprets the "-" in "order-dependent"
+
+        :proj_csv: only consider projects in this csv file (needs `proj_cols`)
+        """
+
+        # Check input arguments
+        if isinstance(flaky_types, str):
+            flaky_types = [flaky_types]
+        for flaky_type in flaky_types:
+            if flaky_type not in FlakinessType.all_types:
+                raise ValueError(f"Unknown flaky type '{flaky_type}'")
+
+        logging.info("Generate tests overview")
+        passed_failed = PassedFailed(self.get_passed_failed())
+        to = passed_failed.to_tests_overview()
+
+        logging.info("Start export")
+        # Filter for specified projects
+        if proj_csv is not None:
+            proj_df = pd.read_csv(proj_csv)[proj_cols]
+            to = to.merge(proj_df)
+
+        if outcome == "random":
+            outcomes = [
+                # "Passed_randomOrder",
+                "Failed_randomOrder",
+                "Error_randomOrder",
+                # "Skipped_randomOrder",
+            ]
+        elif outcome == "same":
+            outcomes = [
+                # "Passed_sameOrder",
+                "Failed_sameOrder",
+                "Error_sameOrder",
+                # "Skipped_sameOrder",
+            ]
+        elif outcome == "any":
+            outcomes = [
+                # "Passed_sameOrder",
+                "Failed_sameOrder",
+                "Error_sameOrder",
+                # "Skipped_sameOrder",
+                # "Passed_randomOrder",
+                "Failed_randomOrder",
+                "Error_randomOrder",
+                # "Skipped_randomOrder",
+            ]
+        else:
+            raise ValueError(f"Unknown value for argument outcome")
+
+        for f_type in flaky_types:
+            # Filter for flaky tests
+            flaky_tests = to[to["flaky?"] == f_type][proj_cols + test_cols]
+            print(f"{flaky_tests=}")
+            pf_flaky = passed_failed._df.merge(flaky_tests)
+            print(f"{pf_flaky=}")
+
+            pool = multiprocessing.Pool()
+            pool.map(
+                partial(
+                    self._save_flaky_failures_iteration,
+                    outcomes=outcomes,
+                    save_dir=f"{save_dir}/{f_type}",
+                ),
+                map(lambda x: x[1], pf_flaky.iterrows()),
+            )
+
 
 class ResultsDir(IterationCollection):
     """
