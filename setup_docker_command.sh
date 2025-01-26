@@ -11,10 +11,14 @@ SCRIPT_DIR=$(dirname $0)
 
 source "$SCRIPT_DIR/utils.sh"
 
-debug_echo "-- Define FlaPy docker image"
-export FLAPY_DOCKER_IMAGE="registry.hub.docker.com/gruberma/flapy"
+if [[ -n $FLAPY_DOCKER_IMAGE ]]; then
+    debug_echo "-- setup_docker_command: FLAPY_DOCKER_IMAGE not set, using default image"
+    export FLAPY_DOCKER_IMAGE="registry.hub.docker.com/gruberma/flapy"
+else
+    debug_echo "-- setup_docker_command: Using custom FLAPY_DOCKER_IMAGE"
+fi
 
-debug_echo "-- Creating alias 'flapy_docker_command'"
+debug_echo "-- setup_docker_command: Creating alias 'flapy_docker_command'"
 function flapy_docker_command {
     # Possible modifications to the normal docker command:
     # * Setting a different tmp-dir to avoid overflowing /tmp by prepending TMPDIR=...
