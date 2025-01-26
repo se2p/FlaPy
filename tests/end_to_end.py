@@ -45,7 +45,7 @@ def test_end_to_end():
     logging.info(f"ERROR: {err}")
 
     # CHECK OUTPUT
-    assert len(list(out_dir.rglob("*"))) == 9
+    assert len(list(out_dir.rglob("*"))) == 11
 
     # PARSE
     logging.info("PARSING")
