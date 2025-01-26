@@ -2,7 +2,7 @@ FROM registry.hub.docker.com/library/python:3.10.1-bullseye AS build
 
 WORKDIR /flapy_build
 
-ENV POETRY_VERSION="1.1.8"
+ENV POETRY_VERSION="1.8.3"
 
 # Python shall not write the byte code to *.pyc files; they cannot be cached between
 # runs of the container anyway, hence we save the required time and resources for that
