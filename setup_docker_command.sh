@@ -12,10 +12,10 @@ SCRIPT_DIR=$(dirname $0)
 source "$SCRIPT_DIR/utils.sh"
 
 if [[ -n $FLAPY_DOCKER_IMAGE ]]; then
+    debug_echo "-- setup_docker_command: Using custom image: $FLAPY_DOCKER_IMAGE"
+else
     debug_echo "-- setup_docker_command: FLAPY_DOCKER_IMAGE not set, using default image"
     export FLAPY_DOCKER_IMAGE="registry.hub.docker.com/gruberma/flapy"
-else
-    debug_echo "-- setup_docker_command: Using custom FLAPY_DOCKER_IMAGE"
 fi
 
 debug_echo "-- setup_docker_command: Creating alias 'flapy_docker_command'"
