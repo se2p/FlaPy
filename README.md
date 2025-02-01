@@ -190,7 +190,7 @@ We use containers to run the projects' test suites in an isolated environment.
 ```bash
 docker build -t my_flapy -f Dockerfile .
 ```
-This image can be used together with all existing scripts by changing the `FLAPY_DOCKER_IMAGE` variable in `setup_docker_command.sh` to `localhost/my_flapy`.
+This image can be used together with all existing scripts by setting the `FLAPY_DOCKER_IMAGE` environment variable.
 
 
 ### Building and running outside docker
